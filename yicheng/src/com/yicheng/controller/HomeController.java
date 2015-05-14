@@ -11,6 +11,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class HomeController {
 	
+	@RequestMapping(value = { "/Home", "/home" }, method = RequestMethod.GET)
+	public ModelAndView home(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("home", null);
+	}
+	
 	@RequestMapping(value = { "/Error", "/error" }, method = RequestMethod.GET)
 	public ModelAndView error(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("error", null);

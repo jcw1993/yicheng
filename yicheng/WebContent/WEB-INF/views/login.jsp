@@ -28,12 +28,10 @@
 <script type="text/javascript"
 	src="<c:url value="/resources/js/jquery.timepicker.js" />"></script>
 
-<title>南大任务协同平台-用户登录</title>
+<title>怡诚-用户登录</title>
 </head>
 <body class="login-body">
 	<div class="container center">
-		<!-- <h2>任务协同平台</h2>
-		<h4>登录</h4> -->
 		<div class="row">
 		<img src="<c:url value="/resources/images/login_logo.png" />" alt="任务协同平台" />
 		</div>
@@ -41,8 +39,8 @@
 		<div class="row col-xs-4">
 			<form id="loginForm" action="Login" method="post">
 				<div class="input-group input-item">
-					<span class="input-group-addon">邮箱</span> <input type="text"
-						class="form-control" id="mail" name="mail" placeholder="邮箱"
+					<span class="input-group-addon">用户名</span> <input type="text"
+						class="form-control" id="name" name="name" placeholder="用户名"
 						aria-describedby="basic-addon2" />
 				</div>
 				<div class="input-group input-item">
@@ -60,27 +58,25 @@
 
 	<script type="text/javascript">
 
-	var $mailInput;
+	var $nameInput;
 	var $passwordInput;
 	var $loginBtn;
 	var $loginForm;
 
-	var MAIL_PATTERN = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-	
 	$(function() {
-		$mailInput = $("#mail");
+		$nameInput = $("#name");
 		$passwordInput = $("#password");
 		$loginLink = $("#login");
 		$loginForm = $("#loginForm");
 		
 		$loginLink.click(function(e) {
 			console.log("log");
-			var mail = $mailInput.val();
+			var name = $nameInput.val();
 			var password = $passwordInput.val();
-			console.log("mail: " + mail);
+			console.log("name: " + name);
 			console.log("password: " + password);
-			if(checkParameters(mail, password)) {
-				mail = mail.trim();
+			if(checkParameters(name, password)) {
+				name = name.trim();
 				password = password.trim();
 				$loginForm.submit();	
 			}
@@ -95,17 +91,11 @@
 
 	});
 
-	function checkParameters(mail, password) {
-		if(mail == undefined || mail.trim() == "") {
-			alert("邮箱不能为空");
+	function checkParameters(name, password) {
+		if(name == undefined || name.trim() == "") {
+			alert("用户名不能为空");
 			return false;
 		}
-
-		if(!MAIL_PATTERN.test(mail)) {
-			alert("邮箱格式不正确");
-			return false;
-		}
-
 		if(password == undefined || password == "") {
 			alert("密码不能为空!");
 			return false;

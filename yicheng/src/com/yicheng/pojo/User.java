@@ -10,6 +10,7 @@ public class User implements Serializable {
 	private String name;
 	private String password;
 	private int type;
+	
 	public int getId() {
 		return id;
 	}
@@ -34,6 +35,8 @@ public class User implements Serializable {
 	public void setType(int type) {
 		this.type = type;
 	}
+	
+	public User() {}
 	
 	public User(int id) {
 		this.id = id;
