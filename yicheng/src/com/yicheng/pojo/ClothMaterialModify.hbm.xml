@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.yicheng.pojo">
+    <class name="OrderCloth" table="order_cloth">
+        <id name="id" column="id">
+            <generator class="increment" />
+        </id>
+        <property name="orderNumber" type="string" column="order_number" />
+        <property name="clothId" type="integer" column="cloth_id" />
+        <property name="materialId" type="integer" column="material_id" />
+        <property name="part" type="string" column="part" />
+        <property name="unitName" type="string" column="unit_name" />
+        <property name="count" type="integer" column="count" />
+        <property name="orderCount" type="integer" column="order_count" />
+        <property name="consumption" type="double" column="consumption" />
+        <property name="price" type="double" column="price" />
+        <proerty name="orderDate" type="datetime" column="order_date" />
+        <property name="remark" type="string" column="remark" />
+        <proerty name="modifyDate" type="datetime" column="modify_date" />
+    </class>
+
+</hibernate-mapping>
+	
+	private int id;
+	private String number;
+	private int clothId;
+	private Date deliveryDate;
