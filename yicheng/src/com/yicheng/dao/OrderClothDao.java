@@ -8,10 +8,10 @@ public interface OrderClothDao {
 	
 	public int create(OrderCloth orderCloth);
 	
-	public int update(OrderCloth orderCloth);
+	public void update(OrderCloth orderCloth);
 	
 	public void delete(int id);
 	
-	public List<OrderCloth> getByOrderNumber(String number);
+	public List<OrderCloth> getByOrderNumber(String orderNumber);
 
 }

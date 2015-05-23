@@ -18,6 +18,7 @@ import com.yicheng.service.UserService;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.UserInfoStorage;
+import com.yicheng.util.Utils;
 
 @Controller
 public class LoginController {
@@ -40,6 +41,8 @@ public class LoginController {
 			response.sendRedirect(request.getContextPath() + "/Login");
 			return;
 		}
+		
+//		int userType = Utils.getRequestIntValue(request, "userType", true);
 
 		name = name.trim();
 		password = password.trim();

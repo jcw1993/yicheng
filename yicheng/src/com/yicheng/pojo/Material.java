@@ -37,4 +37,9 @@ public class Material implements Serializable {
 	}
 
 	public Material() {}
+	
+	public Material(int id) {
+		this.id = id;
+	}
+
 }

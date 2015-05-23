@@ -36,5 +36,9 @@ public class Cloth implements Serializable {
 	}
 	
 	public Cloth() {}
+	
+	public Cloth(int id) {
+		this.id = id;
+	}
 
 }

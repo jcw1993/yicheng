@@ -20,7 +20,7 @@ import com.yicheng.util.ResultCode;
 @Service
 public class UserServiceImpl implements UserService {
 	
-private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	
 	private static final String ALL_USER_CACHE_KEY = "all_user_cache";
 	
@@ -107,10 +107,10 @@ private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	}
 
 	@Override
-	public GenericResult<Integer> create(User User) {
+	public GenericResult<Integer> create(User user) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = userDao.create(User);
+			int outId = userDao.create(user);
 			result.setData(outId);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -121,10 +121,10 @@ private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	}
 
 	@Override
-	public NoneDataResult update(User User) {
+	public NoneDataResult update(User user) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			userDao.update(User);
+			userDao.update(user);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);

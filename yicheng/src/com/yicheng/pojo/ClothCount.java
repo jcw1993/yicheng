@@ -45,4 +45,8 @@ public class ClothCount implements Serializable {
 	
 	public ClothCount() {}
 
+	public ClothCount(int id) {
+		this.id = id;
+	}
+	
 }

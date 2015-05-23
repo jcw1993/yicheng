@@ -87,4 +87,8 @@ public class ClothMaterial implements Serializable {
 	}
 	
 	public ClothMaterial() {}
+
+	public ClothMaterial(int id) {
+		this.id = id;
+	}
 }

@@ -38,5 +38,9 @@ public class OrderCloth implements Serializable {
 	}
 
 	public OrderCloth() {}
+
+	public OrderCloth(int id) {
+		this.id = id;
+	}
 	
 }
