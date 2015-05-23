@@ -11,7 +11,7 @@
         </id>
         <property name="title" type="string" column="title" />
         <property name="description" type="integer" column="description" />
-        <proerty name="createdDate" type="datetime" column="created_date" />
+        <property name="createdTime" type="timestamp" column="created_time" />
     </class>
 
 </hibernate-mapping>

@@ -2,9 +2,12 @@ package com.yicheng.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.yicheng.dao.MaterialDao;
 import com.yicheng.pojo.Material;
 
+@Repository
 public class MaterialDaoImpl extends HibernateDaoBase implements MaterialDao {
 
 	@Override

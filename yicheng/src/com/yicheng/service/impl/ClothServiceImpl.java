@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 
 import com.yicheng.dao.ClothDao;
 import com.yicheng.pojo.Cloth;
@@ -15,6 +16,7 @@ import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataResult;
 import com.yicheng.util.ResultCode;
 
+@Service
 public class ClothServiceImpl implements ClothService {
 	private static final String ALL_CLOTH_CACHE_KEY = "all_cloth_cache";
 	

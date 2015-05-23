@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import com.yicheng.dao.OrderClothDao;
 import com.yicheng.pojo.OrderCloth;
 
+@Repository
 public class OrderClothDaoImpl extends HibernateDaoBase implements OrderClothDao {
 
 	@Override

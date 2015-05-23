@@ -15,24 +15,31 @@ public class OrderCloth implements Serializable {
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getOrderNumber() {
 		return orderNumber;
 	}
+
 	public void setOrderNumber(String orderNumber) {
 		this.orderNumber = orderNumber;
 	}
+
 	public int getClothId() {
 		return clothId;
 	}
+
 	public void setClothId(int clothId) {
 		this.clothId = clothId;
 	}
+
 	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
+
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}

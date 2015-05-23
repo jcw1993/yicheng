@@ -9,9 +9,10 @@
         <id name="id" column="id">
             <generator class="increment" />
         </id>
-        <property name="orderNumber" type="string" column="order_number" />
+        
         <property name="clothId" type="integer" column="cloth_id" />
-        <proerty name="deliveryDate" type="datetime" column="delivery_date" />
+        <property name="orderNumber" type="string" column="order_number" />
+        <property name="deliveryDate" type="timestamp" column="delivery_date" />
     </class>
 
 </hibernate-mapping>

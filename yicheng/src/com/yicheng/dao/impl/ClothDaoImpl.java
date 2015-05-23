@@ -2,9 +2,12 @@ package com.yicheng.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.yicheng.dao.ClothDao;
 import com.yicheng.pojo.Cloth;
 
+@Repository
 public class ClothDaoImpl extends HibernateDaoBase implements ClothDao {
 
 	@Override
@@ -25,7 +28,7 @@ public class ClothDaoImpl extends HibernateDaoBase implements ClothDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Cloth> getAll() {
-		return getHibernateTemplate().find("from CLoth");
+		return getHibernateTemplate().find("from Cloth");
 	}
 
 }

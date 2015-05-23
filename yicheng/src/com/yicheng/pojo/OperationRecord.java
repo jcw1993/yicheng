@@ -38,4 +38,8 @@ public class OperationRecord implements Serializable {
 	}
 	
 	public OperationRecord() {}
+	
+	public OperationRecord(int id) {
+		this.id = id;
+	}
 }

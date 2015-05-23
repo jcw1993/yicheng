@@ -17,7 +17,7 @@
         <property name="orderCount" type="integer" column="order_count" />
         <property name="consumption" type="double" column="consumption" />
         <property name="price" type="double" column="price" />
-        <proerty name="orderDate" type="datetime" column="order_date" />
+        <property name="orderDate" type="timestamp" column="order_date" />
         <property name="remark" type="string" column="remark" />
     </class>
 

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 
 import com.yicheng.dao.MaterialDao;
 import com.yicheng.pojo.Material;
@@ -15,6 +16,7 @@ import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataResult;
 import com.yicheng.util.ResultCode;
 
+@Service
 public class MaterialServiceImpl implements MaterialService {
 	
 	private static Logger logger = LoggerFactory.getLogger(MaterialServiceImpl.class);

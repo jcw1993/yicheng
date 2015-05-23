@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import com.yicheng.dao.ClothMaterialDao;
 import com.yicheng.pojo.ClothMaterial;
 
+@Repository
 public class ClothMaterialDaoImpl extends HibernateDaoBase implements ClothMaterialDao {
 
 	@Override
