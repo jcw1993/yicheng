@@ -42,12 +42,12 @@ public class LoginController {
 			return;
 		}
 		
-//		int userType = Utils.getRequestIntValue(request, "userType", true);
+		int userType = Utils.getRequestIntValue(request, "userType", true);
 
 		name = name.trim();
 		password = password.trim();
-		GenericResult<User> userResult = userService.getByNameAndPassword(
-				name, password);
+		GenericResult<User> userResult = userService.search(
+				name, password, userType);
 		if (userResult.getResultCode() == ResultCode.NORMAL) {
 			User user = userResult.getData();
 			String sessionId = request.getSession(true).getId();

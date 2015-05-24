@@ -1,0 +1,88 @@
+@CHARSET "UTF-8";
+
+body {
+	font-family: "微软雅黑";
+	font-size: 14px;
+}
+
+a {
+	text-decoration: none;
+}
+
+a.login {
+	text-align: center;
+	width: 160px;
+}
+
+.center {
+	text-align: center;
+}
+
+div.header {
+	/*background-color: #3371B7;*/
+	
+}
+
+div.input-item {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-left: 40px;
+	min-width: 300px;
+}
+
+ul.nav {
+	float: left;
+}
+
+ul.nav>li {
+	font-size: 16px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+div.container-body {
+	width: 90%;
+	max-width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 50px;
+}
+.bottom-line {
+	border-bottom: 1px #dddddd solid;
+}
+
+.logo {
+	width: 200px;
+	height: 40px;
+	position: absolute;
+	left: 10px;
+	top: 0;
+}
+
+.navi-user-pic {
+	height: 40px;
+	position: absolute;
+	left: 10px;
+	top: 0;
+}
+
+label {
+	margin-right: 0.5em;
+}
+
+.login-body {
+	background-color: #2d96ff;
+}
+
+.submit-button {
+	margin-top: 20px;
+}
+
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+	border-top: none;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+	background-color: #2d96ff;
+}

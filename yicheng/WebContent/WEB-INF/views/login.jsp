@@ -10,34 +10,30 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
 <link rel="stylesheet"
-	href="<c:url value="/resources/css/co_platform.css" />" />
-<link rel="stylesheet"
 	href="<c:url value="/resources/css/bootstrap.min.css" />" />
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/bootstrap-theme.min.css" />" />
 <link rel="stylesheet"
-	href="<c:url value="/resources/css/co_platform.css" />" />
-
+	href="<c:url value="/resources/css/main.css" />" />
 
 <script type="text/javascript"
 	src="<c:url value="/resources/js/jquery-1.11.2.js" />"></script>
 <script type="text/javascript"
 	src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
-<script type="text/javascript"
-	src="<c:url value="/resources/js/jquery.validate.js" />"></script>
-<script type="text/javascript"
-	src="<c:url value="/resources/js/jquery.timepicker.js" />"></script>
+
 
 <title>怡诚-用户登录</title>
 </head>
-<body class="login-body">
+<body>
 	<div class="container center">
 		<div class="row">
-		<img src="<c:url value="/resources/images/login_logo.png" />" alt="任务协同平台" />
 		</div>
 		<div class="row col-xs-4"></div>
-		<div class="row col-xs-4">
+		<div class="row col-xs-5">
 			<form id="loginForm" action="Login" method="post">
+				<div class="input-group input-item">
+					<h3>怡诚-用户登录</h3>
+				</div>
 				<div class="input-group input-item">
 					<span class="input-group-addon">用户名</span> <input type="text"
 						class="form-control" id="name" name="name" placeholder="用户名"
@@ -48,9 +44,19 @@
 						class="form-control" id="password" name="password"
 						placeholder="密码" aria-describedby="basic-addon2" />
 				</div>
+				<div class="input-group input-item">
+					<label for="userType">选择身份:</label>
+					<input type="radio" name="userType" value="0" /> 打样开发员
+					<input type="radio" name="userType" value="1" /> 报价员
+					<input type="radio" name="userType" value="2" /> 采购员
+					<input type="radio" name="userType" value="3" /> 总经理
+				</div>
 				<div class="input-item">
-					<a id="login" class="btn btn-lg login btn-success" href="#"> 登
+					<div class="row">
+						<a id="login" class="btn btn-lg login btn-success" href="#"> 登
 						录 </a>
+					</div>
+
 				</div>
 			</form>
 		</div>

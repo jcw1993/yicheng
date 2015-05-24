@@ -14,30 +14,20 @@
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/bootstrap-theme.min.css" />" />
 <link rel="stylesheet"
-	href="<c:url value="/resources/css/jquery.timepicker.css" />" />
-<link rel="stylesheet"
 	href="<c:url value="/resources/css/ui_lightness/jquery-ui.min.css" />" />
 <link rel="stylesheet"
-	href="<c:url value="/resources/css/bootstrap-treeview.css" />" />
-<link rel="stylesheet"
-	href="<c:url value="/resources/css/co_platform.css" />" />
+	href="<c:url value="/resources/css/main.css" />" />
+
 
 <script type="text/javascript"
 	src="<c:url value="/resources/js/jquery-1.11.2.js" />"></script>
 <script type="text/javascript"
 	src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
 <script type="text/javascript"
-	src="<c:url value="/resources/js/datepicker-zh-CN.js" />"></script>
-<script type="text/javascript"
 	src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
 <script type="text/javascript"
-	src="<c:url value="/resources/js/bootstrap-treeview.js" />"></script>
-<script type="text/javascript"
-	src="<c:url value="/resources/js/jquery.validate.js" />"></script>
-<script type="text/javascript"
 	src="<c:url value="/resources/js/jquery.timepicker.js" />"></script>
-<script type="text/javascript"
-	src="<c:url value="/resources/js/co_platform.js" />"></script>
+
 
 <title>任务协同平台</title>
 </head>

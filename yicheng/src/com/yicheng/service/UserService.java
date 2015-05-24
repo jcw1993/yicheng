@@ -11,7 +11,7 @@ public interface UserService {
 	
 	public GenericResult<User> getById(int id);
 	
-	public GenericResult<User> getByNameAndPassword(String name, String password);
+	public GenericResult<User> search(String name, String password, int userType);
 	
 	public GenericResult<Integer> create(User user);
 	

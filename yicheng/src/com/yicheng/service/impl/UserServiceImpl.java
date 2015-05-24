@@ -78,8 +78,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public GenericResult<User> getByNameAndPassword(String name,
-			String password) {
+	public GenericResult<User> search(String name,
+			String password, int userType) {
 		GenericResult<User> result = new GenericResult<User>();
 		if(StringUtils.isBlank(name) || StringUtils.isBlank(password)) {
 			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
@@ -89,7 +89,8 @@ public class UserServiceImpl implements UserService {
 		GenericResult<List<User>> allResult = getAll();
 		if(allResult.getResultCode() == ResultCode.NORMAL) {
 			for(User user : allResult.getData()) {
-				if(user.getName().equals(name) && user.getPassword().equals(password)) {
+				if(user.getName().equals(name) && user.getPassword().equals(password)
+						&& user.getType() == userType) {
 					result.setData(user);
 					break;
 				}
