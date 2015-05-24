@@ -46,7 +46,7 @@
 				</div>
 				<div class="input-group input-item">
 					<label for="userType">选择身份:</label>
-					<input type="radio" name="userType" value="0" /> 打样开发员
+					<input type="radio" name="userType" value="0" checked="checked" /> 打样开发员
 					<input type="radio" name="userType" value="1" /> 报价员
 					<input type="radio" name="userType" value="2" /> 采购员
 					<input type="radio" name="userType" value="3" /> 总经理

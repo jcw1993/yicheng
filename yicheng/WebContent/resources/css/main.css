@@ -59,11 +59,8 @@ div.container-body {
 	top: 0;
 }
 
-.navi-user-pic {
-	height: 40px;
-	position: absolute;
-	left: 10px;
-	top: 0;
+.create-button {
+	float: right;
 }
 
 label {
@@ -76,6 +73,15 @@ label {
 
 .submit-button {
 	margin-top: 20px;
+}
+
+.inline {
+	display: inline;
+}
+
+div.title-area {
+	margin-top: 0.4em;
+	margin-bottom: 0.4em;
 }
 
 
