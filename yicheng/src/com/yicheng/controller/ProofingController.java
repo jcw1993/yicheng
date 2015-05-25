@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yicheng.pojo.Cloth;
-import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
 import com.yicheng.service.MaterialService;
+import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.GenericJsonResult;
 import com.yicheng.util.GenericResult;
-import com.yicheng.util.NoneDataJsonResult;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
 
@@ -47,19 +46,28 @@ public class ProofingController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothResult = clothService.getAll();
 		
-		Map<Cloth, List<ClothMaterial>> clothMaterialMap = new HashMap<Cloth, List<ClothMaterial>>();
 		if(clothResult.getResultCode() == ResultCode.NORMAL) {
-			for(Cloth cloth : clothResult.getData()) {
-				GenericResult<List<ClothMaterial>> clothMaterialResult = clothMaterialService.getByCloth(cloth.getId());
-				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
-					clothMaterialMap.put(cloth, clothMaterialResult.getData());
-				}
-			}
-			model.put("clothMaterialMap", clothMaterialMap);
+			model.put("clothes", clothResult.getData());
 		}else {
 			logger.warn("cloth get all exception");
 		}
 		return new ModelAndView("proofing/cloth_material_manage", "model", model);
+	}
+	
+	@RequestMapping(value = "/Proofing/ClothMaterialDetail", method = RequestMethod.GET)
+	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		GenericResult<Cloth> clothResult = clothService.getById(clothId);
+		GenericResult<List<ClothMaterialDetailData>> clothMaterialDetailResult = clothMaterialService.getDetailByCloth(clothId);
+		if(clothResult.getResultCode() == ResultCode.NORMAL
+				&& clothMaterialDetailResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("cloth", clothResult.getData());
+			model.put("clothMaterialDetails", clothMaterialDetailResult.getData());
+		}
+		
+		return new ModelAndView("proofing/cloth_material_detail", "model", model);
 	}
 	
 	@RequestMapping(value = "/Proofing/CreateCloth", method = RequestMethod.GET)

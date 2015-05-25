@@ -15,8 +15,6 @@
 	href="<c:url value="/resources/css/bootstrap-theme.min.css" />" />
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/ui_lightness/jquery-ui.min.css" />" />
-	<link rel="stylesheet"
-	href="<c:url value="/resources/css/ui_lightness/flat-ui.css" />" />
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/main.css" />" />
 
@@ -27,8 +25,6 @@
 	src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
 <script type="text/javascript"
 	src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
-<script type="text/javascript"
-	src="<c:url value="/resources/js/flat-ui.min.js" />"></script>
 
 
 <title>怡诚ERP系统</title>

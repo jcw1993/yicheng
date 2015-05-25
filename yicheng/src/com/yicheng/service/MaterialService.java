@@ -14,4 +14,6 @@ public interface MaterialService {
 	public NoneDataResult delete(int id);
 	
 	public GenericResult<List<Material>> getAll();
+	
+	public GenericResult<Material> getById(int materialId);
 }

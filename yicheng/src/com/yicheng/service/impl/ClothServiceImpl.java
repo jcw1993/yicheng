@@ -92,6 +92,24 @@ public class ClothServiceImpl implements ClothService {
 		}
 		return result;
 	}
-	
 
+	@Override
+	public GenericResult<Cloth> getById(int clothId) {
+		GenericResult<Cloth> result = new GenericResult<Cloth>();
+		GenericResult<List<Cloth>> allResult = getAll();
+		
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			for(Cloth cloth : allResult.getData()) {
+				if(cloth.getId() == clothId) {
+					result.setData(cloth);
+					return result;
+				}
+			}
+		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		
+		return result;
+	}
 }

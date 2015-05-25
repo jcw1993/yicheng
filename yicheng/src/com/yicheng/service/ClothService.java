@@ -15,5 +15,7 @@ public interface ClothService {
 	public NoneDataResult delete(int id);
 	
 	public GenericResult<List<Cloth>> getAll();
+	
+	public GenericResult<Cloth> getById(int clothId);
 
 }

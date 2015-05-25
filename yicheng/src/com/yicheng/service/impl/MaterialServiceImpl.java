@@ -94,4 +94,24 @@ public class MaterialServiceImpl implements MaterialService {
 		return result;
 	}
 
+	@Override
+	public GenericResult<Material> getById(int materialId) {
+		GenericResult<Material> result = new GenericResult<Material>();
+		GenericResult<List<Material>> allResult = getAll();
+		
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			for(Material material : allResult.getData()) {
+				if(material.getId() == materialId) {
+					result.setData(material);
+					return result;
+				}
+			}
+		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		
+		return result;
+	}
+
 }

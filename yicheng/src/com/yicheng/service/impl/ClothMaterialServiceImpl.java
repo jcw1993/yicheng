@@ -11,7 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.yicheng.dao.ClothMaterialDao;
 import com.yicheng.pojo.ClothMaterial;
+import com.yicheng.pojo.Material;
 import com.yicheng.service.ClothMaterialService;
+import com.yicheng.service.ClothService;
+import com.yicheng.service.MaterialService;
+import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataResult;
@@ -26,6 +30,11 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	
 	@Autowired
 	private ClothMaterialDao clothMaterialDao;
+	
+	@Autowired
+	private MaterialService materialService;
+	@Autowired
+	private ClothService clothService;
 	
 	@Override
 	public GenericResult<Integer> create(ClothMaterial clothMaterial) {
@@ -144,6 +153,35 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 			result.setResultCode(allResult.getResultCode());
 			result.setMessage(allResult.getMessage());
 		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<ClothMaterialDetailData>> getDetailByCloth(int clothId) {
+		GenericResult<List<ClothMaterialDetailData>> result = new GenericResult<List<ClothMaterialDetailData>>();
+		
+		GenericResult<List<ClothMaterial>> clothMaterialResult = getByCloth(clothId);
+		if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+			List<ClothMaterialDetailData> dataList = new ArrayList<ClothMaterialDetailData>();
+			for(ClothMaterial clothMaterial : clothMaterialResult.getData()) {
+				int materialId = clothMaterial.getMaterialId();
+				GenericResult<Material> materialResult = materialService.getById(materialId);
+				if(materialResult.getResultCode() == ResultCode.NORMAL) {
+					ClothMaterialDetailData data = new ClothMaterialDetailData(clothMaterial, materialResult.getData());
+					dataList.add(data);
+				}
+			}
+			if(!dataList.isEmpty()) {
+				result.setData(dataList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no cloth material detail data, clothId: " + clothId);
+			}
+		}else {
+			result.setResultCode(clothMaterialResult.getResultCode());
+			result.setMessage(clothMaterialResult.getMessage());
+		}
+
 		return result;
 	}
 }

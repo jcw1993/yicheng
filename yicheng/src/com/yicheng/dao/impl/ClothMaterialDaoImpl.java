@@ -37,6 +37,7 @@ public class ClothMaterialDaoImpl extends HibernateDaoBase implements ClothMater
 			return query.list();
 		}catch(Exception e) {
 			logger.error(e.getMessage());
+			e.printStackTrace();
 		}finally {
 			session.close();
 		}
