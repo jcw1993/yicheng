@@ -12,41 +12,14 @@
 	<div class="container-body">
 		<h3>历史记录<a id="cloth-create" href="CreateCloth" class="btn btn-primary create-button">创建皮衣</a></h3>
 		<hr />
-		<div class="list-item row">
-			<p class="col-sm-8">皮衣1</p>
-			<a href="#" class="col-sm-1">详情</a>
-			<a href="#" class="col-sm-1">修改</a>
-		</div>
-		<div class="list-item row">
-			<p class="col-sm-8">皮衣1</p>
-			<a href="#" class="col-sm-1">详情</a>
-			<a href="#" class="col-sm-1">修改</a>
-		</div>
-		<div class="list-item row">
-			<p class="col-sm-8">皮衣1</p>
-			<a href="#" class="col-sm-1">详情</a>
-			<a href="#" class="col-sm-1">修改</a>
-		</div>
-		<div class="list-item row">
-			<p class="col-sm-8">皮衣1</p>
-			<a href="#" class="col-sm-1">详情</a>
-			<a href="#" class="col-sm-1">修改</a>
-		</div>
-		<div class="list-item row">
-			<p class="col-sm-8">皮衣1</p>
-			<a href="#" class="col-sm-1">详情</a>
-			<a href="#" class="col-sm-1">修改</a>
-		</div>
-		<div class="list-item row">
-			<p class="col-sm-8">皮衣1</p>
-			<a href="#" class="col-sm-1">详情</a>
-			<a href="#" class="col-sm-1">修改</a>
-		</div>
-		<div class="list-item row">
-			<p class="col-sm-8">皮衣1</p>
-			<a href="#" class="col-sm-1">详情</a>
-			<a href="#" class="col-sm-1">修改</a>
-		</div>										
+		<c:forEach items="${model.clothes}" var="cloth">
+			<div class="list-item row">
+				<p class="col-sm-3">${cloth.name}</p>
+				<p class="col-sm-5">${cloth.type}</p>
+				<a href="ClothPriceDetail?clothId=${cloth.id}" class="col-sm-1">详情</a>
+				<a href="#" class="col-sm-1" clothId="${cloth.id}">修改</a>
+			</div>
+		</c:forEach>				
 	</div>
 
 

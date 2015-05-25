@@ -12,8 +12,8 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a href="ClothMaterialList">面辅料管理</a></li>
-						<li><a href="#">退出</a></li>
+						<li><a href="ClothMaterialManage">面辅料管理</a></li>
+						<li><a href="../Logout">退出</a></li>
 					</ul>
 				</div>
 			</div>

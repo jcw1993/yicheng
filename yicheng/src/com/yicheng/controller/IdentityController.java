@@ -22,7 +22,7 @@ import com.yicheng.util.UserInfoStorage;
 import com.yicheng.util.Utils;
 
 @Controller
-public class LoginController {
+public class IdentityController {
 
 	@Autowired
 	private UserService userService;

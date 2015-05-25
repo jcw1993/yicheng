@@ -23,8 +23,8 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li><a href="#">报价单管理</a></li>
-						<li><a href="#">退出</a></li>
+						<li><a href="ClothPricingManage">报价单管理</a></li>
+						<li><a href="../Logout">退出</a></li>
 					</ul>
 				</div>
 			</div>

@@ -22,8 +22,9 @@
 			<div class="col-xs-10">
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav" style="width: 100%">
-						<li><a href="#">采购单管理</a></li>
+					<ul class="nav navbar-nav">
+						<li><a href="ClothCountManage">采购单管理</a></li>
+						<li><a href="../Logout">退出</a></li>
 					</ul>
 				</div>
 			</div>
