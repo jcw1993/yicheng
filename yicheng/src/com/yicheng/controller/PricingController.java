@@ -13,12 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yicheng.pojo.Cloth;
+import com.yicheng.pojo.Material;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
+import com.yicheng.service.MaterialService;
 import com.yicheng.service.data.ClothMaterialDetailData;
+import com.yicheng.util.GenericJsonResult;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
@@ -61,4 +65,5 @@ public class PricingController {
 		}
 		return new ModelAndView("pricing/cloth_price_detail", "model", model);
 	}
+
 }

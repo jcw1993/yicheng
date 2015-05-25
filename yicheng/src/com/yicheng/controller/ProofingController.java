@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.sun.org.apache.regexp.internal.REUtil;
 import com.yicheng.pojo.Cloth;
+import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
@@ -73,6 +75,47 @@ public class ProofingController {
 	@RequestMapping(value = "/Proofing/CreateCloth", method = RequestMethod.GET)
 	public ModelAndView createClothGet(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("proofing/cloth_create", "model", null);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/CreateCloth", method = RequestMethod.POST)
+	public GenericJsonResult<Integer> createClothPost(HttpServletRequest request, HttpServletResponse response) {
+		String type = request.getParameter("type");
+		String name = request.getParameter("name");
+		type = type.trim();
+		name = name.trim();
+		
+		// set colorType = 0 for test
+		int colorType = 0;
+		
+		Cloth cloth = new Cloth(type, name, colorType);
+		GenericResult<Integer> createResult = clothService.create(cloth);
+		return new GenericJsonResult<Integer>(createResult);
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/GetAllMaterialByType", method = RequestMethod.GET)
+	public GenericJsonResult<List<Material>> getAllMaterialName(HttpServletRequest request, HttpServletResponse response) {
+		int type = Utils.getRequestIntValue(request, "type", false);
+		GenericResult<List<Material>> materialResult = materialService.getByType(type);
+		return new GenericJsonResult<List<Material>>(materialResult);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/CreateClothMaterial", method = RequestMethod.POST)
+	public GenericJsonResult<Integer> createClothMaterialPost(HttpServletRequest request, HttpServletResponse response) {
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		int materialId = Utils.getRequestIntValue(request, "materialId", true);
+		String part = request.getParameter("part");
+		String unitName = request.getParameter("unitName");
+		double consumption = Utils.getRequestDoubleValue(request, "consumption", true);
+		String remark = request.getParameter("remark");
+		
+		ClothMaterial clothMaterial = new ClothMaterial(clothId, materialId, part, unitName, consumption, null,
+				null, null, null, remark);
+		GenericResult<Integer> createResult = clothMaterialService.create(clothMaterial);
+		return new GenericJsonResult<Integer>(createResult);
 	}
 	
 	@ResponseBody

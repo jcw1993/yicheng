@@ -10,7 +10,7 @@
 	<jsp:include page="buyer_navi.jsp" flush="true" />
 
 	<div class="container-body">
-		<h3>历史记录<a id="cloth-create" href="CreateCloth" class="btn btn-primary create-button">创建皮衣</a></h3>
+		<h3>待处理</h3>
 		<hr />
 		<c:forEach items="${model.clothes}" var="cloth">
 			<div class="list-item row">

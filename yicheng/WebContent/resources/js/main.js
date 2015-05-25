@@ -1,0 +1,2 @@
+var SAVE_TYPE_CREATE = 0;
+var SAVE_TYPE_UPDATE = 1;

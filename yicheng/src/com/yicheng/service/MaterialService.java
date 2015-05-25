@@ -15,5 +15,7 @@ public interface MaterialService {
 	
 	public GenericResult<List<Material>> getAll();
 	
+	public GenericResult<List<Material>> getByType(int type);
+	
 	public GenericResult<Material> getById(int materialId);
 }

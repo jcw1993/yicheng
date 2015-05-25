@@ -40,6 +40,19 @@ public class Cloth implements Serializable {
 	public Cloth(int id) {
 		this.id = id;
 	}
+
+	public Cloth(int id, String type, String name, int colorType) {
+		this.id = id;
+		this.type = type;
+		this.name = name;
+		this.colorType = colorType;
+	}
+	
+	public Cloth(String type, String name, int colorType) {
+		this.type = type;
+		this.name = name;
+		this.colorType = colorType;
+	}	
 	
 	@Override
 	public boolean equals(Object obj) {

@@ -25,7 +25,8 @@
 	src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
 <script type="text/javascript"
 	src="<c:url value="/resources/js/bootstrap.min.js" />"></script>
-
+<script type="text/javascript"
+	src="<c:url value="/resources/js/main.js" />"></script>
 
 <title>怡诚ERP系统</title>
 </head>

@@ -112,4 +112,33 @@ public class ClothMaterial implements Serializable {
 	public ClothMaterial(int id) {
 		this.id = id;
 	}
+	
+	public ClothMaterial(int id, int clothId, int materialId, String part, String unitName, double consumption, 
+			Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
+		this.id = id;
+		this.clothId = clothId;
+		this.materialId = materialId;
+		this.part = part;
+		this.unitName = unitName;
+		this.consumption = consumption;
+		this.count = count;
+		this.orderCount = orderCount;
+		this.price = price;
+		this.orderDate = orderDate;
+		this.remark = remark;
+	}
+	
+	public ClothMaterial(int clothId, int materialId, String part, String unitName, double consumption, 
+			Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
+		this.clothId = clothId;
+		this.materialId = materialId;
+		this.part = part;
+		this.unitName = unitName;
+		this.consumption = consumption;
+		this.count = count;
+		this.orderCount = orderCount;
+		this.price = price;
+		this.orderDate = orderDate;
+		this.remark = remark;
+	}
 }

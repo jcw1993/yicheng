@@ -1,5 +1,6 @@
 package com.yicheng.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -105,6 +106,33 @@ public class MaterialServiceImpl implements MaterialService {
 					result.setData(material);
 					return result;
 				}
+			}
+		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<Material>> getByType(int type) {
+		GenericResult<List<Material>> result = new GenericResult<List<Material>>();
+		GenericResult<List<Material>> allResult = getAll();
+		
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Material> resultList = new ArrayList<Material>();
+			for(Material material : allResult.getData()) {
+				if(material.getType() == type) {
+					resultList.add(material);
+				}
+			}
+			
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no material data, type: " + type);
 			}
 		}else {
 			result.setResultCode(allResult.getResultCode());
