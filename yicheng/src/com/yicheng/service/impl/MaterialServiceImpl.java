@@ -32,6 +32,7 @@ public class MaterialServiceImpl implements MaterialService {
 		try {
 			int outId = materialDao.create(material);
 			result.setData(outId);
+			CacheUtil.remove(ALL_MATERIAL_CACHE);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
@@ -45,6 +46,7 @@ public class MaterialServiceImpl implements MaterialService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			materialDao.update(material);
+			CacheUtil.remove(ALL_MATERIAL_CACHE);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
@@ -58,6 +60,7 @@ public class MaterialServiceImpl implements MaterialService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			materialDao.delete(id);
+			CacheUtil.remove(ALL_MATERIAL_CACHE);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);

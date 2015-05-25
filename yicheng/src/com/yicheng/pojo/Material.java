@@ -42,4 +42,16 @@ public class Material implements Serializable {
 		this.id = id;
 	}
 
+	public Material(int id, String name, int colorType, int type) {
+		this.id = id;
+		this.name = name;
+		this.colorType = colorType;
+		this.type = type;
+	}
+	
+	public Material(String name, int colorType, int type) {
+		this.name = name;
+		this.colorType = colorType;
+		this.type = type;
+	}	
 }

@@ -40,5 +40,14 @@ public class Cloth implements Serializable {
 	public Cloth(int id) {
 		this.id = id;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Cloth) {
+			Cloth cloth = (Cloth) obj;
+			return this.id == cloth.getId();
+		}
+		return false; 
+	}
 
 }

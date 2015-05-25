@@ -32,6 +32,7 @@ public class ClothCountServiceImpl implements ClothCountService {
 		try {
 			int outId = clothCountDao.create(clothCount);
 			result.setData(outId);
+			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothCount.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
@@ -45,6 +46,7 @@ public class ClothCountServiceImpl implements ClothCountService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			clothCountDao.update(clothCount);
+			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothCount.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
@@ -54,10 +56,11 @@ public class ClothCountServiceImpl implements ClothCountService {
 	}
 
 	@Override
-	public NoneDataResult delete(int id) {
+	public NoneDataResult delete(int id, int clothId) {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			clothCountDao.delete(id);
+			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothId));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);

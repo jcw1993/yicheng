@@ -113,6 +113,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			int outId = userDao.create(user);
 			result.setData(outId);
+			CacheUtil.remove(ALL_USER_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
@@ -126,6 +127,7 @@ public class UserServiceImpl implements UserService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			userDao.update(user);
+			CacheUtil.remove(ALL_USER_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
@@ -139,6 +141,7 @@ public class UserServiceImpl implements UserService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			userDao.delete(id);
+			CacheUtil.remove(ALL_USER_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);

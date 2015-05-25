@@ -11,7 +11,7 @@ public interface ClothCountService {
 	
 	public NoneDataResult update(ClothCount clothCount);
 	
-	public NoneDataResult delete(int id);
+	public NoneDataResult delete(int id, int clothId);
 	
 	public GenericResult<List<ClothCount>> getByCloth(int clothId);
 

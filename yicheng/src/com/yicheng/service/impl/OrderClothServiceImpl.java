@@ -32,6 +32,7 @@ public class OrderClothServiceImpl implements OrderClothService {
 		try {
 			int outId = orderClothDao.create(orderCloth);
 			result.setData(outId);
+			CacheUtil.remove(String.format(ORDER_CLOTH_CACHE_KEY, orderCloth.getOrderNumber()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
@@ -45,6 +46,7 @@ public class OrderClothServiceImpl implements OrderClothService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			orderClothDao.update(orderCloth);
+			CacheUtil.remove(String.format(ORDER_CLOTH_CACHE_KEY, orderCloth.getOrderNumber()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
@@ -54,10 +56,11 @@ public class OrderClothServiceImpl implements OrderClothService {
 	}
 
 	@Override
-	public NoneDataResult delete(int id) {
+	public NoneDataResult delete(int id, String orderNumber) {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			orderClothDao.delete(id);
+			CacheUtil.remove(String.format(ORDER_CLOTH_CACHE_KEY, orderNumber));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);

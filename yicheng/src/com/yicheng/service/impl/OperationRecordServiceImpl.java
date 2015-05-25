@@ -32,6 +32,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
 		try {
 			int outId = operationRecordDao.create(operationRecord);
 			result.setData(outId);
+			CacheUtil.remove(ALL_OPERATION_RECORD_CACHE);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
@@ -45,6 +46,7 @@ public class OperationRecordServiceImpl implements OperationRecordService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			operationRecordDao.delete(id);
+			CacheUtil.remove(ALL_OPERATION_RECORD_CACHE);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);

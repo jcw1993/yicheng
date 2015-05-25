@@ -31,6 +31,7 @@ public class ClothServiceImpl implements ClothService {
 		try {
 			int outId = clothDao.create(cloth);
 			result.setData(outId);
+			CacheUtil.remove(ALL_CLOTH_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
@@ -44,6 +45,7 @@ public class ClothServiceImpl implements ClothService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			clothDao.update(cloth);
+			CacheUtil.remove(ALL_CLOTH_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
@@ -57,6 +59,7 @@ public class ClothServiceImpl implements ClothService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			clothDao.delete(id);
+			CacheUtil.remove(ALL_CLOTH_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);

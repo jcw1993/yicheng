@@ -1,5 +1,6 @@
 package com.yicheng.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 		try {
 			int outId = clothMaterialDao.create(clothMaterial);
 			result.setData(outId);
+			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY, clothMaterial.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
@@ -45,6 +47,7 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			clothMaterialDao.update(clothMaterial);
+			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY, clothMaterial.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
@@ -54,10 +57,11 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	}
 
 	@Override
-	public NoneDataResult delete(int id) {
+	public NoneDataResult delete(int id, int clothId) {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			clothMaterialDao.delete(id);
+			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY, clothId));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
@@ -87,6 +91,58 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 				result.setMessage(e.getMessage());
 				result.setResultCode(ResultCode.E_DATABASE_GET_ERROR);
 			}
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<ClothMaterial>> getNeedPricing(int clothId) {
+		GenericResult<List<ClothMaterial>> result = new GenericResult<List<ClothMaterial>>();
+		
+		GenericResult<List<ClothMaterial>> allResult = getByCloth(clothId);
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<ClothMaterial> resultList = new ArrayList<ClothMaterial>();
+			for(ClothMaterial clothMaterial : allResult.getData()) {
+				if(clothMaterial.getPrice() == 0.0) {
+					resultList.add(clothMaterial);
+				}
+			}
+			
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("cloth material no data");
+			}
+		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<ClothMaterial>> getNeedCount(int clothId) {
+		GenericResult<List<ClothMaterial>> result = new GenericResult<List<ClothMaterial>>();
+		
+		GenericResult<List<ClothMaterial>> allResult = getByCloth(clothId);
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<ClothMaterial> resultList = new ArrayList<ClothMaterial>();
+			for(ClothMaterial clothMaterial : allResult.getData()) {
+				if(clothMaterial.getPrice() > 0.0 && clothMaterial.getCount() == 0) {
+					resultList.add(clothMaterial);
+				}
+			}
+			
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("cloth material no data");
+			}
+		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
 		}
 		return result;
 	}

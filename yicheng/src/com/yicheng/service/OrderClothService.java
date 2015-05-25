@@ -11,7 +11,7 @@ public interface OrderClothService {
 	
 	public NoneDataResult update(OrderCloth orderCloth);
 	
-	public NoneDataResult delete(int id);
+	public NoneDataResult delete(int id, String orderNumber);
 	
 	public GenericResult<List<OrderCloth>> getByOrderNumber(String orderNumber);
 }
