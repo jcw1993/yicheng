@@ -92,6 +92,10 @@ div.margin-top-little {
 	padding-left: 3.2em;
 }
 
+.full-width {
+	width: 100%;
+}
+
 
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
 	border-top: none;

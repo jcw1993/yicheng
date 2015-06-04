@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.yicheng.common.MaterialType;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
@@ -129,19 +130,6 @@ public class ProofingController {
 		return new ModelAndView("proofing/cloth_material_operate", "model", model);
 	}
 	
-	
-	private Map<String, Object> getClothMaterialInfo(int clothId) {
-		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<Cloth> clothResult = clothService.getById(clothId);
-		GenericResult<List<ClothMaterialDetailData>> clothMaterialDetailResult = clothMaterialService.getDetailByCloth(clothId);
-		if(clothResult.getResultCode() == ResultCode.NORMAL
-				&& clothMaterialDetailResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("cloth", clothResult.getData());
-			model.put("clothMaterialDetails", clothMaterialDetailResult.getData());
-		}
-		return model;
-	}
-	
 	@ResponseBody
 	@RequestMapping(value = "/Proofing/DeleteClothMaterial", method = RequestMethod.GET)
 	 public NoneDataJsonResult deleteClothMaterial(HttpServletRequest request, HttpServletResponse response) {
@@ -149,6 +137,28 @@ public class ProofingController {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		NoneDataResult result = clothMaterialService.delete(clothMaterialId, clothId);
 		return new NoneDataJsonResult(result);
+	}
+	
+	private Map<String, Object> getClothMaterialInfo(int clothId) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		GenericResult<Cloth> clothResult = clothService.getById(clothId);
+		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_LEATHER);
+		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_FABRIC);
+		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_LEATHER);
+		
+		if(clothResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("cloth", clothResult.getData());
+		}
+		if(leatherDetailResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("leatherDetails", leatherDetailResult.getData());
+		}
+		if(fabricDetailResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("fabricDetails", fabricDetailResult.getData());
+		}
+		if(supportDetailResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("supportDetails", supportDetailResult.getData());
+		}
+		return model;
 	}
 	
 }

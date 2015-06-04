@@ -10,7 +10,10 @@
 	<jsp:include page="proofing_navi.jsp" flush="true" />
 
 	<c:set value="${model.cloth}" var="cloth" />
-	<c:set value="${model.clothMaterialDetails}" var="clothMaterialDetails" />
+	<c:set value="${model.leatherDetails}" var="leatherDetails" />
+	<c:set value="${model.fabricDetails}" var="fabricDetails" />
+	<c:set value="${model.supportDetails}" var="supportetails" />
+
 	<div class="container-body">
 		<h3>皮衣详情</h3>
 		<hr />
@@ -36,7 +39,9 @@
 					<div class="col-sm-2">
 						<a href="#" id="add_leather_btn" class="btn btn-success btn-sm" >添加</a>	
 					</div>
-				</div>		
+				</div>	
+
+				<c:if test="${null != leatherDetails}">	
 				<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
 					<tr>
 						<th>项目</th>
@@ -46,19 +51,21 @@
 						<th>备注</th>
 						<th>操作</th>
 					</tr>
-					<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail">
-					<c:if test="${clothMaterialDetail.materialType == 0}">
-						<tr clothMaterialId="${clothMaterialDetail.id}">
-							<td>${clothMaterialDetail.materialName}</td>
-							<td>${clothMaterialDetail.part}</td>
-							<td>${clothMaterialDetail.unitName}</td>
-							<td>${clothMaterialDetail.consumption}</td>
-							<td>${clothMaterialDetail.remark}</td>
+					<c:forEach items="${leatherDetails}" var="leatherDetail">
+						<tr clothMaterialId="${leatherDetail.id}">
+							<td>${leatherDetail.materialName}</td>
+							<td>${leatherDetail.part}</td>
+							<td>${leatherDetail.unitName}</td>
+							<td>${leatherDetail.consumption}</td>
+							<td>${leatherDetail.remark}</td>
 							<td><a href="#" class="delete_leather_btn" >删除</a></td>
 						</tr>
-					</c:if>
 					</c:forEach>
 				</table>
+				</c:if>
+				<c:if test="${null == leatherDetails}">
+					<p>暂无数据</p>
+				</c:if>
 			</div>
 
 			<div class="margin-top-little">
@@ -68,6 +75,7 @@
 			     		<a href="#" id="add_fabric_btn" class="btn btn-success btn-sm" >添加</a>	
 			     	</div>
 			     </div>		
+			     <c:if test="${null != fabricDetails}">
 			     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
 			     	<tr>
 			     		<th>项目</th>
@@ -77,19 +85,21 @@
 			     		<th>备注</th>
 			     		<th>操作</th>
 			     	</tr>
-			     	<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail" >
-					<c:if test="${clothMaterialDetail.materialType == 1}">
-						<tr clothMaterialId="${clothMaterialDetail.id}">
-							<td>${clothMaterialDetail.materialName}</td>
-							<td>${clothMaterialDetail.part}</td>
-							<td>${clothMaterialDetail.unitName}</td>
-							<td>${clothMaterialDetail.consumption}</td>
-							<td>${clothMaterialDetail.remark}</td>
+			     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
+						<tr clothMaterialId="${fabricDetail.id}">
+							<td>${fabricDetail.materialName}</td>
+							<td>${fabricDetail.part}</td>
+							<td>${fabricDetail.unitName}</td>
+							<td>${fabricDetail.consumption}</td>
+							<td>${fabricDetail.remark}</td>
 							<td><a href="#" class="delete_fabric_btn" >删除</a></td>
 						</tr>
-					</c:if>
 			     	</c:forEach>
 			     </table>
+			     </c:if>
+			     <c:if test="${null == fabricDetails}">
+			     	<p>暂无数据</p>
+			     </c:if>
 			</div>
 
 
@@ -101,6 +111,7 @@
 					</div>
 
 	     	     </div>		
+	     	     <c:if test="${null != supportDetails}">
 	     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">
 	     	     	<tr>
 	     	     		<th>项目</th>
@@ -110,19 +121,23 @@
 	     	     		<th>备注</th>
 	     	     		<th>操作</th>
 	     	     	</tr>
-	     	     	<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail" >
+	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
 					<c:if test="${clothMaterialDetail.materialType == 2}">
-						<tr clothMaterialId="${clothMaterialDetail.id}">
-							<td>${clothMaterialDetail.materialName}</td>
-							<td>${clothMaterialDetail.part}</td>
-							<td>${clothMaterialDetail.unitName}</td>
-							<td>${clothMaterialDetail.consumption}</td>
-							<td>${clothMaterialDetail.remark}</td>
+						<tr clothMaterialId="${supportDetail.id}">
+							<td>${supportDetail.materialName}</td>
+							<td>${supportDetail.part}</td>
+							<td>${supportDetail.unitName}</td>
+							<td>${supportDetail.consumption}</td>
+							<td>${supportDetail.remark}</td>
 							<td><a href="#" class="delete_support_btn" >删除</a></td>
 						</tr>
 					</c:if>	     	     	
 					</c:forEach>
 	     	     </table>
+	     	     </c:if>
+	     	     <c:if test="${null == supportDetails}">
+	     	     	<p>暂无数据</p>
+	     	     </c:if>
 			</div>
       	   
 		</div>

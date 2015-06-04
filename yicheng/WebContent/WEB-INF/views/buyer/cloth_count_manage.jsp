@@ -12,14 +12,36 @@
 	<div class="container-body">
 		<h3>待处理</h3>
 		<hr />
-		<c:forEach items="${model.clothes}" var="cloth">
+		<c:if test="${null != model.clothToCount}">
+		<c:forEach items="${model.clothToCount}" var="cloth">
 			<div class="list-item row">
-				<p class="col-sm-3">${cloth.name}</p>
+				<p class="col-sm-5">${cloth.name}</p>
 				<p class="col-sm-5">${cloth.type}</p>
 				<a href="ClothCountDetail?clothId=${cloth.id}" class="col-sm-1">详情</a>
-				<a href="#" class="col-sm-1" clothId="${cloth.id}">修改</a>
+				<a href="ClothCountOperate?clothId=${cloth.id}" class="col-sm-1" clothId="${cloth.id}">处理</a>
 			</div>
-		</c:forEach>		
+		</c:forEach>	
+		</c:if>
+		<c:if test="${null == model.clothToCount}">
+			<p>暂无数据</p>
+		</c:if>
+
+
+		<h3>已处理</h3>
+		<hr />
+		<c:if test="${null != model.clothCounted}">
+		<c:forEach items="${model.clothCounted}" var="cloth">
+			<div class="list-item row">
+				<p class="col-sm-5">${cloth.name}</p>
+				<p class="col-sm-5">${cloth.type}</p>
+				<a href="ClothCountDetail?clothId=${cloth.id}" class="col-sm-1">详情</a>
+				<a href="ClothCountOperate?clothId=${cloth.id}" class="col-sm-1" clothId="${cloth.id}">修改</a>
+			</div>
+		</c:forEach>	
+		</c:if>
+		<c:if test="${null == model.clothCounted}">
+			<p>暂无数据</p>
+		</c:if>
 	</div>
 
 
