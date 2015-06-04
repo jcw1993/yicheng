@@ -29,31 +29,52 @@
 	     	        </div>
 	     	     </div>
 
-				<div class="row title-area">
+				<div class="row title-area margin-top-little">
 					<p class="col-sm-7">皮料信息</p>
 					<div class="col-sm-2">
 						<a href="#" id="add_leather_btn" class="btn btn-success btn-sm" >添加</a>	
 					</div>
 				</div>		    
-				<div class="cloth_material_area row">
-					<p class="col-sm-2">项目</p>
-					<p class="col-sm-2">部位</p>
-					<p class="col-sm-2">单位</p>
-					<p class="col-sm-2">用料</p>
-					<p class="col-sm-2">备注</p>
+				<div id="leather_area" class="cloth_material_area row">
+					<div class="row padding-left-little">
+						<p class="col-sm-2">项目</p>
+						<p class="col-sm-2">部位</p>
+						<p class="col-sm-2">单位</p>
+						<p class="col-sm-2">用料</p>
+						<p class="col-sm-2">备注</p>
+					</div>
+
 				</div>
 
-				<div class="row title-area">
+				<div class="row title-area margin-top-little">
 					<p class="col-sm-7">面料信息</p>
 					<div class="col-sm-2">
 						<a href="#" id="add_fabric_btn" class="btn btn-success btn-sm" >添加</a>	
 					</div>
 				</div>			
+				<div id="fabric_area" class="cloth_material_area row">
+					<div class="row padding-left-little">
+						<p class="col-sm-2">项目</p>
+						<p class="col-sm-2">部位</p>
+						<p class="col-sm-2">单位</p>
+						<p class="col-sm-2">用料</p>
+						<p class="col-sm-2">备注</p>
+					</div>
+				</div>
 
-				<div class="row title-area">
+				<div class="row title-area margin-top-little">
 					<p class="col-sm-7">辅料信息</p>
 					<div class="col-sm-2">
 						<a href="#" id="add_support_btn" class="btn btn-success btn-sm" >添加</a>	
+					</div>
+				</div>
+				<div id="support_area" class="cloth_material_area row">
+					<div class="row padding-left-little">
+						<p class="col-sm-2">项目</p>
+						<p class="col-sm-2">部位</p>
+						<p class="col-sm-2">单位</p>
+						<p class="col-sm-2">用料</p>
+						<p class="col-sm-2">备注</p>
 					</div>
 				</div>
 	        </form>
@@ -83,25 +104,25 @@
 				        <div class="form-group row">
 					        <label for="part" class="col-sm-2 control-label">部位</label>
 					        <div class="col-sm-6">
-					            <input type="text" class="form-control" name="part" placeholder="部位" />
+					            <input type="text" id="part" class="form-control" name="part" placeholder="部位" />
 					        </div>
 					    </div>
 				        <div class="form-group row">
 					        <label class="col-sm-2 control-label">单位</label>
 					        <div class="col-sm-6">
-					            <input type="text" class="form-control" name="unitName" placeholder="单位" />
+					            <input type="text" id="unitName" class="form-control" name="unitName" placeholder="单位" />
 					        </div>
 					    </div>
 				        <div class="form-group row">
 					        <label for="consumption" class="col-sm-2 control-label">用料</label>
 					        <div class="col-sm-6">
-					            <input type="text" class="form-control" name="consumption" placeholder="用料" />
+					            <input type="text" id="consumption" class="form-control" name="consumption" placeholder="用料" />
 					        </div>
 					    </div>
 				        <div class="form-group row">
 					        <label for="remark" class="col-sm-2 control-label">备注</label>
 					        <div class="col-sm-6">
-					            <input type="text" class="form-control" name="remark" placeholder="备注" />
+					            <input type="text" id="remark" class="form-control" name="remark" placeholder="备注" />
 					        </div>
 					    </div>	
 					</div>
@@ -126,17 +147,27 @@ var $material_create_submit = $("#material_create_submit");
 var $material_create_form = $("#material_create_form");
 
 var $material_select = $("#material_select");
+var $part = $("#part");
+var $unitName = $("#unitName");
+var $consumption = $("#consumption");
+var $remark = $("#remark");
 
 var $cloth_name_input = $("#cloth_name_input");
 var $cloth_type_input = $("#cloth_type_input");
+
+var $leatherArea = $("#leather_area");
+var $fabricArea = $("#fabric_area");
+var $supportArea = $("#support_area");
 
 /*variables*/
 var materials;
 var clothId;
 
+var currentMaterialType;
+
 
 $add_leather_btn.click(function(e) {
-	console.log("add leather");
+	currentMaterialType = MATERIAL_TYPE_LEATHER;
 	if(clothId) {
 		$material_create_modal.modal();
 		updateMaterialSelect(0);
@@ -147,7 +178,7 @@ $add_leather_btn.click(function(e) {
 });
 
 $add_fabric_btn.click(function(e) {
-	console.log("add fabric");
+	currentMaterialType = MATERIAL_TYPE_FABRIC;
 	if(clothId) {
 		$material_create_modal.modal();
 		updateMaterialSelect(1);
@@ -158,7 +189,7 @@ $add_fabric_btn.click(function(e) {
 });
 
 $add_support_btn.click(function(e) {
-	console.log("add support");
+	currentMaterialType = MATERIAL_TYPE_SUPPORT;
 	if(clothId) {
 		$material_create_modal.modal();
 		updateMaterialSelect(2);
@@ -173,6 +204,9 @@ $material_create_submit.click(function(e) {
 	console.log("create material submit");
 	saveClothMaterial(SAVE_TYPE_CREATE);
 });
+
+
+init();
 
 
 /*functions*/
@@ -210,6 +244,9 @@ function saveClothMaterial(saveType) {
 			success: function(result) {
 				if(result.resultCode == 0) {
 					console.log("create clothMaterial succcss");
+					appendClothMaterialItem(currentMaterialType, $("#material_select option:selected").text(),
+						$part.val(), $unitName.val(), $consumption.val(), $remark.val());
+					resetInput();
 				}else {
 					console.log("create clothMaterial fail");
 				}
@@ -256,8 +293,55 @@ function checkClothCreate() {
 	}
 }
 
-function appendClothMaterialItem($clothMaterialArea) {
+function appendClothMaterialItem(materialType, materialName, part, unitName, consumption, remark) {
+	var $clothMaterialArea;
+	switch(materialType) {
+		case MATERIAL_TYPE_LEATHER:
+			$clothMaterialArea = $leatherArea;
+			break;
+		case MATERIAL_TYPE_FABRIC:
+			$clothMaterialArea = $fabricArea;
+			break;
+		case MATERIAL_TYPE_SUPPORT:
+			$clothMaterialArea = $supportArea;
+			break;
+		default:
+			return;		
+	}
 
+	var $row = $("<div class='row padding-left-little'>");
+
+
+	var $clothMaterialColumn1 = $("<p class='col-sm-2'>" + materialName + "</p>");
+	var $clothMaterialColumn2 = $("<p class='col-sm-2'>" + part + "</p>");
+	var $clothMaterialColumn3 = $("<p class='col-sm-2'>" + unitName + "</p>");
+	var $clothMaterialColumn4 = $("<p class='col-sm-2'>" + consumption + "</p>");
+	var $clothMaterialColumn5 = $("<p class='col-sm-2'>" + remark + "</p>");
+
+	$row.append($clothMaterialColumn1);
+	$row.append($clothMaterialColumn2);
+	$row.append($clothMaterialColumn3);
+	$row.append($clothMaterialColumn4);
+	$row.append($clothMaterialColumn5);
+
+	$clothMaterialArea.append($row);
+
+	$clothMaterialArea.show();
+}
+
+/*init page*/
+function init() {
+	$leatherArea.hide();
+	$fabricArea.hide();
+	$supportArea.hide();
+}
+
+/*reset input*/
+function resetInput() {
+	$part.val("");
+	$unitName.val("");
+	$consumption.val("");
+	$remark.val("");
 }
 </script>	
 </body>

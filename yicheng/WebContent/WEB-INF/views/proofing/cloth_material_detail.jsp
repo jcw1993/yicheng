@@ -45,7 +45,7 @@
 					<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail">
 					<c:if test="${clothMaterialDetail.materialType == 0}">
 						<tr>
-							<td>${clothMaterialDetail.materialId}</td>
+							<td>${clothMaterialDetail.materialName}</td>
 							<td>${clothMaterialDetail.part}</td>
 							<td>${clothMaterialDetail.unitName}</td>
 							<td>${clothMaterialDetail.consumption}</td>
@@ -71,7 +71,7 @@
 			     	<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail" >
 					<c:if test="${clothMaterialDetail.materialType == 1}">
 						<tr>
-							<td>${clothMaterialDetail.materialId}</td>
+							<td>${clothMaterialDetail.materialName}</td>
 							<td>${clothMaterialDetail.part}</td>
 							<td>${clothMaterialDetail.unitName}</td>
 							<td>${clothMaterialDetail.consumption}</td>
@@ -98,7 +98,7 @@
 	     	     	<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail" >
 					<c:if test="${clothMaterialDetail.materialType == 2}">
 						<tr>
-							<td>${clothMaterialDetail.materialId}</td>
+							<td>${clothMaterialDetail.materialName}</td>
 							<td>${clothMaterialDetail.part}</td>
 							<td>${clothMaterialDetail.unitName}</td>
 							<td>${clothMaterialDetail.consumption}</td>

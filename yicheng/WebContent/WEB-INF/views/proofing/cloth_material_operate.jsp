@@ -19,37 +19,42 @@
 	         <div class="form-group row">
 		        <label class="col-sm-2 control-label">款号</label>
 		        <div class="col-sm-6">
-		            <label>${cloth.type}</label>
+		        <input id="cloth_type_input" type="text" class="form-control" name="type" placeholder="款号" value="${cloth.type}" />
 		        </div>
 		     </div>
 
              <div class="form-group row">
      	        <label for="name" class="col-sm-2 control-label">款名</label>
      	        <div class="col-sm-6">
-     	            <label>${cloth.name}</label>
+     	        <input id="cloth_name_input" type="text" class="form-control" name="name" placeholder="款名" value="${cloth.name}" />
      	        </div>
      	     </div>
 			
 			<div class="margin-top-little">
 				<div class="row title-area">
 					<p class="col-sm-7">皮料信息</p>
+					<div class="col-sm-2">
+						<a href="#" id="add_leather_btn" class="btn btn-success btn-sm" >添加</a>	
+					</div>
 				</div>		
-				<table class="table table-striped table-bordered table-hover table-responsive">
+				<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
 					<tr>
 						<th>项目</th>
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
 						<th>备注</th>
+						<th>操作</th>
 					</tr>
 					<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail">
 					<c:if test="${clothMaterialDetail.materialType == 0}">
-						<tr>
-							<td>${clothMaterialDetail.materialId}</td>
+						<tr clothMaterialId="${clothMaterialDetail.id}">
+							<td>${clothMaterialDetail.materialName}</td>
 							<td>${clothMaterialDetail.part}</td>
 							<td>${clothMaterialDetail.unitName}</td>
 							<td>${clothMaterialDetail.consumption}</td>
 							<td>${clothMaterialDetail.remark}</td>
+							<td><a href="#" class="delete_leather_btn" >删除</a></td>
 						</tr>
 					</c:if>
 					</c:forEach>
@@ -59,23 +64,28 @@
 			<div class="margin-top-little">
 		 	     <div class="row title-area">
 			     	<p class="col-sm-7">面料信息</p>
+			     	<div class="col-sm-2">
+			     		<a href="#" id="add_fabric_btn" class="btn btn-success btn-sm" >添加</a>	
+			     	</div>
 			     </div>		
-			     <table class="table table-striped table-bordered table-hover table-responsive">
+			     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
 			     	<tr>
 			     		<th>项目</th>
 			     		<th>部位</th>
 			     		<th>单位</th>
 			     		<th>用料</th>
 			     		<th>备注</th>
+			     		<th>操作</th>
 			     	</tr>
 			     	<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail" >
 					<c:if test="${clothMaterialDetail.materialType == 1}">
-						<tr>
-							<td>${clothMaterialDetail.materialId}</td>
+						<tr clothMaterialId="${clothMaterialDetail.id}">
+							<td>${clothMaterialDetail.materialName}</td>
 							<td>${clothMaterialDetail.part}</td>
 							<td>${clothMaterialDetail.unitName}</td>
 							<td>${clothMaterialDetail.consumption}</td>
 							<td>${clothMaterialDetail.remark}</td>
+							<td><a href="#" class="delete_fabric_btn" >删除</a></td>
 						</tr>
 					</c:if>
 			     	</c:forEach>
@@ -87,26 +97,28 @@
 				 <div class="row title-area">
 			     	<p class="col-sm-7">辅料信息</p>
 					<div class="col-sm-2">
-						<a href="#" id="add_leather_btn" class="btn btn-success btn-sm" >添加</a>	
+						<a href="#" id="add_support_btn" class="btn btn-success btn-sm" >添加</a>	
 					</div>
 
 	     	     </div>		
-	     	     <table class="table table-striped table-bordered table-hover table-responsive">
+	     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">
 	     	     	<tr>
 	     	     		<th>项目</th>
 	     	     		<th>部位</th>
 	     	     		<th>单位</th>
 	     	     		<th>用料</th>
 	     	     		<th>备注</th>
+	     	     		<th>操作</th>
 	     	     	</tr>
 	     	     	<c:forEach items="${clothMaterialDetails}" var="clothMaterialDetail" >
 					<c:if test="${clothMaterialDetail.materialType == 2}">
-						<tr>
-							<td>${clothMaterialDetail.materialId}</td>
+						<tr clothMaterialId="${clothMaterialDetail.id}">
+							<td>${clothMaterialDetail.materialName}</td>
 							<td>${clothMaterialDetail.part}</td>
 							<td>${clothMaterialDetail.unitName}</td>
 							<td>${clothMaterialDetail.consumption}</td>
 							<td>${clothMaterialDetail.remark}</td>
+							<td><a href="#" class="delete_support_btn" >删除</a></td>
 						</tr>
 					</c:if>	     	     	
 					</c:forEach>
@@ -114,13 +126,243 @@
 			</div>
       	   
 		</div>
+	</div>
 
-
+	<div id="material_create_modal" class="modal fade">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">材料信息</h4>
+				</div>
+				<form id="material_create_form">
+					<div id="material_create_content" class="modal-body">
+						<input type="hidden" name="clothId" value="" />
+				        <div class="form-group row">
+					        <label class="col-sm-2 control-label">项目</label>
+					        <div class="col-sm-6">
+					            <!-- <input type="text" class="form-control" name="material_name" placeholder="项目" /> -->
+					            <select id="material_select" name="materialId">
+					            	
+					            </select>
+					        </div>
+					    </div>				
+				        <div class="form-group row">
+					        <label for="part" class="col-sm-2 control-label">部位</label>
+					        <div class="col-sm-6">
+					            <input type="text" id="part" class="form-control" name="part" placeholder="部位" />
+					        </div>
+					    </div>
+				        <div class="form-group row">
+					        <label class="col-sm-2 control-label">单位</label>
+					        <div class="col-sm-6">
+					            <input type="text" id="unitName" class="form-control" name="unitName" placeholder="单位" />
+					        </div>
+					    </div>
+				        <div class="form-group row">
+					        <label for="consumption" class="col-sm-2 control-label">用料</label>
+					        <div class="col-sm-6">
+					            <input type="text" id="consumption" class="form-control" name="consumption" placeholder="用料" />
+					        </div>
+					    </div>
+				        <div class="form-group row">
+					        <label for="remark" class="col-sm-2 control-label">备注</label>
+					        <div class="col-sm-6">
+					            <input type="text" id="remark" class="form-control" name="remark" placeholder="备注" />
+					        </div>
+					    </div>	
+					</div>
+					<div class="modal-footer">
+						<button id="material_create_submit" type="button"
+							class="btn btn-primary" data-dismiss="modal">保存</button>
+					</div>
+				</form>
+			
+			</div>
+		</div>
 	</div>
 
 
 <script type="text/javascript">
+/*variables*/
+var clothId;
+var materials;
+var currentMaterialType;
 
+var $deleteLeatherBtn = $(".delete_leather_btn");
+var $deleteFabricBtn = $(".delete_fabric_btn");
+var $deleteSupportBtn = $(".delete_support_btn");
+
+var $leatherTable = $("#leather_table");
+var $fabricTable = $("#fabric_table");
+var $supportTable  =$("#support_table");
+
+var $add_leather_btn = $("#add_leather_btn");
+var $add_fabric_btn = $("#add_fabric_btn");
+var $add_support_btn = $("#add_support_btn");
+
+var $material_create_modal = $("#material_create_modal");
+var $material_create_submit = $("#material_create_submit");
+var $material_create_form = $("#material_create_form");
+
+var $material_select = $("#material_select");
+var $part = $("#part");
+var $unitName = $("#unitName");
+var $consumption = $("#consumption");
+var $remark = $("#remark");
+
+$(function() {
+	clothId = "${model.cloth.id}";
+
+	$deleteLeatherBtn.click(function(e) {
+		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
+		deleteClothMaterial(clothMaterialId);
+	});
+
+	$deleteFabricBtn.click(function(e) {
+		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
+		deleteClothMaterial(clothMaterialId);
+	});
+
+	$deleteSupportBtn.click(function(e) {
+		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
+		deleteClothMaterial(clothMaterialId);
+	});
+
+	$add_leather_btn.click(function(e) {
+		console.log("add leather");
+		currentMaterialType = MATERIAL_TYPE_LEATHER;
+		$material_create_modal.modal();
+		updateMaterialSelect(0);
+
+	});
+
+	$add_fabric_btn.click(function(e) {
+		console.log("add fabric");
+		currentMaterialType = MATERIAL_TYPE_FABRIC;
+		$material_create_modal.modal();
+		updateMaterialSelect(1);
+	});
+
+	$add_support_btn.click(function(e) {
+		console.log("add support");
+		currentMaterialType = MATERIAL_TYPE_SUPPORT;
+		$material_create_modal.modal();
+		updateMaterialSelect(2);
+
+	});
+
+	$material_create_submit.click(function(e) {
+		console.log("create material submit");
+		saveClothMaterial(SAVE_TYPE_CREATE);
+	});
+});
+
+/*functions*/
+function updateMaterialSelect(type) {
+	materials = null;
+	$.ajax({
+		url: "GetAllMaterialByType?type=" + type,
+		success: function(result) {
+			console.log(result.data);
+			if(result.resultCode == 0) {
+				materials = result.data;
+				fillMaterialSelect();
+			}else {
+				console.log("getAllMaterial exception: " + result.message);
+			}
+		}
+	});
+}
+
+function fillMaterialSelect() {
+	if(materials) {
+		$material_select.empty();
+		materials.forEach(function(material){
+			$material_select.append($("<option value='" + material.id+ "'>" + material.name + "</option>"));
+		}); 
+	}
+}
+
+function saveClothMaterial(saveType) {
+	if(saveType == SAVE_TYPE_CREATE) {
+		$.ajax({
+			url: "CreateClothMaterial?clothId=" + clothId,
+			data: $material_create_form.serialize(),
+			method: "post",
+			success: function(result) {
+				if(result.resultCode == 0) {
+					console.log("create clothMaterial succcss");
+					var clothMaterialId = result.data;
+					console.log("clothMaterialId: " + clothMaterialId);
+					appendClothMaterialItem(currentMaterialType, clothMaterialId, $("#material_select option:selected").text(),
+						$part.val(), $unitName.val(), $consumption.val(), $remark.val());
+					resetInput();
+				}else {
+					console.log("create clothMaterial fail");
+				}
+			}
+		});
+	}else {
+		// TODO
+	}
+}
+
+function appendClothMaterialItem(materialType, clothMaterialId, materialName, part, unitName, consumption, remark) {
+	var $clothMaterialTable;
+	switch(materialType) {
+		case MATERIAL_TYPE_LEATHER:
+			$clothMaterialTable = $leatherTable;
+			break;
+		case MATERIAL_TYPE_FABRIC:
+			$clothMaterialTable = $fabricTable;
+			break;
+		case MATERIAL_TYPE_SUPPORT:
+			$clothMaterialTable = $supportTable;
+			break;
+		default:
+			return;		
+	}
+
+	var $row = $("<tr clothMaterialId='" + clothMaterialId + "'>");
+
+	var $clothMaterialTd1 = $("<td>" + materialName + "</td>");
+	var $clothMaterialTd2 = $("<td>" + part + "</td>");
+	var $clothMaterialTd3 = $("<td>" + unitName + "</td>");
+	var $clothMaterialTd4 = $("<td>" + consumption + "</td>");
+	var $clothMaterialTd5 = $("<td>" + remark + "</td>");
+	var $clothMaterialTd6 = $("<td><a href='#'' class='delete_support_btn' >删除</a></td>");
+
+	$row.append($clothMaterialTd1);
+	$row.append($clothMaterialTd2);
+	$row.append($clothMaterialTd3);
+	$row.append($clothMaterialTd4);
+	$row.append($clothMaterialTd5);
+	$row.append($clothMaterialTd6);
+
+	$clothMaterialTable.append($row);
+}
+
+
+function deleteClothMaterial(clothMaterialId) {
+	$.ajax({
+		url: "DeleteClothMaterial?clothMaterialId=" + clothMaterialId + "&clothId=" + clothId,
+		success: function(result) {
+			if(result.resultCode == 0) {
+				location.reload();
+			}else {
+				console.log("delete clothMaterial error");
+			}
+		}
+	});
+}
+
+/*reset input*/
+function resetInput() {
+	$part.val("");
+	$unitName.val("");
+	$consumption.val("");
+	$remark.val("");
+}
 </script>	
 </body>
 </html>

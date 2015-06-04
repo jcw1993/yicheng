@@ -19,7 +19,11 @@
 				<a href="ClothPriceDetail?clothId=${cloth.id}" class="col-sm-1">详情</a>
 				<a href="#" class="col-sm-1" clothId="${cloth.id}">修改</a>
 			</div>
-		</c:forEach>				
+		</c:forEach>	
+
+		<h3>已处理</h3>		
+		<hr />
+			
 	</div>
 
 

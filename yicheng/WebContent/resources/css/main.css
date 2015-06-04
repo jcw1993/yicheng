@@ -79,13 +79,17 @@ label {
 	display: inline;
 }
 
-div.title-area {
+.title-area {
 	margin-top: 0.4em;
 	margin-bottom: 0.4em;
 }
 
-.margin-top-little {
+div.margin-top-little {
 	margin-top: 3.2em;
+}
+
+.padding-left-little {
+	padding-left: 3.2em;
 }
 
 

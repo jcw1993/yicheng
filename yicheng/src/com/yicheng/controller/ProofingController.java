@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.sun.org.apache.regexp.internal.REUtil;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
@@ -26,6 +25,8 @@ import com.yicheng.service.MaterialService;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.GenericJsonResult;
 import com.yicheng.util.GenericResult;
+import com.yicheng.util.NoneDataJsonResult;
+import com.yicheng.util.NoneDataResult;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
 
@@ -59,16 +60,7 @@ public class ProofingController {
 	@RequestMapping(value = "/Proofing/ClothMaterialDetail", method = RequestMethod.GET)
 	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		
-		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<Cloth> clothResult = clothService.getById(clothId);
-		GenericResult<List<ClothMaterialDetailData>> clothMaterialDetailResult = clothMaterialService.getDetailByCloth(clothId);
-		if(clothResult.getResultCode() == ResultCode.NORMAL
-				&& clothMaterialDetailResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("cloth", clothResult.getData());
-			model.put("clothMaterialDetails", clothMaterialDetailResult.getData());
-		}
-		
+		Map<String, Object> model = getClothMaterialInfo(clothId);
 		return new ModelAndView("proofing/cloth_material_detail", "model", model);
 	}
 	
@@ -128,6 +120,35 @@ public class ProofingController {
 		Material material = new Material(name, 0, type);
 		GenericResult<Integer> createResult = materialService.create(material);
 		return new GenericJsonResult<Integer>(createResult);
+	}
+	
+	@RequestMapping(value = "/Proofing/ClothMaterialOperate", method = RequestMethod.GET)
+	public ModelAndView clothMaterialOperate(HttpServletRequest request, HttpServletResponse response) {
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		Map<String, Object> model = getClothMaterialInfo(clothId);
+		return new ModelAndView("proofing/cloth_material_operate", "model", model);
+	}
+	
+	
+	private Map<String, Object> getClothMaterialInfo(int clothId) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		GenericResult<Cloth> clothResult = clothService.getById(clothId);
+		GenericResult<List<ClothMaterialDetailData>> clothMaterialDetailResult = clothMaterialService.getDetailByCloth(clothId);
+		if(clothResult.getResultCode() == ResultCode.NORMAL
+				&& clothMaterialDetailResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("cloth", clothResult.getData());
+			model.put("clothMaterialDetails", clothMaterialDetailResult.getData());
+		}
+		return model;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/DeleteClothMaterial", method = RequestMethod.GET)
+	 public NoneDataJsonResult deleteClothMaterial(HttpServletRequest request, HttpServletResponse response) {
+		int clothMaterialId = Utils.getRequestIntValue(request, "clothMaterialId", true);
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		NoneDataResult result = clothMaterialService.delete(clothMaterialId, clothId);
+		return new NoneDataJsonResult(result);
 	}
 	
 }

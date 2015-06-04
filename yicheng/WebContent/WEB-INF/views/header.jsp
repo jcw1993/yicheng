@@ -35,6 +35,6 @@
 
 	<script type="text/javascript">
 	$(function() {
-		console.log("Hello world!");
+		
 	});
 </script>

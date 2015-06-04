@@ -17,7 +17,7 @@
 				<p class="col-sm-3">${cloth.name}</p>
 				<p class="col-sm-5">${cloth.type}</p>
 				<a href="ClothMaterialDetail?clothId=${cloth.id}" class="col-sm-1">详情</a>
-				<a href="#" class="col-sm-1" clothId="${cloth.id}">修改</a>
+				<a href="ClothMaterialOperate?clothId=${cloth.id}" class="col-sm-1" clothId="${cloth.id}">修改</a>
 			</div>
 		</c:forEach>									
 	</div>
