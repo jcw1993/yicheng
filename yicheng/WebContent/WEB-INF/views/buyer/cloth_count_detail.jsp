@@ -3,7 +3,7 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <jsp:include page="../header.jsp" flush="true" />
 
@@ -47,7 +47,7 @@
 					<th>用料</th>
 					<th>单价</th>
 					<th>金额</th>
-					<th>订购数量</th>
+					<th>数量</th>
 					<th>订购日期</th>
 					<th>备注</th>
 					</tr>
@@ -59,11 +59,11 @@
 							<td>${leatherDetail.consumption}</td>
 							<td>${leatherDetail.price}</td>
 							<td>${leatherDetail.consumption * leatherDetail.price}</td>
-							<td>${clothMaterialDetail.orderCount}</td>
+							<td>${clothMaterialDetail.count}</td>
 							<td>
 								<fmt:formatDate value="${clothMaterialDetail.orderDate}" pattern="yyyy-MM-dd" />
 							</td>
-							<td>${leatherDetail.remark}</td>
+							<td class="remark">${leatherDetail.remark}</td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -86,7 +86,7 @@
 						<th>用料</th>
 						<th>单价</th>
 						<th>金额</th>
-						<th>订购数量</th>
+						<th>数量</th>
 						<th>订购日期</th>
 						<th>备注</th>
 			     	</tr>
@@ -98,11 +98,11 @@
 							<td>${fabricDetail.consumption}</td>
 							<td>${fabricDetail.price}</td>
 							<td>${fabricDetail.consumption * v.price}</td>
-							<td>${clothMaterialDetail.orderCount}</td>
+							<td>${clothMaterialDetail.count}</td>
 							<td>
 								<fmt:formatDate value="${clothMaterialDetail.orderDate}" pattern="yyyy-MM-dd" />
 							</td>
-							<td>${fabricDetail.remark}</td>
+							<td class="remark">${fabricDetail.remark}</td>
 						</tr>
 			     	</c:forEach>
 			     </table>
@@ -126,7 +126,7 @@
  	     					<th>用料</th>
  	     					<th>单价</th>
  	     					<th>金额</th>
- 	     					<th>订购数量</th>
+ 	     					<th>数量</th>
  	     					<th>订购日期</th>
  	     					<th>备注</th>
  	          	     	</tr>
@@ -138,11 +138,11 @@
  	     						<td>${supportDetail.consumption}</td>
  	     						<td>${supportDetail.price}</td>
  	     						<td>${supportDetail.consumption * supportDetail.price}</td>
-								<td>${clothMaterialDetail.orderCount}</td>
+								<td>${clothMaterialDetail.count}</td>
 								<td>
 									<fmt:formatDate value="${clothMaterialDetail.orderDate}" pattern="yyyy-MM-dd" />
 								</td>
- 	     						<td>${supportDetail.remark}</td>
+ 	     						<td class="remark">${supportDetail.remark}</td>
  	     					</tr>
  	     				</c:forEach>
  	          	     </table>

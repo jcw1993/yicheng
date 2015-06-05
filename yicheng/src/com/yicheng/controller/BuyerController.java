@@ -62,14 +62,14 @@ public class BuyerController {
 	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		Map<String, Object> model = getClothMaterialInfo(clothId);
-		return new ModelAndView("pricing/cloth_count_detail", "model", model);
+		return new ModelAndView("buyer/cloth_count_detail", "model", model);
 	}
 	
 	@RequestMapping(value = "/Buyer/ClothCountOperate", method = RequestMethod.GET)
 	public ModelAndView clothMaterialOperate(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		Map<String, Object> model = getClothMaterialInfo(clothId);
-		return new ModelAndView("pricing/cloth_count_operate", "model", model);
+		return new ModelAndView("buyer/cloth_count_operate", "model", model);
 	}
 	
 	// TODO
@@ -79,11 +79,13 @@ public class BuyerController {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothMaterialId = Utils.getRequestIntValue(request, "clothMaterialId", true);
 		int count = Utils.getRequestIntValue(request, "count", true);
+		String remark = request.getParameter("remark");
 		
 		GenericResult<ClothMaterial> clothMaterialResult = clothMaterialService.getById(clothId, clothMaterialId);
 		if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
 			ClothMaterial clothMaterial = clothMaterialResult.getData();
 			clothMaterial.setCount(count);
+			clothMaterial.setRemark(remark);
 			NoneDataResult updateResult = clothMaterialService.update(clothMaterial);
 			return new NoneDataJsonResult(updateResult);
 		}else {

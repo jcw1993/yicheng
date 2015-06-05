@@ -7,7 +7,7 @@
 <jsp:include page="../header.jsp" flush="true" />
 
 <body>
-	<jsp:include page="count_navi.jsp" flush="true" />
+	<jsp:include page="buyer_navi.jsp" flush="true" />
 
 	<c:set value="${model.cloth}" var="cloth" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
@@ -46,9 +46,10 @@
 					<th>用料</th>
 					<th>单价</th>
 					<th>金额</th>
-					<th>订购数量</th>
+					<th>数量</th>
 					<th>订购日期</th>
 					<th>备注</th>
+					<th>操作</th>
 					</tr>
 					<c:forEach items="${leatherDetails}" var="leatherDetail">
 						<tr clothMaterialId="${leatherDetail.id}">
@@ -58,8 +59,10 @@
 							<td>${leatherDetail.consumption}</td>
 							<td>${leatherDetail.price}</td>
 							<td>${leatherDetail.consumption * leatherDetail.price}</td>
-							<th><input type="text" name="orderCount" value="${leatherDetail.orderCount}"/></th>
-							<td>${leatherDetail.remark}</td>
+							<td><input type="text" name="count" class="full-width count" value="${leatherDetail.count}"/></td>
+							<td></td>
+							<td><input type="text" name="remark" class="full-width remark" value="${leatherDetail.remark}" /></td>
+							<td><a href="#" class="save_count_btn">保存</a></td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -82,9 +85,10 @@
 						<th>用料</th>
 						<th>单价</th>
 						<th>金额</th>
-						<th>订购数量</th>
+						<th>数量</th>
 						<th>订购日期</th>
 						<th>备注</th>
+						<th>操作</th>
 			     	</tr>
 			     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
 						<tr clothMaterialId="${fabricDetail.id}">
@@ -94,8 +98,10 @@
 							<td>${fabricDetail.consumption}</td>
 							<td>${fabricDetail.price}</td>
 							<td>${fabricDetail.consumption * v.price}</td>
-							<th><input type="text" name="orderCount" value="${fabricDetail.orderCount}"/></th>
-							<td>${fabricDetail.remark}</td>
+							<td><input type="text" name="count" class="full-width count" value="${fabricDetail.count}"/></td>
+							<td></td>
+							<td><input type="text" name="remark" class="full-width remark" value="${fabricDetail.remark}" /></td>
+							<td><a href="#" class="save_count_btn">保存</a></td>
 						</tr>
 			     	</c:forEach>
 			     </table>
@@ -119,9 +125,10 @@
 						<th>用料</th>
 						<th>单价</th>
 						<th>金额</th>
-						<th>订购数量</th>
+						<th>数量</th>
 						<th>订购日期</th>
 						<th>备注</th>
+						<th>操作</th>
 	     	     	</tr>
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
 						<tr clothMaterialId="${supportDetail.id}">
@@ -131,8 +138,10 @@
 							<td>${supportDetail.consumption}</td>
 							<td>${supportDetail.price}</td>
 							<td>${supportDetail.consumption * supportDetail.price}</td>
-							<th><input type="text" name="orderCount" value="${supportDetail.orderCount}"/></th>
-							<td>${supportDetail.remark}</td>
+							<td><input type="text" name="count" class="full-width count" value="${supportDetail.count}"/></td>
+							<td></td>
+							<td><input type="text" name="remark" class="full-width remark" value="${supportDetail.remark}" /></td>
+							<td><a href="#" class="save_count_btn">保存</a></td>
 						</tr>
 					</c:forEach>
 	     	     </table>
@@ -200,7 +209,46 @@
 
 
 <script type="text/javascript">
+/* variables */
+var clothId;
 
+var $saveCountBtn = $(".save_count_btn");
+
+$(function() {
+	clothId = "${model.cloth.id}";
+
+	$saveCountBtn.click(function(e) {
+		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
+		var count = $(this).parent().parent().find("input.count").val();
+		var remark = $(this).parent().parent().find("input.remark").val();
+		if(checkInt(count)) {
+			saveClothMaterialCount(clothMaterialId, count, remark);
+		}else {
+			alert("数量为整数！");
+		}
+		
+	});
+});
+
+function saveClothMaterialCount(clothMaterialId, count, remark) {
+	$.ajax({
+		url: "ClothMaterialSaveCount",
+		method: "post",
+		data: {
+			clothId: clothId,
+			clothMaterialId: clothMaterialId,
+			count: count,
+			remark: remark
+		},
+		success: function(result) {
+			if(result.resultCode == 0) {
+				console.log("save count success");
+			}else {
+				cnosole.log("save count fail");
+			}
+		}
+	});
+}
 </script>	
 </body>
 </html>

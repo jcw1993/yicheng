@@ -56,7 +56,7 @@
 							<td>${leatherDetail.consumption}</td>
 							<td>${leatherDetail.price}</td>
 							<td>${leatherDetail.consumption * (null == leatherDetail.price ? 0.0 : leatherDetail.price)}</td>
-							<td>${leatherDetail.remark}</td>
+							<td class="remark">${leatherDetail.remark}</td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -89,7 +89,7 @@
 							<td>${fabricDetail.consumption}</td>
 							<td>${fabricDetail.price}</td>
 							<td>${fabricDetail.consumption * (null == fabricDetail.price ? 0.0 : fabricDetail.price)}</td>
-							<td>${fabricDetail.remark}</td>
+							<td class="remark">${fabricDetail.remark}</td>
 						</tr>
 			     	</c:forEach>
 			     </table>
@@ -124,7 +124,7 @@
 							<td>${supportDetail.consumption}</td>
 							<td>${supportDetail.price}</td>
 							<td>${supportDetail.consumption * (null == supportDetail.price ? 0.0 : supportDetail.price)}</td>
-							<td>${supportDetail.remark}</td>
+							<td class="remark">${supportDetail.remark}</td>
 						</tr>    	
 					</c:forEach>
 					</table>

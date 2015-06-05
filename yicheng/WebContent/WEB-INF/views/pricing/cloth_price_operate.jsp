@@ -55,9 +55,9 @@
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
 							<td>${leatherDetail.consumption}</td>
-							<td><input type="text" name="price" class="full-width" value="${leatherDetail.price}" /></td>
+							<td><input type="text" name="price" class="full-width price" value="${leatherDetail.price}" /></td>
 							<td><label class="priceTotal">${leatherDetail.consumption * (null == leatherDetail.price ? 0.0 : leatherDetail.price)}</label></td>
-							<td>${leatherDetail.remark}</td>
+							<td><input type="text" name="remark" class="full-width remark" value="${leatherDetail.remark}" /></td>
 							<td><a href="#" class="save_price_btn">保存</a></td>
 						</tr>
 					</c:forEach>
@@ -90,9 +90,9 @@
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
 							<td>${fabricDetail.consumption}</td>
-							<td><input type="text" name="price" value="${fabricDetail.price}" /></td>
+							<td><input type="text" name="price" class="full-width price" value="${fabricDetail.price}" /></td>
 							<td><label class="priceTotal">${fabricDetail.consumption * (null == fabricDetail.price ? 0.0 : fabricDetail.price)}</label></td>
-							<td>${fabricDetail.remark}</td>
+							<td><input type="text" name="remark" class="full-width remark" value="${fabricDetail.remark}" /><</td>
 							<td><a href="#" class="save_price_btn">保存</a></td>
 						</tr>
 			     	</c:forEach>
@@ -126,9 +126,9 @@
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.consumption}</td>
-							<td><input type="text" name="price" value="${supportDetail.price}" /></td>
+							<td><input type="text" name="price" class="full-width price" value="${supportDetail.price}" /></td>
 							<td><label class="priceTotal">${supportDetail.consumption * (null == supportDetail.price ? 0.0 : supportDetail.price)}</label></td>
-							<td>${supportDetail.remark}</td>
+							<td><input type="text" name="remark" class="full-width remark" value="${supportDetail.remark}" /></td>
 							<td><a href="#" class="save_price_btn">保存</a></td>
 						</tr>
 					</c:forEach>
@@ -207,22 +207,26 @@ $(function() {
 
 	$savePriceBtn.click(function(e) {
 		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
-		console.log("clothMaterialId:" + clothMaterialId);
-		var price = $(this).parent().parent().find("input").val();
-		console.log("price: " + price);
-		saveClothMaterialPrice(clothMaterialId, price);
+		var price = $(this).parent().parent().find("input.price").val();
+		var remark = $(this).parent().parent().find("input.remark").val();
+		if(checkDouble(price)) {
+			saveClothMaterialPrice(clothMaterialId, price, remark);
+		}else {
+			alert("单价格式错误！");
+		}
 	});
 
 });
 
-function saveClothMaterialPrice(clothMaterialId, price) {
+function saveClothMaterialPrice(clothMaterialId, price, remark) {
 	$.ajax({
 		url: "ClothMaterialSavePrice",
 		method: "post",
 		data: {
 			clothId: clothId,
 			clothMaterialId: clothMaterialId,
-			price: price
+			price: price, 
+			remark: remark
 		},
 		success: function(result) {
 			if(result.resultCode == 0) {

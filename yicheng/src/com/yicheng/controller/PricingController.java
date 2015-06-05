@@ -78,11 +78,13 @@ public class PricingController {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothMaterialId = Utils.getRequestIntValue(request, "clothMaterialId", true);
 		double price = Utils.getRequestDoubleValue(request, "price", true);
+		String remark = request.getParameter("remark");
 		
 		GenericResult<ClothMaterial> clothMaterialResult = clothMaterialService.getById(clothId, clothMaterialId);
 		if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
 			ClothMaterial clothMaterial = clothMaterialResult.getData();
 			clothMaterial.setPrice(price);
+			clothMaterial.setRemark(remark);
 			NoneDataResult updateResult = clothMaterialService.update(clothMaterial);
 			return new NoneDataJsonResult(updateResult);
 		}else {

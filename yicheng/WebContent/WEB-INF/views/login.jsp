@@ -40,16 +40,18 @@
 						aria-describedby="basic-addon2" />
 				</div>
 				<div class="input-group input-item">
-					<span class="input-group-addon">密码</span> <input type="password"
+					<span class="input-group-addon">密码&nbsp;&nbsp;&nbsp;</span> <input type="password"
 						class="form-control" id="password" name="password"
 						placeholder="密码" aria-describedby="basic-addon2" />
 				</div>
 				<div class="input-group input-item">
 					<label for="userType">选择身份:</label>
-					<input type="radio" name="userType" value="0" checked="checked" /> 打样开发员
-					<input type="radio" name="userType" value="1" /> 报价员
-					<input type="radio" name="userType" value="2" /> 采购员
-					<input type="radio" name="userType" value="3" /> 总经理
+					<select name="userType">
+						<option value="0" selected="selected">打样开发员</option>
+						<option value="1">报价员</option>
+						<option value="2">采购员</option>
+						<option value="3">总经理</option>
+					</select>
 				</div>
 				<div class="input-item">
 					<div class="row">
