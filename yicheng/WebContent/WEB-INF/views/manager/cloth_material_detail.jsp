@@ -7,7 +7,7 @@
 <jsp:include page="../header.jsp" flush="true" />
 
 <body>
-	<jsp:include page="pricing_navi.jsp" flush="true" />
+	<jsp:include page="manager_navi.jsp" flush="true" />
 
 	<c:set value="${model.cloth}" var="cloth" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
@@ -36,18 +36,16 @@
 			<div class="margin-top-little">
 				<div class="row title-area">
 					<p class="col-sm-7">皮料信息</p>
-				</div>		
-				<c:if test="${null != leatherDetails}">
+				</div>	
+
+				<c:if test="${null != leatherDetails}">	
 				<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
 					<tr>
 						<th>项目</th>
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
-						<th>单价</th>
-						<th>金额</th>
 						<th>备注</th>
-						<th>保存</th>	
 					</tr>
 					<c:forEach items="${leatherDetails}" var="leatherDetail">
 						<tr clothMaterialId="${leatherDetail.id}">
@@ -55,10 +53,7 @@
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
 							<td>${leatherDetail.consumption}</td>
-							<td><input type="text" name="price" class="full-width price" value="${leatherDetail.price}" /></td>
-							<td><label class="priceTotal blue">${leatherDetail.consumption * (null == leatherDetail.price ? 0.0 : leatherDetail.price)}</label></td>
-							<td><input type="text" name="remark" class="full-width remark" value="${leatherDetail.remark}" /></td>
-							<td><a href="#" class="save_price_btn">保存</a></td>
+							<td>${leatherDetail.remark}</td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -75,14 +70,11 @@
 			     <c:if test="${null != fabricDetails}">
 			     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
 			     	<tr>
-						<th>项目</th>
-						<th>部位</th>
-						<th>单位</th>
-						<th>用料</th>
-						<th>单价</th>
-						<th>金额</th>
-						<th>备注</th>
-						<th>保存</th>
+			     		<th>项目</th>
+			     		<th>部位</th>
+			     		<th>单位</th>
+			     		<th>用料</th>
+			     		<th>备注</th>
 			     	</tr>
 			     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
 						<tr clothMaterialId="${fabricDetail.id}">
@@ -90,19 +82,16 @@
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
 							<td>${fabricDetail.consumption}</td>
-							<td><input type="text" name="price" class="full-width price" value="${fabricDetail.price}" /></td>
-							<td><label class="priceTotal blue">${fabricDetail.consumption * (null == fabricDetail.price ? 0.0 : fabricDetail.price)}</label></td>
-							<td><input type="text" name="remark" class="full-width remark" value="${fabricDetail.remark}" /></td>
-							<td><a href="#" class="save_price_btn">保存</a></td>
+							<td>${fabricDetail.remark}</td>
 						</tr>
 			     	</c:forEach>
 			     </table>
 			     </c:if>
-
 			     <c:if test="${null == fabricDetails}">
 			     	<p>暂无数据</p>
 			     </c:if>
 			</div>
+
 
 			<div class="margin-top-little">
 				 <div class="row title-area">
@@ -111,14 +100,11 @@
 	     	     <c:if test="${null != supportDetails}">
 	     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">
 	     	     	<tr>
-						<th>项目</th>
-						<th>部位</th>
-						<th>单位</th>
-						<th>用料</th>
-						<th>单价</th>
-						<th>金额</th>
-						<th>备注</th>
-						<th>保存</th>
+	     	     		<th>项目</th>
+	     	     		<th>部位</th>
+	     	     		<th>单位</th>
+	     	     		<th>用料</th>
+	     	     		<th>备注</th>
 	     	     	</tr>
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
 						<tr clothMaterialId="${supportDetail.id}">
@@ -126,14 +112,11 @@
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.consumption}</td>
-							<td><input type="text" name="price" class="full-width price" value="${supportDetail.price}" /></td>
-							<td><label class="priceTotal blue">${supportDetail.consumption * (null == supportDetail.price ? 0.0 : supportDetail.price)}</label></td>
-							<td><input type="text" name="remark" class="full-width remark" value="${supportDetail.remark}" /></td>
-							<td><a href="#" class="save_price_btn">保存</a></td>
+							<td>${supportDetail.remark}</td>
 						</tr>
 					</c:forEach>
 	     	     </table>
-				 </c:if>
+	     	     </c:if>
 	     	     <c:if test="${null == supportDetails}">
 	     	     	<p>暂无数据</p>
 	     	     </c:if>
@@ -194,51 +177,5 @@
 			</div>
 		</div>
 	</div>
-
-
-<script type="text/javascript">
-/* variables */
-var clothId;
-
-var $savePriceBtn = $(".save_price_btn");
-
-$(function() {
-	clothId = "${model.cloth.id}";
-
-	$savePriceBtn.click(function(e) {
-		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
-		var price = $(this).parent().parent().find("input.price").val();
-		var remark = $(this).parent().parent().find("input.remark").val();
-		if(checkDouble(price)) {
-			saveClothMaterialPrice(clothMaterialId, price, remark);
-		}else {
-			alert("单价格式错误！");
-		}
-	});
-
-});
-
-function saveClothMaterialPrice(clothMaterialId, price, remark) {
-	$.ajax({
-		url: "ClothMaterialSavePrice",
-		method: "post",
-		data: {
-			clothId: clothId,
-			clothMaterialId: clothMaterialId,
-			price: price, 
-			remark: remark
-		},
-		success: function(result) {
-			if(result.resultCode == 0) {
-				console.log("save price success");
-				location.reload();
-			}else {
-				cnosole.log("save price fail");
-			}
-		}
-	});
-}
-
-</script>	
 </body>
 </html>

@@ -7,7 +7,7 @@
 <jsp:include page="../header.jsp" flush="true" />
 
 <body>
-	<jsp:include page="pricing_navi.jsp" flush="true" />
+	<jsp:include page="manager_navi.jsp" flush="true" />
 
 	<c:set value="${model.cloth}" var="cloth" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />

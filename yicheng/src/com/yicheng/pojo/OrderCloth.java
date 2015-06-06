@@ -11,6 +11,7 @@ public class OrderCloth implements Serializable {
 	private String orderNumber;
 	private int clothId;
 	private Date deliveryDate;
+	private Integer count;
 	
 	public int getId() {
 		return id;
@@ -42,6 +43,14 @@ public class OrderCloth implements Serializable {
 
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 
 	public OrderCloth() {}

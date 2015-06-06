@@ -9,10 +9,10 @@
 <body>
 	<jsp:include page="buyer_navi.jsp" flush="true" />
 
-	<c:set value="${model.cloth}" var="cloth" />
+	<c:set value="${model.clothOrder}" var="clothOrder" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
-	<c:set value="${model.supportDetails}" var="supportetails" />
+	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
 		<h3>皮衣详情</h3>
@@ -22,16 +22,37 @@
 	         <div class="form-group row">
 		        <label class="col-sm-2 control-label">款号</label>
 		        <div class="col-sm-6">
-		        <input id="cloth_type_input" type="text" class="form-control" name="type" placeholder="款号" value="${cloth.type}" />
+		        <label>${clothOrder.clothType}</label>
 		        </div>
 		     </div>
 
              <div class="form-group row">
      	        <label for="name" class="col-sm-2 control-label">款名</label>
      	        <div class="col-sm-6">
-     	        <input id="cloth_name_input" type="text" class="form-control" name="name" placeholder="款名" value="${cloth.name}" />
+     	        <label>${clothOrder.clothName}</label>
      	        </div>
      	     </div>
+
+             <div class="form-group row">
+     	        <label for="name" class="col-sm-2 control-label">采购数量</label>
+     	        <div class="col-sm-6">
+     	        <input type="text" name="buyCount" id="buyCount" value="${null == clothOrder.count ? 0 : clothOrder.count}" />
+     	        </div>
+     	     </div>     
+             <div class="form-group row">
+      	        <label class="col-sm-2">订货单总价</label>
+     	        <label id="orderPrice" class="col-sm-4">
+     	        	<c:if test="${null != model.clothTotalPrice}">${model.clothTotalPrice}</c:if>
+     	        	<c:if test="${null == model.clothTotalPrice}">暂无</c:if>
+     	        </label>     	     
+     	     </div>     	     	     	
+
+     	     <div class="form-group row">
+     	     <div class="col-sm-2"></div>
+     	     <div class="col-sm-4">
+     	     	<a href="#" id="save_cloth_count" class="btn btn-sm btn-success">保存</a>
+     	     </div>     	     	
+     	     </div>     
 			
 			<div class="margin-top-little">
 				<div class="row title-area">
@@ -45,8 +66,8 @@
 					<th>单位</th>
 					<th>用料</th>
 					<th>单价</th>
-					<th>金额</th>
 					<th>数量</th>
+					<th>金额</th>
 					<th>订购日期</th>
 					<th>备注</th>
 					<th>操作</th>
@@ -58,8 +79,8 @@
 							<td>${leatherDetail.unitName}</td>
 							<td>${leatherDetail.consumption}</td>
 							<td>${leatherDetail.price}</td>
-							<td>${leatherDetail.consumption * leatherDetail.price}</td>
 							<td><input type="text" name="count" class="full-width count" value="${leatherDetail.count}"/></td>
+							<td>${null == leatherDetail.materialTotalPrice ? "暂无" : leatherDetail.materialTotalPrice}</td>
 							<td></td>
 							<td><input type="text" name="remark" class="full-width remark" value="${leatherDetail.remark}" /></td>
 							<td><a href="#" class="save_count_btn">保存</a></td>
@@ -84,8 +105,8 @@
 						<th>单位</th>
 						<th>用料</th>
 						<th>单价</th>
-						<th>金额</th>
 						<th>数量</th>
+						<th>金额</th>
 						<th>订购日期</th>
 						<th>备注</th>
 						<th>操作</th>
@@ -97,8 +118,8 @@
 							<td>${fabricDetail.unitName}</td>
 							<td>${fabricDetail.consumption}</td>
 							<td>${fabricDetail.price}</td>
-							<td>${fabricDetail.consumption * v.price}</td>
 							<td><input type="text" name="count" class="full-width count" value="${fabricDetail.count}"/></td>
+							<td>${null == fabricDetail.materialTotalPrice ? "暂无" : fabricDetail.materialTotalPrice}</td>
 							<td></td>
 							<td><input type="text" name="remark" class="full-width remark" value="${fabricDetail.remark}" /></td>
 							<td><a href="#" class="save_count_btn">保存</a></td>
@@ -124,8 +145,8 @@
 						<th>单位</th>
 						<th>用料</th>
 						<th>单价</th>
-						<th>金额</th>
 						<th>数量</th>
+						<th>金额</th>
 						<th>订购日期</th>
 						<th>备注</th>
 						<th>操作</th>
@@ -137,8 +158,8 @@
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.consumption}</td>
 							<td>${supportDetail.price}</td>
-							<td>${supportDetail.consumption * supportDetail.price}</td>
 							<td><input type="text" name="count" class="full-width count" value="${supportDetail.count}"/></td>
+							<td>${null == supportDetail.materialTotalPrice ? "暂无" : supportDetail.materialTotalPrice}</td>
 							<td></td>
 							<td><input type="text" name="remark" class="full-width remark" value="${supportDetail.remark}" /></td>
 							<td><a href="#" class="save_count_btn">保存</a></td>
@@ -213,9 +234,11 @@
 var clothId;
 
 var $saveCountBtn = $(".save_count_btn");
+var $saveClothCountBtn = $("#save_cloth_count");
+var $buyCountInput = $("#buyCount");
 
 $(function() {
-	clothId = "${model.cloth.id}";
+	clothId = "${model.clothOrder.clothId}";
 
 	$saveCountBtn.click(function(e) {
 		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
@@ -227,6 +250,32 @@ $(function() {
 			alert("数量为整数！");
 		}
 		
+	});
+
+	$saveClothCountBtn.click(function(e) {
+		var buyCount = $buyCountInput.val();
+		console.log("clothId", clothId);
+		console.log("buyCount: " + buyCount);
+		if(checkInt(buyCount)) {
+			$.ajax({
+				url: "OrderClothSaveCount",
+				method: "post",
+				data: {
+					clothId: clothId,
+					buyCount: buyCount
+				},
+				success: function(result) {
+					if(result.resultCode == 0) {
+						location.reload();
+					}else {
+						console.log("save count error");
+					}
+				}
+			});
+		}else {
+			alert("采购数量格式错误！");
+		}
+
 	});
 });
 
@@ -243,6 +292,7 @@ function saveClothMaterialCount(clothMaterialId, count, remark) {
 		success: function(result) {
 			if(result.resultCode == 0) {
 				console.log("save count success");
+				location.reload();
 			}else {
 				cnosole.log("save count fail");
 			}

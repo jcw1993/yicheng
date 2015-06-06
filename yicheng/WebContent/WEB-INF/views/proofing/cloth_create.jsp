@@ -29,6 +29,13 @@
 	     	        </div>
 	     	     </div>
 
+	     	     <div class="form-group row">
+		     	     <div class="col-sm-2"></div>
+		     	     <div class="col-sm-4">
+		     	     	<a href="#" id="save_cloth_btn" class="btn btn-sm btn-success">保存</a>
+		     	     </div>     	     	
+	     	     </div>   
+
 				<div class="row title-area margin-top-little">
 					<p class="col-sm-7">皮料信息</p>
 					<div class="col-sm-2">
@@ -142,6 +149,8 @@ var $add_leather_btn = $("#add_leather_btn");
 var $add_fabric_btn = $("#add_fabric_btn");
 var $add_support_btn = $("#add_support_btn");
 
+var $saveClothBtn = $("#save_cloth_btn");
+
 var $material_create_modal = $("#material_create_modal");
 var $material_create_submit = $("#material_create_submit");
 var $material_create_form = $("#material_create_form");
@@ -196,7 +205,10 @@ $add_support_btn.click(function(e) {
 	}else {
 		checkClothCreate();
 	}
+});
 
+$saveClothBtn.click(function(e) {
+	checkClothCreate();
 });
 
 

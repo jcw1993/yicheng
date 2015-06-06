@@ -12,7 +12,7 @@
 	<c:set value="${model.cloth}" var="cloth" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
-	<c:set value="${model.supportDetails}" var="supportetails" />
+	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
 		<h3>皮衣详情</h3>
@@ -107,7 +107,6 @@
 	     	     		<th>备注</th>
 	     	     	</tr>
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
-					<c:if test="${clothMaterialDetail.materialType == 2}">
 						<tr clothMaterialId="${supportDetail.id}">
 							<td>${supportDetail.materialName}</td>
 							<td>${supportDetail.part}</td>
@@ -115,7 +114,6 @@
 							<td>${supportDetail.consumption}</td>
 							<td>${supportDetail.remark}</td>
 						</tr>
-					</c:if>	     	     	
 					</c:forEach>
 	     	     </table>
 	     	     </c:if>

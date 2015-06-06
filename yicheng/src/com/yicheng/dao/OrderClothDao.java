@@ -13,5 +13,7 @@ public interface OrderClothDao {
 	public void delete(int id);
 	
 	public List<OrderCloth> getByOrderNumber(String orderNumber);
+	
+	public OrderCloth getFirstByCloth(int clothId);
 
 }

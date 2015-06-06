@@ -12,7 +12,7 @@
 	<c:set value="${model.cloth}" var="cloth" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
-	<c:set value="${model.supportDetails}" var="supportetails" />
+	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
 		<h3>皮衣详情</h3>
@@ -22,14 +22,14 @@
 	         <div class="form-group row">
 		        <label class="col-sm-2 control-label">款号</label>
 		        <div class="col-sm-6">
-		        <input id="cloth_type_input" type="text" class="form-control" name="type" placeholder="款号" value="${cloth.type}" />
+		        <label>${cloth.type}</label>
 		        </div>
 		     </div>
 
              <div class="form-group row">
      	        <label for="name" class="col-sm-2 control-label">款名</label>
      	        <div class="col-sm-6">
-     	        <input id="cloth_name_input" type="text" class="form-control" name="name" placeholder="款名" value="${cloth.name}" />
+     	        <label>${cloth.name}</label>
      	        </div>
      	     </div>
 			
@@ -122,7 +122,6 @@
 	     	     		<th>操作</th>
 	     	     	</tr>
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
-					<c:if test="${clothMaterialDetail.materialType == 2}">
 						<tr clothMaterialId="${supportDetail.id}">
 							<td>${supportDetail.materialName}</td>
 							<td>${supportDetail.part}</td>
@@ -131,7 +130,6 @@
 							<td>${supportDetail.remark}</td>
 							<td><a href="#" class="delete_support_btn" >删除</a></td>
 						</tr>
-					</c:if>	     	     	
 					</c:forEach>
 	     	     </table>
 	     	     </c:if>

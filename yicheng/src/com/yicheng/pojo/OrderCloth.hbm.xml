@@ -13,6 +13,7 @@
         <property name="clothId" type="integer" column="cloth_id" />
         <property name="orderNumber" type="string" column="order_number" />
         <property name="deliveryDate" type="timestamp" column="delivery_date" />
+        <property name="count" type="integer" column="count" />
     </class>
 
 </hibernate-mapping>

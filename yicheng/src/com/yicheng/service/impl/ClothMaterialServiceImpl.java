@@ -13,9 +13,11 @@ import com.yicheng.dao.ClothMaterialDao;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
+import com.yicheng.pojo.OrderCloth;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
 import com.yicheng.service.MaterialService;
+import com.yicheng.service.OrderClothService;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
@@ -36,6 +38,8 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	private MaterialService materialService;
 	@Autowired
 	private ClothService clothService;
+	@Autowired
+	private OrderClothService orderClothService;
 	
 	@Override
 	public GenericResult<Integer> create(ClothMaterial clothMaterial) {
@@ -317,6 +321,11 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	private boolean isCounted(int clothId) {
 		boolean result = true; 
 		GenericResult<List<ClothMaterial>> allResult = getByCloth(clothId);
+		GenericResult<OrderCloth> orderClothResult = orderClothService.getFirstbyCloth(clothId);
+		if((orderClothResult.getResultCode() == ResultCode.NORMAL && null == orderClothResult.getData().getCount()) 
+				|| (orderClothResult.getResultCode() != ResultCode.NORMAL)) {
+			result = false;
+		}
 		if(allResult.getResultCode() == ResultCode.NORMAL) {
 			for(ClothMaterial clothMaterial : allResult.getData()) {
 				if(null == clothMaterial.getCount()) {

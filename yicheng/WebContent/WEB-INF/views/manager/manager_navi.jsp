@@ -22,8 +22,10 @@
 			<div class="col-xs-10">
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav" style="width: 100%">
-						<li><a href="#">面辅料管理</a></li>
+					<ul class="nav navbar-nav">
+						<li><a href="ClothMaterialManage">面辅料明细表</a></li>
+						<li><a href="ClothPriceManage">报价单</a></li>
+						<li><a href="ClothCountManage">采购单</a></li>
 					</ul>
 				</div>
 			</div>

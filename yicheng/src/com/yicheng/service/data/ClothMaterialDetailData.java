@@ -24,8 +24,12 @@ public class ClothMaterialDetailData implements Serializable {
 	private Integer count;
 	private Integer orderCount;
 	private Double price;
+	
+	private Double materialTotalPrice;
+	
 	private Date orderDate;
 	private String remark;
+	
 	public int getId() {
 		return id;
 	}
@@ -93,6 +97,15 @@ public class ClothMaterialDetailData implements Serializable {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+	public Double getMaterialTotalPrice() {
+		if(null == materialTotalPrice) {
+			calculateTotalPrice();
+		}
+		return materialTotalPrice;
+	}
+	public void setMaterialTotalPrice(Double materialTotalPrice) {
+		this.materialTotalPrice = materialTotalPrice;
+	}
 	public Date getOrderDate() {
 		return orderDate;
 	}
@@ -127,6 +140,14 @@ public class ClothMaterialDetailData implements Serializable {
 			this.materialName = material.getName();
 			this.materialType = material.getType();
 		}
+	}
+	
+	public void calculateTotalPrice() {
+		if(null == price || null == count) {
+			return;
+		}
+		
+		materialTotalPrice = price * consumption * count;
 	}
 
 }
