@@ -175,6 +175,44 @@ public class ProofingController {
 		return new ModelAndView("proofing/material_manage", "model", model);
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/CreateMaterial", method = RequestMethod.POST)
+	public GenericJsonResult<Integer> createMaterial(HttpServletRequest request, HttpServletResponse response) {
+		int type = Utils.getRequestIntValue(request, "type", true);
+		String name = request.getParameter("name");
+		name = name.trim();
+		// color 0
+		int colorType = 0;
+		
+		Material material = new Material(name, colorType, type);
+		GenericResult<Integer> createResult = materialService.create(material);
+		return new GenericJsonResult<Integer>(createResult);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/DeleteMaterial", method = RequestMethod.POST)
+	public NoneDataJsonResult deleteMaterial(HttpServletRequest request, HttpServletResponse response) {
+		int materialId = Utils.getRequestIntValue(request, "materialId", true);
+		return new NoneDataJsonResult(materialService.delete(materialId));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/UpdateMaterial", method = RequestMethod.POST)
+	public NoneDataJsonResult updateMaterial(HttpServletRequest request, HttpServletResponse response) {
+		int materialId = Utils.getRequestIntValue(request, "materialId", true);
+		String name = request.getParameter("name");
+		name = name.trim();
+		
+		GenericResult<Material> materialResult = materialService.getById(materialId);
+		if(materialResult.getResultCode() == ResultCode.NORMAL) {
+			Material material = materialResult.getData();
+			material.setName(name);
+			return new NoneDataJsonResult(materialService.update(material));
+		}else {
+			return new NoneDataJsonResult(materialResult);
+		}
+	}
+	
 	private Map<String, Object> getClothMaterialInfo(int clothId) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<Cloth> clothResult = clothService.getById(clothId);

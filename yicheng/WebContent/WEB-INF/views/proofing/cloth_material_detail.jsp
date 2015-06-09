@@ -15,7 +15,7 @@
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
-		<h3>皮衣详情<a id="cloth-create" href="ExportMaterialExcel?clothId=${cloth.id}" class="btn btn-primary create-button">导出Excel</a></h3>
+		<h3>皮衣详情<a id="cloth-create" href="ExportMaterialExcel?clothId=${cloth.id}" class="btn btn-primary create-button">导出面辅料明细表</a></h3>
 		<hr />
 		<div>
 			<p>基本信息</p>
