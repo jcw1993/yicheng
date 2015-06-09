@@ -9,27 +9,27 @@
 <body>
 	<jsp:include page="manager_navi.jsp" flush="true" />
 
-	<c:set value="${model.cloth}" var="cloth" />
+	<c:set value="${model.clothOrder}" var="clothOrder" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
-		<h3>皮衣详情</h3>
+		<h3>皮衣详情<a id="cloth-create" href="ExportPriceExcel?clothId=${clothOrder.clothId}" class="btn btn-primary create-button">导出Excel</a></h3>
 		<hr />
 		<div>
 			<p>基本信息</p>
 	         <div class="form-group row">
 		        <label class="col-sm-2 control-label">款号</label>
 		        <div class="col-sm-6">
-		            <label>${cloth.type}</label>
+		            <label>${clothOder.clothType}</label>
 		        </div>
 		     </div>
 
              <div class="form-group row">
      	        <label for="name" class="col-sm-2 control-label">款名</label>
      	        <div class="col-sm-6">
-     	            <label>${cloth.name}</label>
+     	            <label>${clothOder.clothName}</label>
      	        </div>
      	     </div>
 			

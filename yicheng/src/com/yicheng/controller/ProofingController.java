@@ -1,5 +1,6 @@
 package com.yicheng.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,9 +104,10 @@ public class ProofingController {
 		String part = request.getParameter("part");
 		String unitName = request.getParameter("unitName");
 		double consumption = Utils.getRequestDoubleValue(request, "consumption", true);
+		double estimatedPrice = Utils.getRequestDoubleValue(request, "estimatedPrice", false);
 		String remark = request.getParameter("remark");
 		
-		ClothMaterial clothMaterial = new ClothMaterial(clothId, materialId, part, unitName, consumption, null,
+		ClothMaterial clothMaterial = new ClothMaterial(clothId, materialId, part, unitName, consumption, estimatedPrice, null,
 				null, null, null, remark);
 		GenericResult<Integer> createResult = clothMaterialService.create(clothMaterial);
 		return new GenericJsonResult<Integer>(createResult);
@@ -137,6 +139,40 @@ public class ProofingController {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		NoneDataResult result = clothMaterialService.delete(clothMaterialId, clothId);
 		return new NoneDataJsonResult(result);
+	}
+	
+	@RequestMapping(value = "/Proofing/MaterialManage", method = RequestMethod.GET)
+	public ModelAndView materialManage(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		GenericResult<List<Material>> materialResult = materialService.getAll();
+		
+		if(materialResult.getResultCode() == ResultCode.NORMAL) {
+			List<Material> leatherList = new ArrayList<Material>();
+			List<Material> fabricList = new ArrayList<Material>();
+			List<Material> supportList = new ArrayList<Material>();
+			
+			for(Material material : materialResult.getData()) {
+				if(material.getType() == MaterialType.MATERIAL_TYPE_LEATHER) {
+					leatherList.add(material);
+				}else if(material.getType() == MaterialType.MATERIAL_TYPE_FABRIC) {
+					fabricList.add(material);
+				}else if(material.getType() == MaterialType.MATERIAL_TYPE_SUPPORT) { 
+					supportList.add(material);
+				}
+			}
+			if(!leatherList.isEmpty()) {
+				model.put("leathers", leatherList);
+			}
+			if(!fabricList.isEmpty()) {
+				model.put("fabrics", fabricList);
+			}
+			if(!supportList.isEmpty()) {
+				model.put("supports", supportList);
+			}
+		}else {
+			logger.warn("material get all exception");
+		}
+		return new ModelAndView("proofing/material_manage", "model", model);
 	}
 	
 	private Map<String, Object> getClothMaterialInfo(int clothId) {

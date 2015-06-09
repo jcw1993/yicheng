@@ -48,6 +48,7 @@
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
+						<th>单价</th>
 						<th>备注</th>
 						<th>操作</th>
 					</tr>
@@ -57,6 +58,7 @@
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
 							<td>${leatherDetail.consumption}</td>
+							<td>${leatherDetail.estimatedPrice}</td>
 							<td>${leatherDetail.remark}</td>
 							<td><a href="#" class="delete_leather_btn" >删除</a></td>
 						</tr>
@@ -82,6 +84,7 @@
 			     		<th>部位</th>
 			     		<th>单位</th>
 			     		<th>用料</th>
+			     		<th>单价</th>
 			     		<th>备注</th>
 			     		<th>操作</th>
 			     	</tr>
@@ -91,6 +94,7 @@
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
 							<td>${fabricDetail.consumption}</td>
+							<td>${fabricDetail.estimatedPrice}</td>
 							<td>${fabricDetail.remark}</td>
 							<td><a href="#" class="delete_fabric_btn" >删除</a></td>
 						</tr>
@@ -118,6 +122,7 @@
 	     	     		<th>部位</th>
 	     	     		<th>单位</th>
 	     	     		<th>用料</th>
+	     	     		<th>单价</th>
 	     	     		<th>备注</th>
 	     	     		<th>操作</th>
 	     	     	</tr>
@@ -127,6 +132,7 @@
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.consumption}</td>
+							<td>${supportDetail.estimatedPrice}</td>
 							<td>${supportDetail.remark}</td>
 							<td><a href="#" class="delete_support_btn" >删除</a></td>
 						</tr>

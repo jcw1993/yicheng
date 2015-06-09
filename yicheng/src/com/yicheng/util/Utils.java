@@ -1,15 +1,30 @@
 package com.yicheng.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,56 +103,161 @@ public class Utils {
 		cookie.setPath("/");
 		response.addCookie(cookie);
 	}
-	
-	public static void addSaeStorage(HttpServletRequest request) {
-		
-	}
 	 
-/*	public static void tmpfsToStorage(){
-		
-	}
-	
-	public static void storageToTmpfs(){
-		
-	}
-	
-	public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("gbk");
-        PrintWriter out = response.getWriter();
-        // 浣跨敤SaeUserInfo鎷垮埌鏀硅姹傚彲鍐欑殑璺緞
-        String realPath = SaeUserInfo.getSaeTmpPath() + "/";
-        try {
-            // 浣跨敤common-upload涓婁紶鏂囦欢鑷宠繖涓矾寰勪腑
-            boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-            if (!isMultipart)
-                return;
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            upload.setFileSizeMax(1024 * 1024);
-            List<FileItem> items = null;
-            items = upload.parseRequest(request);
-            for (FileItem item : items) {
-                if (!item.isFormField()) {
-                    File fullFile = new File(item.getName());
-                    File uploadFile = new File(realPath, fullFile.getName());
-                    item.write(uploadFile);
-                    // 涓婁紶瀹屾瘯鍚�浣跨敤SaeStorage寰�torage閲岄潰鍐�
-                    SaeStorage ss = new SaeStorage();
-                    // 浣跨敤upload鏂规硶涓婁紶鍒板煙涓篿mage涓�
-                    ss.upload("file", realPath + fullFile.getName(),
-                            fullFile.getName());
+	/**
+	 * 
+	 * 解析Excel文件
+	 * 
+	 * @param filePath 文件路径
+	 * @param columnNum 列数
+	 * @param version excel版本 0：98-2003， 1:2007+，默认1
+	 * @return
+	 * @throws IOException
+	 */
+	@SuppressWarnings("resource")
+	public static List<String[]> parseExcel(String filePath, int columnNum, int version)
+			throws IOException {
+		File file = new File(filePath);
+		if (!file.exists()) {
+			return null;
+		}
 
-                    out.print("upload file:" + realPath + fullFile.getName()
-                            + "</br>");
-                }
-            }
-            out.print("upload end...");
-        } catch (Exception e) {
-            out.print("ERROR:" + e.getMessage() + "</br>");
-        } finally {
-            out.flush();
-            out.close();
-        }
-    }*/
+		Workbook workbook = null;
+		Sheet sheet = null;
+		Row row = null;
+		Cell cell = null;
+		List<String[]> resultList = new ArrayList<String[]>();
+		InputStream input = new FileInputStream(file);
+		
+		switch (version) {
+		case 0:
+			workbook = new HSSFWorkbook(input);
+			break;
+		case 1:
+			workbook = new XSSFWorkbook(input);
+			break;
+		default:
+			workbook = new XSSFWorkbook(input);
+			break;
+		}
+		
+		int numberOfSheets = workbook.getNumberOfSheets();
+		// sheet
+		for (int sheetIndex = 0; sheetIndex < numberOfSheets; sheetIndex++) {
+			sheet = workbook.getSheetAt(sheetIndex);
+			if (null == sheet) {
+				continue;
+			}
+			// row
+			int lastRowIndex = sheet.getLastRowNum();
+			for (int rowIndex = 1; rowIndex <= lastRowIndex; rowIndex++) {
+				row = sheet.getRow(rowIndex);
+				if (null == row) {
+					continue;
+				}
+				// cell
+				String[] line = new String[columnNum];
+				for (int cellIndex = 0; cellIndex < columnNum; cellIndex++) {
+					cell = row.getCell(cellIndex);
+					if (null == cell) {
+						continue;
+					}
+					line[cellIndex] = getCellValue(cell, true);
+				}
+				resultList.add(line);
+			}
+		}
+		if(null != input) {
+			input.close();
+		}
+		return resultList;
+	}
+	
+	/**
+	 * 
+	 * 将数据以Excel形式导出
+	 * 
+	 * @param columnNames
+	 * @param data
+	 * @param out
+	 * @param version
+	 * @throws IOException
+	 */
+	@SuppressWarnings("resource")
+	public static void exportExcel(String[] columnNames, String[][] data, OutputStream output, int version)
+			throws IOException {
+		if(null == output) {
+			return ;
+		} 
+		
+		if(null == columnNames || columnNames.length == 0) {
+			return ;
+		}
+		
+		if(data == null || data.length == 0) {
+			return ;
+		}
+		
+		Workbook workbook = null;
+		Sheet sheet = null;
+		Row row = null;
+		Cell cell = null;
+		CellStyle style = null;
+
+		switch (version) {
+		case 0:
+			workbook = new HSSFWorkbook();
+			break;
+		case 1:
+			workbook = new XSSFWorkbook();
+			break;
+		default:
+			workbook = new XSSFWorkbook();
+			break;
+		}
+
+		style = workbook.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+		sheet = workbook.createSheet("学籍数据");
+
+		// 表头
+		row = sheet.createRow(0);
+		for (int i = 0; i < columnNames.length; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(columnNames[i]);
+			cell.setCellStyle(style);
+		}
+
+		// 写入数据
+		for (int i = 0; i < data.length; i++) {
+			row = sheet.createRow(i + 1);
+			for (int j = 0; j < data[i].length; j++) {
+				cell = row.createCell(j);
+				cell.setCellValue(data[i][j]);
+				cell.setCellStyle(style);
+			}
+		}
+
+		workbook.write(output);
+		
+		output.flush();
+		output.close();
+	}
+
+	private static String getCellValue(Cell cell, boolean intFlag) {
+		if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+			if (intFlag) {
+				int value = (int) cell.getNumericCellValue();
+				return String.valueOf(value);
+			} else {
+				return String.valueOf(cell.getNumericCellValue());
+			}
+		} else if (cell.getCellType() == Cell.CELL_TYPE_BOOLEAN) {
+			boolean value = cell.getBooleanCellValue();
+			return String.valueOf(value);
+		} else {
+			return cell.getStringCellValue();
+		}
+	}
 }

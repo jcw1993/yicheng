@@ -16,6 +16,7 @@
         <property name="count" type="integer" column="count" />
         <property name="orderCount" type="integer" column="order_count" />
         <property name="consumption" type="double" column="consumption" />
+        <property name="estimatedPrice" type="double" column="estimated_price" />
         <property name="price" type="double" column="price" />
         <property name="orderDate" type="timestamp" column="order_date" />
         <property name="remark" type="string" column="remark" />

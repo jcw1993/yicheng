@@ -14,6 +14,7 @@ public class ClothMaterialModify implements Serializable {
 	private String part;
 	private String unitName;
 	private double consumption;
+	private Double estimatedPrice;
 	private int count;
 	private int orderCount;
 	private double price;
@@ -61,6 +62,13 @@ public class ClothMaterialModify implements Serializable {
 	}
 	public void setConsumption(double consumption) {
 		this.consumption = consumption;
+	}
+	public Double getEstimatedPrice() {
+		return estimatedPrice;
+	}
+
+	public void setEstimatedPrice(Double estimatedPrice) {
+		this.estimatedPrice = estimatedPrice;
 	}
 	public int getCount() {
 		return count;

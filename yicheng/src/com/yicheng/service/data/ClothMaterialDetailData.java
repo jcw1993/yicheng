@@ -23,6 +23,7 @@ public class ClothMaterialDetailData implements Serializable {
 	private double consumption;
 	private Integer count;
 	private Integer orderCount;
+	private Double estimatedPrice;
 	private Double price;
 	
 	private Double materialTotalPrice;
@@ -91,8 +92,14 @@ public class ClothMaterialDetailData implements Serializable {
 	public void setOrderCount(Integer orderCount) {
 		this.orderCount = orderCount;
 	}
+	public Double getEstimatedPrice() {
+		return estimatedPrice;
+	}
+	public void setEstimatedPrice(Double estimatedPrice) {
+		this.estimatedPrice = estimatedPrice;
+	}
 	public Double getPrice() {
-		return price;
+		return (null == price ? estimatedPrice : price);
 	}
 	public void setPrice(Double price) {
 		this.price = price;
@@ -131,6 +138,7 @@ public class ClothMaterialDetailData implements Serializable {
 			this.consumption = clothMaterial.getConsumption();
 			this.count = clothMaterial.getCount();
 			this.orderCount = clothMaterial.getOrderCount();
+			this.estimatedPrice = clothMaterial.getEstimatedPrice();
 			this.price = clothMaterial.getPrice();
 			this.orderDate = clothMaterial.getOrderDate();
 			this.remark = clothMaterial.getRemark();

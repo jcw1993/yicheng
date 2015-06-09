@@ -48,6 +48,7 @@
 						<p class="col-sm-2">部位</p>
 						<p class="col-sm-2">单位</p>
 						<p class="col-sm-2">用料</p>
+						<p class="col-sm-2">单价</p>
 						<p class="col-sm-2">备注</p>
 					</div>
 
@@ -65,6 +66,7 @@
 						<p class="col-sm-2">部位</p>
 						<p class="col-sm-2">单位</p>
 						<p class="col-sm-2">用料</p>
+						<p class="col-sm-2">单价</p>
 						<p class="col-sm-2">备注</p>
 					</div>
 				</div>
@@ -81,6 +83,7 @@
 						<p class="col-sm-2">部位</p>
 						<p class="col-sm-2">单位</p>
 						<p class="col-sm-2">用料</p>
+						<p class="col-sm-2">单价</p>
 						<p class="col-sm-2">备注</p>
 					</div>
 				</div>
@@ -127,6 +130,12 @@
 					        </div>
 					    </div>
 				        <div class="form-group row">
+					        <label for="consumption" class="col-sm-2 control-label">单价</label>
+					        <div class="col-sm-6">
+					            <input type="text" id="estimatedPrice" class="form-control" name="estimatedPrice" placeholder="用料" />
+					        </div>
+					    </div>
+				        <div class="form-group row">
 					        <label for="remark" class="col-sm-2 control-label">备注</label>
 					        <div class="col-sm-6">
 					            <input type="text" id="remark" class="form-control" name="remark" placeholder="备注" />
@@ -159,6 +168,7 @@ var $material_select = $("#material_select");
 var $part = $("#part");
 var $unitName = $("#unitName");
 var $consumption = $("#consumption");
+var $estimatedPrice = $("#estimatedPrice");
 var $remark = $("#remark");
 
 var $cloth_name_input = $("#cloth_name_input");
@@ -257,7 +267,7 @@ function saveClothMaterial(saveType) {
 				if(result.resultCode == 0) {
 					console.log("create clothMaterial succcss");
 					appendClothMaterialItem(currentMaterialType, $("#material_select option:selected").text(),
-						$part.val(), $unitName.val(), $consumption.val(), $remark.val());
+						$part.val(), $unitName.val(), $consumption.val(), $estimatedPrice.val(), $remark.val());
 					resetInput();
 				}else {
 					console.log("create clothMaterial fail");
@@ -305,7 +315,7 @@ function checkClothCreate() {
 	}
 }
 
-function appendClothMaterialItem(materialType, materialName, part, unitName, consumption, remark) {
+function appendClothMaterialItem(materialType, materialName, part, unitName, consumption, estimatedPrice, remark) {
 	var $clothMaterialArea;
 	switch(materialType) {
 		case MATERIAL_TYPE_LEATHER:
@@ -328,13 +338,15 @@ function appendClothMaterialItem(materialType, materialName, part, unitName, con
 	var $clothMaterialColumn2 = $("<p class='col-sm-2'>" + part + "</p>");
 	var $clothMaterialColumn3 = $("<p class='col-sm-2'>" + unitName + "</p>");
 	var $clothMaterialColumn4 = $("<p class='col-sm-2'>" + consumption + "</p>");
-	var $clothMaterialColumn5 = $("<p class='col-sm-2'>" + remark + "</p>");
+	var $clothMaterialColumn5 = $("<p class='col-sm-2'>" + estimatedPrice + "</p>");
+	var $clothMaterialColumn6 = $("<p class='col-sm-2'>" + remark + "</p>");
 
 	$row.append($clothMaterialColumn1);
 	$row.append($clothMaterialColumn2);
 	$row.append($clothMaterialColumn3);
 	$row.append($clothMaterialColumn4);
 	$row.append($clothMaterialColumn5);
+	$row.append($clothMaterialColumn6);
 
 	$clothMaterialArea.append($row);
 

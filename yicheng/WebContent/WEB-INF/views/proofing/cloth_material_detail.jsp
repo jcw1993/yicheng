@@ -15,7 +15,7 @@
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
-		<h3>皮衣详情</h3>
+		<h3>皮衣详情<a id="cloth-create" href="ExportMaterialExcel?clothId=${cloth.id}" class="btn btn-primary create-button">导出Excel</a></h3>
 		<hr />
 		<div>
 			<p>基本信息</p>
@@ -45,6 +45,7 @@
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
+						<th>单价</th>
 						<th>备注</th>
 					</tr>
 					<c:forEach items="${leatherDetails}" var="leatherDetail">
@@ -53,6 +54,7 @@
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
 							<td>${leatherDetail.consumption}</td>
+							<td>${leatherDetail.estimatedPrice}</td>
 							<td>${leatherDetail.remark}</td>
 						</tr>
 					</c:forEach>
@@ -74,6 +76,7 @@
 			     		<th>部位</th>
 			     		<th>单位</th>
 			     		<th>用料</th>
+			     		<th>单价</th>
 			     		<th>备注</th>
 			     	</tr>
 			     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
@@ -82,6 +85,7 @@
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
 							<td>${fabricDetail.consumption}</td>
+							<td>${fabricDetail.estimatedPrice}</td>
 							<td>${fabricDetail.remark}</td>
 						</tr>
 			     	</c:forEach>
@@ -104,6 +108,7 @@
 	     	     		<th>部位</th>
 	     	     		<th>单位</th>
 	     	     		<th>用料</th>
+	     	     		<th>单价</th>
 	     	     		<th>备注</th>
 	     	     	</tr>
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
@@ -112,6 +117,7 @@
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.consumption}</td>
+							<td>${supportDetail.estimatedPrice}</td>
 							<td>${supportDetail.remark}</td>
 						</tr>
 					</c:forEach>

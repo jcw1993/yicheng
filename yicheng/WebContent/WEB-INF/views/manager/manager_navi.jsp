@@ -26,6 +26,7 @@
 						<li><a href="ClothMaterialManage">面辅料明细表</a></li>
 						<li><a href="ClothPriceManage">报价单</a></li>
 						<li><a href="ClothCountManage">采购单</a></li>
+						<li><a href="../Logout">退出</a></li>
 					</ul>
 				</div>
 			</div>

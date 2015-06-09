@@ -80,7 +80,7 @@ public class ManagerController {
 		return new ModelAndView("manager/cloth_material_detail", "model", model);
 	}
 	
-	@RequestMapping(value = "{/Manager/ClothPriceDetail", method = RequestMethod.GET)
+	@RequestMapping(value = "/Manager/ClothPriceDetail", method = RequestMethod.GET)
 	public ModelAndView clothPriceDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		Map<String, Object> model = getClothMaterialInfo(clothId);

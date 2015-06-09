@@ -13,6 +13,7 @@ public class ClothMaterial implements Serializable {
 	private String part;
 	private String unitName;
 	private double consumption;
+	private Double estimatedPrice;
 	private Integer count;
 	private Integer orderCount;
 	private Double price;
@@ -66,6 +67,14 @@ public class ClothMaterial implements Serializable {
 	public void setConsumption(double consumption) {
 		this.consumption = consumption;
 	}
+	
+	public Double getEstimatedPrice() {
+		return estimatedPrice;
+	}
+
+	public void setEstimatedPrice(Double estimatedPrice) {
+		this.estimatedPrice = estimatedPrice;
+	}
 
 	public Integer getCount() {
 		return count;
@@ -84,7 +93,7 @@ public class ClothMaterial implements Serializable {
 	}
 
 	public Double getPrice() {
-		return price;
+		return (null == price ? estimatedPrice : price);
 	}
 
 	public void setPrice(Double price) {
@@ -114,13 +123,14 @@ public class ClothMaterial implements Serializable {
 	}
 	
 	public ClothMaterial(int id, int clothId, int materialId, String part, String unitName, double consumption, 
-			Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
+			Double estimatedPrice, Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
 		this.id = id;
 		this.clothId = clothId;
 		this.materialId = materialId;
 		this.part = part;
 		this.unitName = unitName;
 		this.consumption = consumption;
+		this.estimatedPrice = estimatedPrice;
 		this.count = count;
 		this.orderCount = orderCount;
 		this.price = price;
@@ -129,12 +139,13 @@ public class ClothMaterial implements Serializable {
 	}
 	
 	public ClothMaterial(int clothId, int materialId, String part, String unitName, double consumption, 
-			Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
+			Double estimatedPrice, Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
 		this.clothId = clothId;
 		this.materialId = materialId;
 		this.part = part;
 		this.unitName = unitName;
 		this.consumption = consumption;
+		this.estimatedPrice = estimatedPrice;
 		this.count = count;
 		this.orderCount = orderCount;
 		this.price = price;
