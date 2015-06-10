@@ -26,6 +26,7 @@
 		</c:if>
 	</div>
 
+<jsp:include page="../footer.jsp" flush="true" />
 
 <script type="text/javascript">
 

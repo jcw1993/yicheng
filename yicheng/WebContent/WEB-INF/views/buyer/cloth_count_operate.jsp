@@ -15,7 +15,9 @@
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
-		<h3>皮衣详情</h3>
+		<h3>皮衣详情
+		<a href="ClothCountOperate?clothId=${clothOrder.clothId}" class="btn btn-primary create-button">查看详情</a>
+		</h3>
 		<hr />
 		<div>
 			<p>基本信息</p>
@@ -171,6 +173,14 @@
 	     	     	<p>暂无数据</p>
 	     	     </c:if>
 			</div>
+
+			<div class="margin-top-little">
+				<div class="row">
+					<div class="col-sm-3"></div>
+					<div class="col-sm-4"><a href="ClothCountToProcess" class="btn btn-info btn-lg" >提交</a></div>
+				</div>
+					
+			</div>
       	   
 		</div>
 	</div>
@@ -228,6 +238,7 @@
 		</div>
 	</div>
 
+<jsp:include page="../footer.jsp" flush="true" />
 
 <script type="text/javascript">
 /* variables */

@@ -2,6 +2,8 @@ package com.yicheng.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import com.yicheng.dao.ClothDao;
@@ -28,7 +30,18 @@ public class ClothDaoImpl extends HibernateDaoBase implements ClothDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Cloth> getAll() {
-		return getHibernateTemplate().find("from Cloth");
+		Session session = super.getSession(true);
+		Query query = null;
+		try {
+			query = session.createQuery("from Cloth order by createdTime desc, id desc");
+			return query.list();
+		}catch(Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}finally {
+			session.close();
+		}
+		return null;
 	}
 
 }

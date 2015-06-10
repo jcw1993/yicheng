@@ -15,7 +15,10 @@
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
-		<h3>皮衣详情<a id="cloth-create" href="ExportMaterialExcel?clothId=${cloth.id}" class="btn btn-primary create-button">导出面辅料明细表</a></h3>
+		<h3>皮衣详情
+		<a id="cloth-create" href="ExportMaterialExcel?clothId=${cloth.id}" class="btn btn-primary create-button">导出面辅料明细表</a>
+		<a href="ClothMaterialOperate?clothId=${cloth.id}" class="btn btn-primary create-button">修改</a>
+		</h3>
 		<hr />
 		<div>
 			<p>基本信息</p>
@@ -45,7 +48,7 @@
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
-						<th>单价</th>
+						<th>估价</th>
 						<th>备注</th>
 					</tr>
 					<c:forEach items="${leatherDetails}" var="leatherDetail">
@@ -76,7 +79,7 @@
 			     		<th>部位</th>
 			     		<th>单位</th>
 			     		<th>用料</th>
-			     		<th>单价</th>
+			     		<th>估价</th>
 			     		<th>备注</th>
 			     	</tr>
 			     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
@@ -108,7 +111,7 @@
 	     	     		<th>部位</th>
 	     	     		<th>单位</th>
 	     	     		<th>用料</th>
-	     	     		<th>单价</th>
+	     	     		<th>估价</th>
 	     	     		<th>备注</th>
 	     	     	</tr>
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
@@ -183,5 +186,7 @@
 			</div>
 		</div>
 	</div>
+<jsp:include page="../footer.jsp" flush="true" />
+	
 </body>
 </html>

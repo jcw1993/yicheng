@@ -1,6 +1,7 @@
 package com.yicheng.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Cloth implements Serializable {
 	private static final long serialVersionUID = 186654531546632842L;
@@ -9,6 +10,7 @@ public class Cloth implements Serializable {
 	private String type;
 	private String name;
 	private int colorType;
+	private Date createdTime;
 	
 	public int getId() {
 		return id;
@@ -35,23 +37,31 @@ public class Cloth implements Serializable {
 		this.colorType = colorType;
 	}
 	
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
 	public Cloth() {}
 	
 	public Cloth(int id) {
 		this.id = id;
 	}
 
-	public Cloth(int id, String type, String name, int colorType) {
+	public Cloth(int id, String type, String name, int colorType, Date createdTime) {
 		this.id = id;
 		this.type = type;
 		this.name = name;
 		this.colorType = colorType;
+		this.createdTime = createdTime;
 	}
 	
-	public Cloth(String type, String name, int colorType) {
+	public Cloth(String type, String name, int colorType, Date createdTime) {
 		this.type = type;
 		this.name = name;
 		this.colorType = colorType;
+		this.createdTime = createdTime;
 	}	
 	
 	@Override

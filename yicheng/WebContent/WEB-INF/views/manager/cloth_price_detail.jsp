@@ -15,7 +15,7 @@
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
-		<h3>皮衣详情<a id="cloth-create" href="ExportPriceExcel?clothId=${clothOrder.clothId}" class="btn btn-primary create-button">导出报价单</a></h3>
+		<h3>皮衣详情<a href="ExportPriceExcel?clothId=${clothOrder.clothId}" class="btn btn-primary create-button">导出报价单</a></h3>
 		<hr />
 		<div>
 			<p>基本信息</p>
@@ -132,15 +132,12 @@
 
 					<c:if test="${null == supportDetails}">
 						<p>暂无数据</p>
-					</c:if>
-	     	     
-			</div>
-      	   
+					</c:if>	     	     
+			</div>      	   
 		</div>
-
-
 	</div>
 
+<jsp:include page="../footer.jsp" flush="true" />
 
 <script type="text/javascript">
 

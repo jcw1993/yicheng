@@ -39,8 +39,8 @@ public class PricingController {
 	@Autowired
 	private ClothMaterialService clothMaterialService;
 	
-	@RequestMapping(value = "/Pricing/ClothPriceManage", method = RequestMethod.GET)
-	public ModelAndView clothMaterialList(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/Pricing/ClothPriceToProcess", method = RequestMethod.GET)
+	public ModelAndView clothPriceToProcess(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothToPriceResult = clothMaterialService.getNeedPricing();
 		if(clothToPriceResult.getResultCode() == ResultCode.NORMAL) {
@@ -49,24 +49,30 @@ public class PricingController {
 			logger.warn("cloth get need pricing exception");
 		}
 		
+		return new ModelAndView("pricing/cloth_price_to_process", "model", model);
+	}
+	
+	@RequestMapping(value = "/Pricing/ClothPriceProcessed", method = RequestMethod.GET)
+	public ModelAndView clothPriceProcessed(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothPricedResult = clothMaterialService.getPriced();
 		if(clothPricedResult.getResultCode() == ResultCode.NORMAL) {
 			model.put("clothPriced", clothPricedResult.getData());
 		}else {
 			logger.warn("cloth get priced exception");
 		}
-		return new ModelAndView("pricing/cloth_price_manage", "model", model);
+		return new ModelAndView("pricing/cloth_price_processed", "model", model);
 	}
 	
 	@RequestMapping(value = "/Pricing/ClothPriceDetail", method = RequestMethod.GET)
-	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView clothPriceDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		Map<String, Object> model = getClothMaterialInfo(clothId);
 		return new ModelAndView("pricing/cloth_price_detail", "model", model);
 	}
 
 	@RequestMapping(value = "/Pricing/ClothPriceOperate", method = RequestMethod.GET)
-	public ModelAndView clothMaterialOperate(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView clothPriceOperate(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		Map<String, Object> model = getClothMaterialInfo(clothId);
 		return new ModelAndView("pricing/cloth_price_operate", "model", model);

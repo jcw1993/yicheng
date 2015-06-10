@@ -15,7 +15,10 @@
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
 	<div class="container-body">
-		<h3>皮衣详情<a id="cloth-create" href="ExportPriceExcel?clothId=${cloth.id}" class="btn btn-primary create-button">导出报价单</a></h3>
+		<h3>皮衣详情
+		<a href="ExportPriceExcel?clothId=${cloth.id}" class="btn btn-primary create-button">导出报价单</a>
+		<a href="ClothPriceOperate?clothId=${cloth.id}" class="btn btn-primary create-button">进行处理</a>
+		</h3>
 		<hr />
 		<div>
 			<p>基本信息</p>
@@ -44,6 +47,7 @@
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
+						<th>估价</th>
 						<th>单价</th>
 						<th>金额</th>
 						<th>备注</th>
@@ -54,6 +58,7 @@
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
 							<td>${leatherDetail.consumption}</td>
+							<td>${null == leatherDetail.estimatedPrice ? "暂无" : leatherDetail.estimatedPrice}</td>
 							<td>${null == leatherDetail.price ? "暂无" : leatherDetail.price}</td>
 							<td class="blue">${null == leatherDetail.price ? "暂无" : leatherDetail.consumption *  leatherDetail.price}</td>
 							<td class="remark">${leatherDetail.remark}</td>
@@ -77,6 +82,7 @@
 			     		<th>部位</th>
 			     		<th>单位</th>
 			     		<th>用料</th>
+			     		<th>估价</th>
 			     		<th>单价</th>
 			     		<th>金额</th>
 			     		<th>备注</th>
@@ -87,6 +93,7 @@
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
 							<td>${fabricDetail.consumption}</td>
+							<td>${null == fabricDetail.estimatedPrice ? "暂无" : fabricDetail.estimatedPrice}</td>
 							<td>${null == fabricDetail.price ? "暂无" : fabricDetail.price}</td>
 							<td class="blue">${null == fabricDetail.price ? "暂无" : fabricDetail.consumption *  fabricDetail.price}</td>
 							<td class="remark">${fabricDetail.remark}</td>
@@ -112,6 +119,7 @@
 	     	     			<th>部位</th>
 	     	     			<th>单位</th>
 	     	     			<th>用料</th>
+	     	     			<th>估价</th>
 	     	     			<th>单价</th>
 	     	     			<th>金额</th>
 	     	     			<th>备注</th>
@@ -122,6 +130,7 @@
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.consumption}</td>
+							<td>${null == supportDetail.estimatedPrice ? "暂无" : supportDetail.estimatedPrice}</td>
 							<td>${null == supportDetail.price ? "暂无" : supportDetail.price}</td>
 							<td class="blue">${null == supportDetail.price ? "暂无" : supportDetail.consumption *  supportDetail.price}</td>
 							<td class="remark">${supportDetail.remark}</td>
@@ -132,15 +141,12 @@
 
 					<c:if test="${null == supportDetails}">
 						<p>暂无数据</p>
-					</c:if>
-	     	     
-			</div>
-      	   
+					</c:if>	     	     
+			</div>      	   
 		</div>
-
-
 	</div>
 
+<jsp:include page="../footer.jsp" flush="true" />
 
 <script type="text/javascript">
 

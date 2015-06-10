@@ -88,16 +88,31 @@ public class UserServiceImpl implements UserService {
 		
 		GenericResult<List<User>> allResult = getAll();
 		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			// check if name exists
+			boolean nameExist = false;
+			for(User user : allResult.getData()) {
+				if(user.getName().equals(name) && user.getType() == userType) {
+					nameExist = true;
+					break;
+				}
+			}
+			if(!nameExist) {
+				result.setResultCode(ResultCode.E_USERNAME_NOT_EXIST);
+				result.setMessage("username not exists");
+				return result;
+			}
+			
+			
 			for(User user : allResult.getData()) {
 				if(user.getName().equals(name) && user.getPassword().equals(password)
 						&& user.getType() == userType) {
 					result.setData(user);
 					break;
+				}else if(user.getName().equals(name) && !user.getPassword().equals(password)
+						&& user.getType() == userType) {
+					result.setResultCode(ResultCode.E_PASSWORD_ERROR);
+					result.setMessage("password error");
 				}
-			}
-			if(null == result.getData()) {
-				result.setResultCode(ResultCode.E_NO_DATA);
-				result.setMessage("no User data, User name: " + name);
 			}
 		}else {
 			result.setResultCode(allResult.getResultCode());

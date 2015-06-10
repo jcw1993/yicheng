@@ -45,8 +45,21 @@ public class BuyerController {
 	@Autowired
 	private OrderClothService orderClothService;
 	
-	@RequestMapping(value = "/Buyer/ClothCountManage", method = RequestMethod.GET)
-	public ModelAndView clothMaterialList(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/Buyer/ClothCountToProcess", method = RequestMethod.GET)
+	public ModelAndView clothCountToProcess(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		GenericResult<List<Cloth>> clothToCountResult = clothMaterialService.getNeedCount();
+		if(clothToCountResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("clothToCount", clothToCountResult.getData());
+		}else {
+			logger.warn("cloth get need count exception");
+		}
+		
+		return new ModelAndView("buyer/cloth_count_to_process", "model", model);
+	}
+	
+	@RequestMapping(value = "/Buyer/ClothCountProcessed", method = RequestMethod.GET)
+	public ModelAndView clothCountProcessed(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothToCountResult = clothMaterialService.getNeedCount();
 		if(clothToCountResult.getResultCode() == ResultCode.NORMAL) {
@@ -61,18 +74,18 @@ public class BuyerController {
 		}else {
 			logger.warn("cloth get counted exception");
 		}
-		return new ModelAndView("buyer/cloth_count_manage", "model", model);
+		return new ModelAndView("buyer/cloth_count_processed", "model", model);
 	}
 	
 	@RequestMapping(value = "/Buyer/ClothCountDetail", method = RequestMethod.GET)
-	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView clothCountDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		Map<String, Object> model = getClothMaterialInfo(clothId);
 		return new ModelAndView("buyer/cloth_count_detail", "model", model);
 	}
 	
 	@RequestMapping(value = "/Buyer/ClothCountOperate", method = RequestMethod.GET)
-	public ModelAndView clothMaterialOperate(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView clothCountOperate(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		Map<String, Object> model = getClothMaterialInfo(clothId);
 		return new ModelAndView("buyer/cloth_count_operate", "model", model);

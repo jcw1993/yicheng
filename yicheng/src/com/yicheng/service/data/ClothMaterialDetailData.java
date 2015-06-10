@@ -99,7 +99,7 @@ public class ClothMaterialDetailData implements Serializable {
 		this.estimatedPrice = estimatedPrice;
 	}
 	public Double getPrice() {
-		return (null == price ? estimatedPrice : price);
+		return price;
 	}
 	public void setPrice(Double price) {
 		this.price = price;

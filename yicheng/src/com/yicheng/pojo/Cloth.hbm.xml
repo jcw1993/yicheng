@@ -12,6 +12,7 @@
         <property name="name" type="string" column="name" />
         <property name="type" type="string" column="type" />
         <property name="colorType" type="integer" column="color_type" />
+        <property name="createdTime" type="timestamp" column="created_time" />
     </class>
 
 </hibernate-mapping>

@@ -58,35 +58,66 @@
 						<a id="login" class="btn btn-lg login btn-success" href="#"> 登
 						录 </a>
 					</div>
-
+				</div>
+				<div class="input-item">
+					<p id="error-info" class="error-info"></p>
 				</div>
 			</form>
 		</div>
 	</div>
 
+	<jsp:include page="footer.jsp" flush="true" />
+
 	<script type="text/javascript">
+
+	var USER_NAME_NOT_EXIST = 0x00000040;
+	var PASSWORD_ERROR = 0x00000041;
 
 	var $nameInput;
 	var $passwordInput;
 	var $loginBtn;
 	var $loginForm;
+	var $errorInfo;
 
 	$(function() {
 		$nameInput = $("#name");
 		$passwordInput = $("#password");
 		$loginLink = $("#login");
 		$loginForm = $("#loginForm");
+		$errorInfo = $("#error-info");
 		
 		$loginLink.click(function(e) {
 			console.log("log");
 			var name = $nameInput.val();
 			var password = $passwordInput.val();
+			var userType = $("select[name='userType'] option:selected").val();
 			console.log("name: " + name);
 			console.log("password: " + password);
-			if(checkParameters(name, password)) {
+			console.log("userType: " + userType);
+			if(checkParameters(name, password, userType)) {
 				name = name.trim();
 				password = password.trim();
-				$loginForm.submit();	
+				$.ajax({
+					url: "Login",
+					method: "post",
+					data: {
+						name: name,
+						password: password,
+						userType: userType
+					},
+					success: function(result) {
+						if(result.resultCode == 0) {
+							var redirectUrl = result.data;
+							window.location = redirectUrl;
+						}else if(result.resultCode == USER_NAME_NOT_EXIST) {
+							$errorInfo.text("用户名不存在");
+							clearInput();
+						}else if(result.resultCode == PASSWORD_ERROR) {
+							$errorInfo.text("密码错误");
+							clearInput();
+						}
+					}
+				});
 			}
 		}); 
 
@@ -99,7 +130,7 @@
 
 	});
 
-	function checkParameters(name, password) {
+	function checkParameters(name, password, userType) {
 		if(name == undefined || name.trim() == "") {
 			alert("用户名不能为空");
 			return false;
@@ -108,7 +139,16 @@
 			alert("密码不能为空!");
 			return false;
 		}
+		if(userType == undefined || (userType != 0 && userType != 1 && userType != 2 && userType != 3)) {
+			alert("请选择身份");
+			return false;
+		}
 		return true;
+	}
+
+	function clearInput() {
+		$nameInput.val("");
+		$passwordInput.val("");
 	}
 </script>
 </body>

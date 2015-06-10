@@ -18,7 +18,9 @@ public class ResultCode {
 	
 	public static final int E_OTHER_ERROR = 0x00000030;
 	
-	public static final int E_TASK_ASSIGNED = 0x00000041;
+	public static final int E_USERNAME_NOT_EXIST = 0x00000040;
 	
-	public static final int E_PSW_ERROR = 0x00000005;
+	public static final int E_PASSWORD_ERROR = 0x00000041;
+	
+	
 }

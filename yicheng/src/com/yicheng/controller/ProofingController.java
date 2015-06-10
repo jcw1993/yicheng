@@ -1,6 +1,7 @@
 package com.yicheng.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class ProofingController {
 		// set colorType = 0 for test
 		int colorType = 0;
 		
-		Cloth cloth = new Cloth(type, name, colorType);
+		Cloth cloth = new Cloth(type, name, colorType, new Date());
 		GenericResult<Integer> createResult = clothService.create(cloth);
 		return new GenericJsonResult<Integer>(createResult);
 	}
@@ -132,6 +133,13 @@ public class ProofingController {
 		return new ModelAndView("proofing/cloth_material_operate", "model", model);
 	}
 	
+	@RequestMapping(value = "/Proofing/ClothMaterialCreate", method = RequestMethod.GET)
+	public ModelAndView clothMaterialCreate(HttpServletRequest request, HttpServletResponse response) {
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		Map<String, Object> model = getClothMaterialInfo(clothId);
+		return new ModelAndView("proofing/cloth_material_create", "model", model);
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/Proofing/DeleteClothMaterial", method = RequestMethod.GET)
 	 public NoneDataJsonResult deleteClothMaterial(HttpServletRequest request, HttpServletResponse response) {
@@ -139,6 +147,23 @@ public class ProofingController {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		NoneDataResult result = clothMaterialService.delete(clothMaterialId, clothId);
 		return new NoneDataJsonResult(result);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/SaveClothMaterialEstimatedPrice", method = RequestMethod.POST)
+	 public NoneDataJsonResult saveClothMaterialEstimatedPrice(HttpServletRequest request, HttpServletResponse response) {
+		int clothMaterialId = Utils.getRequestIntValue(request, "clothMaterialId", true);
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		double estimatedPrice = Utils.getRequestDoubleValue(request, "estimatedPrice", true);
+		GenericResult<ClothMaterial> clothMaterialResult = clothMaterialService.getById(clothId, clothMaterialId);
+		if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+			ClothMaterial clothMaterial = clothMaterialResult.getData();
+			clothMaterial.setEstimatedPrice(estimatedPrice);
+			return new NoneDataJsonResult(clothMaterialService.update(clothMaterial));
+		}else {
+			return new NoneDataJsonResult(clothMaterialResult);
+		}
+		
 	}
 	
 	@RequestMapping(value = "/Proofing/MaterialManage", method = RequestMethod.GET)

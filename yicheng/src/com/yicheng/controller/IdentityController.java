@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yicheng.common.UserType;
 import com.yicheng.pojo.User;
 import com.yicheng.service.UserService;
+import com.yicheng.util.GenericJsonResult;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.UserInfoStorage;
@@ -33,14 +35,18 @@ public class IdentityController {
 		return new ModelAndView("login", null);
 	}
 
+	@ResponseBody
 	@RequestMapping(value = { "/Login" }, method = RequestMethod.POST)
-	public void login(HttpServletRequest request, HttpServletResponse response)
+	public GenericJsonResult<String> login(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		GenericJsonResult<String> result = new GenericJsonResult<String>();
 		String name = request.getParameter("name");
 		String password = request.getParameter("password");
 		if (StringUtils.isBlank(name) || StringUtils.isBlank(password)) {
-			response.sendRedirect(request.getContextPath() + "/Login");
-			return;
+//			response.sendRedirect(request.getContextPath() + "/Login");
+			result.setResultCode(ResultCode.E_OTHER_ERROR);
+			result.setMessage("username and password cannot be blank");;
+			return result;
 		}
 		
 		int userType = Utils.getRequestIntValue(request, "userType", true);
@@ -55,25 +61,30 @@ public class IdentityController {
 			UserInfoStorage.putUser(sessionId, user);
 			switch (userType) {
 			case UserType.USER_TYPE_PROOFING:
-				response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialManage");
+//				response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialManage");
+				result.setData("Proofing/ClothMaterialManage");
 				break;
 			case UserType.USER_TYPE_PRICING:
-				response.sendRedirect(request.getContextPath() + "/Pricing/ClothPriceManage");
+//				response.sendRedirect(request.getContextPath() + "/Pricing/ClothPriceToProcess");
+				result.setData("Pricing/ClothPriceToProcess");
 				break;
 			case UserType.USER_TYPE_BUYER:
-				response.sendRedirect(request.getContextPath() + "/Buyer/ClothCountManage");
+//				response.sendRedirect(request.getContextPath() + "/Buyer/ClothCountToProcess");
+				result.setData("Buyer/ClothCountToProcess");
 				break;
 			case UserType.USER_TYPE_MANAGER:
 				response.sendRedirect(request.getContextPath() + "/Manager/ClothMaterialManage");
+				result.setData("Manager/ClothMaterialManage");
 				break;
 			default:
 				break;
 			}
-			return;
 		} else {
-			response.sendRedirect(request.getContextPath() + "/Login");
-			return;
+			result.setResultCode(userResult.getResultCode());
+			result.setMessage(userResult.getMessage());
 		}
+		
+		return result;
 
 	}
 

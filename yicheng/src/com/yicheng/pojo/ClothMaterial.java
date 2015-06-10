@@ -93,7 +93,7 @@ public class ClothMaterial implements Serializable {
 	}
 
 	public Double getPrice() {
-		return (null == price ? estimatedPrice : price);
+		return price;
 	}
 
 	public void setPrice(Double price) {
