@@ -33,7 +33,7 @@
 				</tr>
 			</c:forEach>			
 		</table>
-								
+		<jsp:include page="../pagination.jsp" flush="true" />			
 	</div>
 
 <jsp:include page="../footer.jsp" flush="true" />

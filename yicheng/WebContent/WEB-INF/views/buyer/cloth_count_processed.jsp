@@ -40,6 +40,7 @@
 					</tr>
 				</c:forEach>			
 			</table>
+			<jsp:include page="../pagination.jsp" flush="true" />		
 		</c:if>
 		<c:if test="${null == model.clothCounted}">
 			<p>暂无数据</p>

@@ -1,5 +1,6 @@
 package com.yicheng.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yicheng.common.MaterialType;
+import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.service.ClothMaterialService;
@@ -44,7 +46,22 @@ public class PricingController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothToPriceResult = clothMaterialService.getNeedPricing();
 		if(clothToPriceResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("clothToPrice", clothToPriceResult.getData());
+			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+			
+			List<Cloth> allList = clothToPriceResult.getData();
+			int itemCount = allList.size();
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+				if(i < itemCount) {
+					resultList.add(allList.get(i));
+				}
+			}
+			model.put("baseUrl", "ClothPriceToProcess");
+			model.put("pageIndex", pageIndex);
+			model.put("itemCount", itemCount);
+			model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+			model.put("clothToPrice", resultList);
 		}else {
 			logger.warn("cloth get need pricing exception");
 		}
@@ -57,7 +74,22 @@ public class PricingController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothPricedResult = clothMaterialService.getPriced();
 		if(clothPricedResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("clothPriced", clothPricedResult.getData());
+			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+			
+			List<Cloth> allList = clothPricedResult.getData();
+			int itemCount = allList.size();
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+				if(i < itemCount) {
+					resultList.add(allList.get(i));
+				}
+			}
+			model.put("baseUrl", "ClothPriceProcessed");
+			model.put("pageIndex", pageIndex);
+			model.put("itemCount", itemCount);
+			model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+			model.put("clothPriced", resultList);
 		}else {
 			logger.warn("cloth get priced exception");
 		}

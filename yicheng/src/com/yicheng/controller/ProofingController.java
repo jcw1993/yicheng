@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yicheng.common.MaterialType;
+import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
@@ -53,7 +54,22 @@ public class ProofingController {
 		GenericResult<List<Cloth>> clothResult = clothService.getAll();
 		
 		if(clothResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("clothes", clothResult.getData());
+			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+			
+			List<Cloth> allList = clothResult.getData();
+			int itemCount = allList.size();
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+				if(i < itemCount) {
+					resultList.add(allList.get(i));
+				}
+			}
+			model.put("baseUrl", "ClothMaterialManage");
+			model.put("pageIndex", pageIndex);
+			model.put("itemCount", itemCount);
+			model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+			model.put("clothes", resultList);
 		}else {
 			logger.warn("cloth get all exception");
 		}
@@ -111,18 +127,6 @@ public class ProofingController {
 		ClothMaterial clothMaterial = new ClothMaterial(clothId, materialId, part, unitName, consumption, estimatedPrice, null,
 				null, null, null, remark);
 		GenericResult<Integer> createResult = clothMaterialService.create(clothMaterial);
-		return new GenericJsonResult<Integer>(createResult);
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/Proofing/CreateMaterial", method = RequestMethod.POST)
-	public GenericJsonResult<Integer> createMaterialPost(HttpServletRequest request, HttpServletResponse response) {
-		String name = request.getParameter("name");
-		int type = Utils.getRequestIntValue(request, "type", true);
-		
-		// TODO. 1 colorType = 0 for test
-		Material material = new Material(name, 0, type);
-		GenericResult<Integer> createResult = materialService.create(material);
 		return new GenericJsonResult<Integer>(createResult);
 	}
 	

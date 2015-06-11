@@ -33,7 +33,7 @@
 						<th>操作</th>		
 					</tr>
 					<c:forEach items="${leathers}" var="leather">
-						<tr material="${leather.id}">
+						<tr materialId="${leather.id}">
 							<td>${leather.name}</td>
 							<td><a href="#" class="delete_leather_btn" >删除</a></td>
 						</tr>
@@ -114,7 +114,7 @@
 				        <div class="form-group row">
 					        <label class="col-sm-2 control-label">名称</label>
 					        <div class="col-sm-6">
-					            <input type="text" class="form-control" name="material_name" placeholder="项目" />
+					            <input id="material_name" type="text" class="form-control" name="material_name" placeholder="项目" />
 					        </div>
 					    </div>				
 					<div class="modal-footer">
@@ -130,6 +130,90 @@
 <jsp:include page="../footer.jsp" flush="true" />
 
 <script type="text/javascript">
+var $addLeatherBtn = $("#add_leather_btn");
+var $addFabricBtn = $("#add_fabric_btn");
+var $addSupportBtn = $("#add_support_btn");
+
+var $deleteLeatherBtn = $(".delete_leather_btn");
+var $deleteFabricBtn = $(".delete_fabric_btn");
+var $deleteSupportBtn = $(".delete_support_btn");
+
+var $materialCreateModal = $("#material_create_modal");
+var $materialNameInput = $("#material_name");
+var $materialCreateSubmit = $("#material_create_submit");
+
+var materialType;
+
+$addLeatherBtn.click(function(e) {
+	materialType = MATERIAL_TYPE_LEATHER;
+	$materialCreateModal.modal();
+});
+
+$addFabricBtn.click(function(e) {
+	materialType = MATERIAL_TYPE_FABRIC;
+	$materialCreateModal.modal();
+});
+
+$addSupportBtn.click(function(e) {
+	materialType = MATERIAL_TYPE_SUPPORT;
+	$materialCreateModal.modal();
+});
+
+$materialCreateSubmit.click(function(e) {
+	var name = $materialNameInput.val();
+	saveMaterial(name, materialType);
+});
+
+$deleteLeatherBtn.click(function(e) {
+	var materialId = $(this).parent().parent().attr("materialId");
+	console.log("materialId: " + materialId);
+	deleteMaterial(materialId);
+});
+
+$deleteFabricBtn.click(function(e) {
+	var materialId = $(this).parent().parent().attr("materialId");
+	deleteMaterial(materialId);
+});
+
+$deleteSupportBtn.click(function(e) {
+	var materialId = $(this).parent().parent().attr("materialId");
+	deleteMaterial(materialId);
+});
+
+function saveMaterial(name, type) {
+	$.ajax({
+		url: "CreateMaterial",
+		method: "post",
+		data: {
+			name: name,
+			type: type
+		},
+		success: function(result) {
+			alert("添加成功");
+			location.reload();
+		}
+	});
+}
+
+function deleteMaterial(materialId) {
+	var r = confirm("删除已用材料会影响皮衣数据，确认删除?");
+	if (r==true) {
+	  $.ajax({
+	  	url: "DeleteMaterial",
+	  	method: "post",
+	  	data: {
+	  		materialId: materialId
+	  	},
+	  	success: function(result) {
+	  		if(result.resultCode == 0) {
+	  			alert("删除成功");
+	  			location.reload();
+	  		}
+	  	}
+	  });
+	}
+}
+
 
 </script>	
 </body>

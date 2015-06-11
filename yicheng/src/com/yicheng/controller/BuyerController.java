@@ -1,5 +1,6 @@
 package com.yicheng.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yicheng.common.MaterialType;
+import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.OrderCloth;
@@ -50,7 +52,22 @@ public class BuyerController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothToCountResult = clothMaterialService.getNeedCount();
 		if(clothToCountResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("clothToCount", clothToCountResult.getData());
+			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+			
+			List<Cloth> allList = clothToCountResult.getData();
+			int itemCount = allList.size();
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+				if(i < itemCount) {
+					resultList.add(allList.get(i));
+				}
+			}
+			model.put("baseUrl", "ClothCountToProcess");
+			model.put("pageIndex", pageIndex);
+			model.put("itemCount", itemCount);
+			model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+			model.put("clothToCount", resultList);
 		}else {
 			logger.warn("cloth get need count exception");
 		}
@@ -61,19 +78,28 @@ public class BuyerController {
 	@RequestMapping(value = "/Buyer/ClothCountProcessed", method = RequestMethod.GET)
 	public ModelAndView clothCountProcessed(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothToCountResult = clothMaterialService.getNeedCount();
-		if(clothToCountResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("clothToCount", clothToCountResult.getData());
-		}else {
-			logger.warn("cloth get need count exception");
-		}
-		
 		GenericResult<List<Cloth>> clothCountedResult = clothMaterialService.getCounted();
 		if(clothCountedResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("clothCounted", clothCountedResult.getData());
+			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+			
+			List<Cloth> allList = clothCountedResult.getData();
+			int itemCount = allList.size();
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+				if(i < itemCount) {
+					resultList.add(allList.get(i));
+				}
+			}
+			model.put("baseUrl", "ClothCountProcessed");
+			model.put("pageIndex", pageIndex);
+			model.put("itemCount", itemCount);
+			model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+			model.put("clothCounted", resultList);
 		}else {
 			logger.warn("cloth get counted exception");
 		}
+		
 		return new ModelAndView("buyer/cloth_count_processed", "model", model);
 	}
 	
