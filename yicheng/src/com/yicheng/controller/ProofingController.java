@@ -1,31 +1,48 @@
 package com.yicheng.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.yicheng.common.Config;
 import com.yicheng.common.MaterialType;
 import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
+import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
+import com.yicheng.pojo.Content;
 import com.yicheng.pojo.Material;
+import com.yicheng.pojo.OrderCloth;
+import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
+import com.yicheng.service.ContentService;
 import com.yicheng.service.MaterialService;
+import com.yicheng.service.OrderClothService;
+import com.yicheng.service.data.ClothDetailData;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.GenericJsonResult;
 import com.yicheng.util.GenericResult;
@@ -39,6 +56,7 @@ public class ProofingController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ProofingController.class);
 	
+	
 	@Autowired
 	 private ClothService clothService;
 	
@@ -47,6 +65,15 @@ public class ProofingController {
 	
 	@Autowired
 	private MaterialService materialService;
+	
+	@Autowired
+	private ContentService contentService;
+	
+	@Autowired
+	private OrderClothService orderClothService;
+	
+	@Autowired
+	private ClothColorService clothColorService;
 	
 	@RequestMapping(value = "/Proofing/ClothMaterialManage", method = RequestMethod.GET)
 	public ModelAndView clothMaterialList(HttpServletRequest request, HttpServletResponse response) {
@@ -69,18 +96,28 @@ public class ProofingController {
 			model.put("pageIndex", pageIndex);
 			model.put("itemCount", itemCount);
 			model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
-			model.put("clothes", resultList);
+			model.put("clothes", convertClothToDetailData(resultList));
 		}else {
 			logger.warn("cloth get all exception");
 		}
 		return new ModelAndView("proofing/cloth_material_manage", "model", model);
 	}
-	
+
 	@RequestMapping(value = "/Proofing/ClothMaterialDetail", method = RequestMethod.GET)
 	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		Map<String, Object> model = getClothMaterialInfo(clothId);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+		if(clothColorId == 0) {
+			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
+				clothColorId = clothColorResult.getData().get(0).getId();
+			}
+		}
+		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
+		model.put("baseUrl", "ClothMaterialDetail?clothId=" + clothId);
 		return new ModelAndView("proofing/cloth_material_detail", "model", model);
+	
+
 	}
 	
 	@RequestMapping(value = "/Proofing/CreateCloth", method = RequestMethod.GET)
@@ -88,20 +125,73 @@ public class ProofingController {
 		return new ModelAndView("proofing/cloth_create", "model", null);
 	}
 	
-	@ResponseBody
 	@RequestMapping(value = "/Proofing/CreateCloth", method = RequestMethod.POST)
-	public GenericJsonResult<Integer> createClothPost(HttpServletRequest request, HttpServletResponse response) {
+	public void createClothPost(HttpServletRequest request, @RequestParam(value = "image", required = false) MultipartFile file,
+			HttpServletResponse response) throws IOException, ParseException {
 		String type = request.getParameter("type");
 		String name = request.getParameter("name");
+		String client = request.getParameter("client");
+		String supplier = request.getParameter("supplier");
+		String deliveryDate = request.getParameter("deliveryDate");
+		String color = request.getParameter("color");
+		String remark = request.getParameter("remark");
+		
 		type = type.trim();
 		name = name.trim();
+		color = color.trim();
 		
-		// set colorType = 0 for test
-		int colorType = 0;
+		InputStream input = file.getInputStream();
+		byte[] buffer = new byte[1024 * 1024];
+
+		String originalFileName = file.getOriginalFilename();
+		UUID uuid = UUID.randomUUID();
+		String saveName = uuid.toString() + Utils.getFileExtensionWithDot(originalFileName);
 		
-		Cloth cloth = new Cloth(type, name, colorType, new Date());
+		File saveDir = new File(Config.UPLOAD_FOLDER);
+		if (!saveDir.exists()) {
+			saveDir.mkdir();
+		}
+		File imageFile = new File(saveDir, saveName);
+		if (!imageFile.exists()) {
+			imageFile.createNewFile();
+		}
+		FileOutputStream output = new FileOutputStream(imageFile);
+
+		int byteRead = 0;
+		while ((byteRead = input.read(buffer)) != -1) {
+			output.write(buffer, 0, byteRead);
+			output.flush();
+		}
+		output.close();
+		input.close();
+		
+		// write into content
+		Integer imageId = null;
+		Content content = new Content(originalFileName, saveName, new Date());
+		GenericResult<Integer> createContentResult = contentService.create(content);
+		if(createContentResult.getResultCode() == ResultCode.NORMAL) {
+			imageId = createContentResult.getData();
+		}
+		
+		Cloth cloth = new Cloth(type, name, client, supplier, remark, imageId, new Date());
 		GenericResult<Integer> createResult = clothService.create(cloth);
-		return new GenericJsonResult<Integer>(createResult);
+		if(createResult.getResultCode() == ResultCode.NORMAL) {
+			int clothId = createResult.getData();
+			if(StringUtils.isBlank(deliveryDate)) {
+				deliveryDate = null;
+			}else {
+				deliveryDate.trim();
+			}
+			OrderCloth orderCloth = new OrderCloth(null, clothId, null == deliveryDate ? null : Utils.parseDate(deliveryDate, Config.DATE_FORMAT), null);
+			orderClothService.create(orderCloth);
+			ClothColor clothColor = new ClothColor(clothId, color);
+			clothColorService.create(clothColor);
+			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialCreate?clothId=" + clothId);
+		}else {
+			// TODO redirect to error page
+			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialManage");
+		}
+		
 	}
 	
 	
@@ -117,14 +207,16 @@ public class ProofingController {
 	@RequestMapping(value = "/Proofing/CreateClothMaterial", method = RequestMethod.POST)
 	public GenericJsonResult<Integer> createClothMaterialPost(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", true);
 		int materialId = Utils.getRequestIntValue(request, "materialId", true);
 		String part = request.getParameter("part");
 		String unitName = request.getParameter("unitName");
 		double consumption = Utils.getRequestDoubleValue(request, "consumption", true);
 		double estimatedPrice = Utils.getRequestDoubleValue(request, "estimatedPrice", false);
 		String remark = request.getParameter("remark");
-		
-		ClothMaterial clothMaterial = new ClothMaterial(clothId, materialId, part, unitName, consumption, estimatedPrice, null,
+		String color = request.getParameter("color");
+	
+		ClothMaterial clothMaterial = new ClothMaterial(clothId, clothColorId, materialId, color, part, unitName, consumption, estimatedPrice, null,
 				null, null, null, remark);
 		GenericResult<Integer> createResult = clothMaterialService.create(clothMaterial);
 		return new GenericJsonResult<Integer>(createResult);
@@ -133,19 +225,29 @@ public class ProofingController {
 	@RequestMapping(value = "/Proofing/ClothMaterialOperate", method = RequestMethod.GET)
 	public ModelAndView clothMaterialOperate(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		Map<String, Object> model = getClothMaterialInfo(clothId);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+		if(clothColorId == 0) {
+			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
+				clothColorId = clothColorResult.getData().get(0).getId();
+			}
+		}
+		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
+		model.put("baseUrl", "ClothMaterialOperate?clothId=" + clothId);
 		return new ModelAndView("proofing/cloth_material_operate", "model", model);
 	}
 	
 	@RequestMapping(value = "/Proofing/ClothMaterialCreate", method = RequestMethod.GET)
 	public ModelAndView clothMaterialCreate(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		Map<String, Object> model = getClothMaterialInfo(clothId);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", true);
+		
+		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		return new ModelAndView("proofing/cloth_material_create", "model", model);
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/Proofing/DeleteClothMaterial", method = RequestMethod.GET)
+	@RequestMapping(value = "/Proofing/DeleteClothMaterial", method = RequestMethod.POST)
 	 public NoneDataJsonResult deleteClothMaterial(HttpServletRequest request, HttpServletResponse response) {
 		int clothMaterialId = Utils.getRequestIntValue(request, "clothMaterialId", true);
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
@@ -158,8 +260,10 @@ public class ProofingController {
 	 public NoneDataJsonResult saveClothMaterialEstimatedPrice(HttpServletRequest request, HttpServletResponse response) {
 		int clothMaterialId = Utils.getRequestIntValue(request, "clothMaterialId", true);
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", true);
+		
 		double estimatedPrice = Utils.getRequestDoubleValue(request, "estimatedPrice", true);
-		GenericResult<ClothMaterial> clothMaterialResult = clothMaterialService.getById(clothId, clothMaterialId);
+		GenericResult<ClothMaterial> clothMaterialResult = clothMaterialService.getById(clothId, clothColorId, clothMaterialId);
 		if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
 			ClothMaterial clothMaterial = clothMaterialResult.getData();
 			clothMaterial.setEstimatedPrice(estimatedPrice);
@@ -242,16 +346,36 @@ public class ProofingController {
 		}
 	}
 	
-	private Map<String, Object> getClothMaterialInfo(int clothId) {
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/CreateNewColor", method = RequestMethod.POST)
+	public NoneDataJsonResult createNewColor(HttpServletRequest request, HttpServletResponse response) {
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		String color = request.getParameter("color");
+		if(StringUtils.isNotBlank(color)) {
+			ClothColor clothColor = new ClothColor(clothId, color);
+			GenericResult<Integer> creaetResult = clothColorService.create(clothColor);
+			return new NoneDataJsonResult(creaetResult);
+		}
+
+		return new NoneDataJsonResult(ResultCode.E_INVALID_PARAMETER, "color can not null");
+	}
+	
+	private Map<String, Object> getClothMaterialInfo(int clothId, int clothColorId) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<Cloth> clothResult = clothService.getById(clothId);
-		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_LEATHER);
-		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_FABRIC);
-		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_SUPPORT);
+		GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
+		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
+		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
 		
-		if(clothResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("cloth", clothResult.getData());
+		model.put("clothColorId", clothColorId);
+		
+		if(clothResult.getResultCode() == ResultCode.NORMAL 
+				&& clothColorResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("cloth", new ClothDetailData(clothResult.getData(), clothColorResult.getData()));
+			model.put("clothColors", clothColorResult.getData());
 		}
+
 		if(leatherDetailResult.getResultCode() == ResultCode.NORMAL) {
 			model.put("leatherDetails", leatherDetailResult.getData());
 		}
@@ -262,6 +386,20 @@ public class ProofingController {
 			model.put("supportDetails", supportDetailResult.getData());
 		}
 		return model;
+	}
+	
+	private List<ClothDetailData> convertClothToDetailData(List<Cloth> clothList) {
+		if(null == clothList || clothList.isEmpty()) {
+			return null;
+		}
+		List<ClothDetailData> resultList = new ArrayList<ClothDetailData>();
+		for(Cloth cloth : clothList) {
+			GenericResult<List<ClothColor>> colorResult = clothColorService.getByCloth(cloth.getId());
+			if(colorResult.getResultCode() == ResultCode.NORMAL) {
+				resultList.add(new ClothDetailData(cloth, colorResult.getData()));
+			}
+		}
+		return resultList;
 	}
 	
 }

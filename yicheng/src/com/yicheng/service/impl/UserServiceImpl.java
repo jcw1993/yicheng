@@ -59,9 +59,9 @@ public class UserServiceImpl implements UserService {
 		GenericResult<User> result = new GenericResult<User>();
 		GenericResult<List<User>> allResult = getAll();
 		if(allResult.getResultCode() == ResultCode.NORMAL) {
-			for(User User : allResult.getData()) {
-				if(User.getId() == id) {
-					result.setData(User);
+			for(User user : allResult.getData()) {
+				if(user.getId() == id) {
+					result.setData(user);
 					break;
 				}
 			}

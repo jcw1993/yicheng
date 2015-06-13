@@ -9,7 +9,9 @@ public class ClothMaterial implements Serializable {
 	
 	private int id;
 	private int clothId;
+	private int clothColorId;
 	private int materialId;
+	private String color;
 	private String part;
 	private String unitName;
 	private double consumption;
@@ -23,43 +25,45 @@ public class ClothMaterial implements Serializable {
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 	public int getClothId() {
 		return clothId;
 	}
-
 	public void setClothId(int clothId) {
 		this.clothId = clothId;
 	}
-
+	public int getClothColorId() {
+		return clothColorId;
+	}
+	public void setClothColorId(int clothColorId) {
+		this.clothColorId = clothColorId;
+	}
 	public int getMaterialId() {
 		return materialId;
 	}
-
 	public void setMaterialId(int materialId) {
 		this.materialId = materialId;
 	}
-
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 	public String getPart() {
 		return part;
 	}
-
 	public void setPart(String part) {
 		this.part = part;
 	}
-
 	public String getUnitName() {
 		return unitName;
 	}
-
 	public void setUnitName(String unitName) {
 		this.unitName = unitName;
 	}
-
 	public double getConsumption() {
 		return consumption;
 	}
@@ -99,19 +103,15 @@ public class ClothMaterial implements Serializable {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-
 	public Date getOrderDate() {
 		return orderDate;
 	}
-
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
-
 	public String getRemark() {
 		return remark;
 	}
-
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
@@ -122,11 +122,13 @@ public class ClothMaterial implements Serializable {
 		this.id = id;
 	}
 	
-	public ClothMaterial(int id, int clothId, int materialId, String part, String unitName, double consumption, 
+	public ClothMaterial(int id, int clothId, int clothColorId, int materialId, String color, String part, String unitName, double consumption, 
 			Double estimatedPrice, Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
 		this.id = id;
 		this.clothId = clothId;
+		this.clothColorId = clothColorId;
 		this.materialId = materialId;
+		this.color = color;
 		this.part = part;
 		this.unitName = unitName;
 		this.consumption = consumption;
@@ -138,10 +140,12 @@ public class ClothMaterial implements Serializable {
 		this.remark = remark;
 	}
 	
-	public ClothMaterial(int clothId, int materialId, String part, String unitName, double consumption, 
+	public ClothMaterial(int clothId, int clothColorId, int materialId, String color, String part, String unitName, double consumption, 
 			Double estimatedPrice, Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
 		this.clothId = clothId;
+		this.clothColorId = clothColorId;
 		this.materialId = materialId;
+		this.color = color;
 		this.part = part;
 		this.unitName = unitName;
 		this.consumption = consumption;

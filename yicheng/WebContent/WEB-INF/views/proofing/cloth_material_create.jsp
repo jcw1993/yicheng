@@ -34,6 +34,34 @@
      	        <label>${cloth.name}</label>
      	        </div>
      	     </div>
+
+              <div class="form-group row">
+      	        <label for="name" class="col-sm-2 control-label">颜色</label>
+      	        <div class="col-sm-6">
+ 	     	        <label>${cloth.color}</label>
+      	        </div>
+      	     </div>
+
+              <div class="form-group row">
+      	        <label for="name" class="col-sm-2 control-label">买手</label>
+      	        <div class="col-sm-6">
+ 	     	        <label>${cloth.client}</label>
+      	        </div>
+      	     </div>
+
+              <div class="form-group row">
+      	        <label for="name" class="col-sm-2 control-label">供应商</label>
+      	        <div class="col-sm-6">
+ 	     	        <label>${cloth.supplier}</label>
+      	        </div>
+      	     </div>
+
+              <div class="form-group row">
+      	        <label for="name" class="col-sm-2 control-label">备注</label>
+      	        <div class="col-sm-6">
+ 	     	        <label class="remark">${cloth.remark}</label>
+      	        </div>
+      	     </div>     	     
 			
 			<div class="margin-top-little">
 				<div class="row title-area">
@@ -47,6 +75,7 @@
 				<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
 					<tr>
 						<th>项目</th>
+						<th>颜色</th>	
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
@@ -57,6 +86,7 @@
 					<c:forEach items="${leatherDetails}" var="leatherDetail">
 						<tr clothMaterialId="${leatherDetail.id}">
 							<td>${leatherDetail.materialName}</td>
+							<td>${leatherDetail.materialColor}</td>
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
 							<td>${leatherDetail.consumption}</td>
@@ -86,6 +116,7 @@
 			     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
 			     	<tr>
 			     		<th>项目</th>
+			     		<th>颜色</th>
 			     		<th>部位</th>
 			     		<th>单位</th>
 			     		<th>用料</th>
@@ -96,6 +127,7 @@
 			     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
 						<tr clothMaterialId="${fabricDetail.id}">
 							<td>${fabricDetail.materialName}</td>
+							<td>${leatherDetail.materialColor}</td>
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
 							<td>${fabricDetail.consumption}</td>
@@ -127,6 +159,7 @@
 	     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">
 	     	     	<tr>
 	     	     		<th>项目</th>
+	     	     		<th>颜色</th>
 	     	     		<th>部位</th>
 	     	     		<th>单位</th>
 	     	     		<th>用料</th>
@@ -137,6 +170,7 @@
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
 						<tr clothMaterialId="${supportDetail.id}">
 							<td>${supportDetail.materialName}</td>
+							<td>${leatherDetail.materialColor}</td>
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.consumption}</td>
@@ -183,7 +217,13 @@
 					            	
 					            </select>
 					        </div>
-					    </div>				
+					    </div>		
+				        <div class="form-group row">
+					        <label for="color" class="col-sm-2 control-label">颜色</label>
+					        <div class="col-sm-6">
+					            <input type="text" id="color" class="form-control" name="color" placeholder="颜色" />
+					        </div>
+					    </div>					    		
 				        <div class="form-group row">
 					        <label for="part" class="col-sm-2 control-label">部位</label>
 					        <div class="col-sm-6">

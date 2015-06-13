@@ -17,7 +17,9 @@ public interface ClothMaterialService {
 
 	public GenericResult<List<ClothMaterial>> getByCloth(int clothId);
 	
-	public GenericResult<ClothMaterial> getById(int clothId, int clothMaterialId);
+	public GenericResult<List<ClothMaterial>> getByClothColor(int clothId, int clothColorId);
+	
+	public GenericResult<ClothMaterial> getById(int clothId, int clothColorId, int clothMaterialId);
 	
 	public GenericResult<List<Cloth>> getNeedPricing();
 	
@@ -27,8 +29,8 @@ public interface ClothMaterialService {
 	
 	public GenericResult<List<Cloth>> getCounted();
 	
-	public GenericResult<List<ClothMaterialDetailData>> getDetailByCloth(int clothId);
+	public GenericResult<List<ClothMaterialDetailData>> getDetailByCloth(int clothId, int clothColorId);
 	
-	public GenericResult<List<ClothMaterialDetailData>> getTypeDetailByCloth(int clothId, int type);
+	public GenericResult<List<ClothMaterialDetailData>> getTypeDetailByCloth(int clothId, int clothColorId, int type);
 	
 }

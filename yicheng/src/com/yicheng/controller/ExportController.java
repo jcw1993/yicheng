@@ -47,10 +47,12 @@ public class ExportController {
 	@RequestMapping(value = { "/Manager/ExportMaterialExcel", "/Proofing/ExportMaterialExcel" }, method = RequestMethod.GET)
 	public void exportMaterial(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColroId", true);
+		
 		GenericResult<Cloth> clothResult = clothService.getById(clothId);
-		GenericResult<List<ClothMaterialDetailData>> leathherResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_LEATHER);
-		GenericResult<List<ClothMaterialDetailData>> fabricResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_FABRIC);
-		GenericResult<List<ClothMaterialDetailData>> supportResults = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_SUPPORT);
+		GenericResult<List<ClothMaterialDetailData>> leathherResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
+		GenericResult<List<ClothMaterialDetailData>> fabricResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
+		GenericResult<List<ClothMaterialDetailData>> supportResults = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
 		
 		String fileName = null;
 		if(clothResult.getResultCode() == ResultCode.NORMAL) {
@@ -70,10 +72,12 @@ public class ExportController {
 	@RequestMapping(value = { "/Manager/ExportCountExcel",  "/Buyer/ExportCountExcel"}, method = RequestMethod.GET)
 	public void exportCount(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", true);
+		
 		GenericResult<Cloth> clothResult = clothService.getById(clothId);
-		GenericResult<List<ClothMaterialDetailData>> leathherResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_LEATHER);
-		GenericResult<List<ClothMaterialDetailData>> fabricResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_FABRIC);
-		GenericResult<List<ClothMaterialDetailData>> supportResults = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_SUPPORT);
+		GenericResult<List<ClothMaterialDetailData>> leathherResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
+		GenericResult<List<ClothMaterialDetailData>> fabricResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
+		GenericResult<List<ClothMaterialDetailData>> supportResults = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
 		
 		String fileName = null;
 		if(clothResult.getResultCode() == ResultCode.NORMAL) {

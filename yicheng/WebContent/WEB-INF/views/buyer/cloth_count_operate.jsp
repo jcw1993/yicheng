@@ -14,95 +14,61 @@
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
-	<div class="container-body">
-		<h3>皮衣详情
-		<a href="ClothCountOperate?clothId=${clothOrder.clothId}" class="btn btn-primary create-button">查看详情</a>
-		</h3>
-		<hr />
-		<div>
-			<p>基本信息</p>
-	         <div class="form-group row">
-		        <label class="col-sm-2 control-label">款号</label>
-		        <div class="col-sm-6">
-		        <label>${clothOrder.clothType}</label>
-		        </div>
-		     </div>
+	<div class="row container-body-with-left">
+		<div class="col-sm-2 left-navi-div">
+			<jsp:include page="../left_color_navi.jsp" flush="true" />
+		</div>	
+		<div class="col-sm-9">
+			<h3>皮衣详情
+			<a href="ClothCountDetail?clothId=${clothOrder.cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">查看详情</a>
+			</h3>
+			<hr />
+			<div>
+				<p>基本信息</p>
+		         <div class="form-group row">
+			        <label class="col-sm-2 control-label">款号</label>
+			        <div class="col-sm-6">
+			        <label>${clothOrder.cloth.type}</label>
+			        </div>
+			     </div>
 
-             <div class="form-group row">
-     	        <label for="name" class="col-sm-2 control-label">款名</label>
-     	        <div class="col-sm-6">
-     	        <label>${clothOrder.clothName}</label>
-     	        </div>
-     	     </div>
+	             <div class="form-group row">
+	     	        <label for="name" class="col-sm-2 control-label">款名</label>
+	     	        <div class="col-sm-6">
+	     	        <label>${clothOrder.cloth.name}</label>
+	     	        </div>
+	     	     </div>
 
-             <div class="form-group row">
-     	        <label for="name" class="col-sm-2 control-label">采购数量</label>
-     	        <div class="col-sm-6">
-     	        <input type="text" name="buyCount" id="buyCount" value="${null == clothOrder.count ? 0 : clothOrder.count}" />
-     	        </div>
-     	     </div>     
-             <div class="form-group row">
-      	        <label class="col-sm-2">订货单总价</label>
-     	        <label id="orderPrice" class="col-sm-4">
-     	        	<c:if test="${null != model.clothTotalPrice}">${model.clothTotalPrice}</c:if>
-     	        	<c:if test="${null == model.clothTotalPrice}">暂无</c:if>
-     	        </label>     	     
-     	     </div>     	     	     	
+	             <div class="form-group row">
+	     	        <label for="name" class="col-sm-2 control-label">采购数量</label>
+	     	        <div class="col-sm-6">
+	     	        <input type="text" name="buyCount" id="buyCount" value="${null == clothOrder.count ? 0 : clothOrder.count}" />
+	     	        </div>
+	     	     </div>     
+	             <div class="form-group row">
+	      	        <label class="col-sm-2">订货单总价</label>
+	     	        <label id="orderPrice" class="col-sm-4">
+	     	        	<c:if test="${null != model.clothTotalPrice}">${model.clothTotalPrice}</c:if>
+	     	        	<c:if test="${null == model.clothTotalPrice}">暂无</c:if>
+	     	        </label>     	     
+	     	     </div>     	     	     	
 
-     	     <div class="form-group row">
-     	     <div class="col-sm-2"></div>
-     	     <div class="col-sm-4">
-     	     	<a href="#" id="save_cloth_count" class="btn btn-sm btn-success">保存</a>
-     	     </div>     	     	
-     	     </div>     
-			
-			<div class="margin-top-little">
-				<div class="row title-area">
-					<p class="col-sm-7">皮料信息</p>
-				</div>		
-				<c:if test="${null != leatherDetails}">
-				<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
-					<tr>
-					<th>项目</th>
-					<th>部位</th>
-					<th>单位</th>
-					<th>用料</th>
-					<th>单价</th>
-					<th>数量</th>
-					<th>金额</th>
-					<th>订购日期</th>
-					<th>备注</th>
-					<th>操作</th>
-					</tr>
-					<c:forEach items="${leatherDetails}" var="leatherDetail">
-						<tr clothMaterialId="${leatherDetail.id}">
-							<td>${leatherDetail.materialName}</td>
-							<td>${leatherDetail.part}</td>
-							<td>${leatherDetail.unitName}</td>
-							<td>${leatherDetail.consumption}</td>
-							<td>${leatherDetail.price}</td>
-							<td><input type="text" name="count" class="full-width count" value="${leatherDetail.count}"/></td>
-							<td>${null == leatherDetail.materialTotalPrice ? "暂无" : leatherDetail.materialTotalPrice}</td>
-							<td></td>
-							<td><input type="text" name="remark" class="full-width remark" value="${leatherDetail.remark}" /></td>
-							<td><a href="#" class="save_count_btn">保存</a></td>
-						</tr>
-					</c:forEach>
-				</table>
-				</c:if>
-				<c:if test="${null == leatherDetails}">
-					<p>暂无数据</p>
-				</c:if>
-			</div>
-
-			<div class="margin-top-little">
-		 	     <div class="row title-area">
-			     	<p class="col-sm-7">面料信息</p>
-			     </div>		
-			     <c:if test="${null != fabricDetails}">
-			     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
-			     	<tr>
+	     	     <div class="form-group row">
+	     	     <div class="col-sm-2"></div>
+	     	     <div class="col-sm-4">
+	     	     	<a href="#" id="save_cloth_count" class="btn btn-sm btn-success">保存</a>
+	     	     </div>     	     	
+	     	     </div>     
+				
+				<div class="margin-top-little">
+					<div class="row title-area">
+						<p class="col-sm-7">皮料信息</p>
+					</div>		
+					<c:if test="${null != leatherDetails}">
+					<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
+						<tr>
 						<th>项目</th>
+						<th>颜色</th>
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
@@ -112,129 +78,121 @@
 						<th>订购日期</th>
 						<th>备注</th>
 						<th>操作</th>
-			     	</tr>
-			     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
-						<tr clothMaterialId="${fabricDetail.id}">
-							<td>${fabricDetail.materialName}</td>
-							<td>${fabricDetail.part}</td>
-							<td>${fabricDetail.unitName}</td>
-							<td>${fabricDetail.consumption}</td>
-							<td>${fabricDetail.price}</td>
-							<td><input type="text" name="count" class="full-width count" value="${fabricDetail.count}"/></td>
-							<td>${null == fabricDetail.materialTotalPrice ? "暂无" : fabricDetail.materialTotalPrice}</td>
-							<td></td>
-							<td><input type="text" name="remark" class="full-width remark" value="${fabricDetail.remark}" /></td>
-							<td><a href="#" class="save_count_btn">保存</a></td>
 						</tr>
-			     	</c:forEach>
-			     </table>
-			     </c:if>
-			     <c:if test="${null == fabricDetails}">
-			     	<p>暂无数据</p>
-			     </c:if>
-			</div>
-
-
-			<div class="margin-top-little">
-				 <div class="row title-area">
-			     	<p class="col-sm-7">辅料信息</p>
-	     	     </div>		
-	     	     <c:if test="${null != supportDetails}">
-	     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">
-	     	     	<tr>
-						<th>项目</th>
-						<th>部位</th>
-						<th>单位</th>
-						<th>用料</th>
-						<th>单价</th>
-						<th>数量</th>
-						<th>金额</th>
-						<th>订购日期</th>
-						<th>备注</th>
-						<th>操作</th>
-	     	     	</tr>
-	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
-						<tr clothMaterialId="${supportDetail.id}">
-							<td>${supportDetail.materialName}</td>
-							<td>${supportDetail.part}</td>
-							<td>${supportDetail.unitName}</td>
-							<td>${supportDetail.consumption}</td>
-							<td>${supportDetail.price}</td>
-							<td><input type="text" name="count" class="full-width count" value="${supportDetail.count}"/></td>
-							<td>${null == supportDetail.materialTotalPrice ? "暂无" : supportDetail.materialTotalPrice}</td>
-							<td></td>
-							<td><input type="text" name="remark" class="full-width remark" value="${supportDetail.remark}" /></td>
-							<td><a href="#" class="save_count_btn">保存</a></td>
-						</tr>
-					</c:forEach>
-	     	     </table>
-	     	     </c:if>
-	     	     <c:if test="${null == supportDetails}">
-	     	     	<p>暂无数据</p>
-	     	     </c:if>
-			</div>
-
-			<div class="margin-top-little">
-				<div class="row">
-					<div class="col-sm-3"></div>
-					<div class="col-sm-4"><a href="ClothCountToProcess" class="btn btn-info btn-lg" >提交</a></div>
+						<c:forEach items="${leatherDetails}" var="leatherDetail">
+							<tr clothMaterialId="${leatherDetail.id}">
+								<td>${leatherDetail.materialName}</td>
+								<td>${leatherDetail.materialColor}</td>
+								<td>${leatherDetail.part}</td>
+								<td>${leatherDetail.unitName}</td>
+								<td>${leatherDetail.consumption}</td>
+								<td>${leatherDetail.price}</td>
+								<td><input type="text" name="count" class="full-width count" value="${leatherDetail.count}"/></td>
+								<td>${null == leatherDetail.materialTotalPrice ? "暂无" : leatherDetail.materialTotalPrice}</td>
+								<td></td>
+								<td><input type="text" name="remark" class="full-width remark" value="${leatherDetail.remark}" /></td>
+								<td><a href="#" class="save_count_btn">保存</a></td>
+							</tr>
+						</c:forEach>
+					</table>
+					</c:if>
+					<c:if test="${null == leatherDetails}">
+						<p>暂无数据</p>
+					</c:if>
 				</div>
-					
-			</div>
-      	   
-		</div>
-	</div>
 
-	<div id="material_create_modal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">材料信息</h4>
+				<div class="margin-top-little">
+			 	     <div class="row title-area">
+				     	<p class="col-sm-7">面料信息</p>
+				     </div>		
+				     <c:if test="${null != fabricDetails}">
+				     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
+				     	<tr>
+							<th>项目</th>
+							<th>颜色</th>
+							<th>部位</th>
+							<th>单位</th>
+							<th>用料</th>
+							<th>单价</th>
+							<th>数量</th>
+							<th>金额</th>
+							<th>订购日期</th>
+							<th>备注</th>
+							<th>操作</th>
+				     	</tr>
+				     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
+							<tr clothMaterialId="${fabricDetail.id}">
+								<td>${fabricDetail.materialName}</td>
+								<td>${fabricDetail.materialColor}</td>
+								<td>${fabricDetail.part}</td>
+								<td>${fabricDetail.unitName}</td>
+								<td>${fabricDetail.consumption}</td>
+								<td>${fabricDetail.price}</td>
+								<td><input type="text" name="count" class="full-width count" value="${fabricDetail.count}"/></td>
+								<td>${null == fabricDetail.materialTotalPrice ? "暂无" : fabricDetail.materialTotalPrice}</td>
+								<td></td>
+								<td><input type="text" name="remark" class="full-width remark" value="${fabricDetail.remark}" /></td>
+								<td><a href="#" class="save_count_btn">保存</a></td>
+							</tr>
+				     	</c:forEach>
+				     </table>
+				     </c:if>
+				     <c:if test="${null == fabricDetails}">
+				     	<p>暂无数据</p>
+				     </c:if>
 				</div>
-				<form id="material_create_form">
-					<div id="material_create_content" class="modal-body">
-						<input type="hidden" name="clothId" value="" />
-				        <div class="form-group row">
-					        <label class="col-sm-2 control-label">项目</label>
-					        <div class="col-sm-6">
-					            <!-- <input type="text" class="form-control" name="material_name" placeholder="项目" /> -->
-					            <select id="material_select" name="materialId">
-					            	
-					            </select>
-					        </div>
-					    </div>				
-				        <div class="form-group row">
-					        <label for="part" class="col-sm-2 control-label">部位</label>
-					        <div class="col-sm-6">
-					            <input type="text" id="part" class="form-control" name="part" placeholder="部位" />
-					        </div>
-					    </div>
-				        <div class="form-group row">
-					        <label class="col-sm-2 control-label">单位</label>
-					        <div class="col-sm-6">
-					            <input type="text" id="unitName" class="form-control" name="unitName" placeholder="单位" />
-					        </div>
-					    </div>
-				        <div class="form-group row">
-					        <label for="consumption" class="col-sm-2 control-label">用料</label>
-					        <div class="col-sm-6">
-					            <input type="text" id="consumption" class="form-control" name="consumption" placeholder="用料" />
-					        </div>
-					    </div>
-				        <div class="form-group row">
-					        <label for="remark" class="col-sm-2 control-label">备注</label>
-					        <div class="col-sm-6">
-					            <input type="text" id="remark" class="form-control" name="remark" placeholder="备注" />
-					        </div>
-					    </div>	
+
+
+				<div class="margin-top-little">
+					 <div class="row title-area">
+				     	<p class="col-sm-7">辅料信息</p>
+		     	     </div>		
+		     	     <c:if test="${null != supportDetails}">
+		     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">
+		     	     	<tr>
+							<th>项目</th>
+							<th>颜色</th>
+							<th>部位</th>
+							<th>单位</th>
+							<th>用料</th>
+							<th>单价</th>
+							<th>数量</th>
+							<th>金额</th>
+							<th>订购日期</th>
+							<th>备注</th>
+							<th>操作</th>
+		     	     	</tr>
+		     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
+							<tr clothMaterialId="${supportDetail.id}">
+								<td>${supportDetail.materialName}</td>
+								<td>${supportDetail.materialColor}</td>
+								<td>${supportDetail.part}</td>
+								<td>${supportDetail.unitName}</td>
+								<td>${supportDetail.consumption}</td>
+								<td>${supportDetail.price}</td>
+								<td><input type="text" name="count" class="full-width count" value="${supportDetail.count}"/></td>
+								<td>${null == supportDetail.materialTotalPrice ? "暂无" : supportDetail.materialTotalPrice}</td>
+								<td></td>
+								<td><input type="text" name="remark" class="full-width remark" value="${supportDetail.remark}" /></td>
+								<td><a href="#" class="save_count_btn">保存</a></td>
+							</tr>
+						</c:forEach>
+		     	     </table>
+		     	     </c:if>
+		     	     <c:if test="${null == supportDetails}">
+		     	     	<p>暂无数据</p>
+		     	     </c:if>
+				</div>
+
+				<div class="margin-top-little">
+					<div class="row">
+						<div class="col-sm-3"></div>
+						<div class="col-sm-4"><a href="ClothCountToProcess" class="btn btn-info btn-lg" >提交</a></div>
 					</div>
-					<div class="modal-footer">
-						<button id="material_create_submit" type="button"
-							class="btn btn-primary" data-dismiss="modal">保存</button>
-					</div>
-				</form>
-			
-			</div>
+						
+				</div>
+	      	   
+			</div>		
 		</div>
 	</div>
 
@@ -243,13 +201,15 @@
 <script type="text/javascript">
 /* variables */
 var clothId;
+var clothColorId;
 
 var $saveCountBtn = $(".save_count_btn");
 var $saveClothCountBtn = $("#save_cloth_count");
 var $buyCountInput = $("#buyCount");
 
 $(function() {
-	clothId = "${model.clothOrder.clothId}";
+	clothId = "${model.clothOrder.cloth.id}";
+	clothColorId = "${model.clothColorId}";
 
 	$saveCountBtn.click(function(e) {
 		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
@@ -297,6 +257,7 @@ function saveClothMaterialCount(clothMaterialId, count, remark) {
 		data: {
 			clothId: clothId,
 			clothMaterialId: clothMaterialId,
+			clothColorId: clothColorId,
 			count: count,
 			remark: remark
 		},

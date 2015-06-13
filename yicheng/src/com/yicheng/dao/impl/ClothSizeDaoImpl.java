@@ -6,30 +6,30 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import com.yicheng.dao.ClothCountDao;
-import com.yicheng.pojo.ClothCount;
+import com.yicheng.dao.ClothSizeDao;
+import com.yicheng.pojo.ClothSize;
 
 @Repository
-public class ClothCountDaoImpl extends HibernateDaoBase implements ClothCountDao {
+public class ClothSizeDaoImpl extends HibernateDaoBase implements ClothSizeDao {
 
 	@Override
-	public int create(ClothCount clothCount) {
+	public int create(ClothSize clothCount) {
 		return (Integer) getHibernateTemplate().save(clothCount);
 	}
 
 	@Override
-	public void update(ClothCount clothCount) {
+	public void update(ClothSize clothCount) {
 		getHibernateTemplate().update(clothCount);
 	}
 
 	@Override
 	public void delete(int id) {
-		getHibernateTemplate().delete(new ClothCount(id));
+		getHibernateTemplate().delete(new ClothSize(id));
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ClothCount> getByCloth(int clothId) {
+	public List<ClothSize> getByCloth(int clothId) {
 		Session session = super.getSession(true);
 		Query query = null;
 		try {

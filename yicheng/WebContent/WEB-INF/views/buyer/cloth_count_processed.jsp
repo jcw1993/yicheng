@@ -13,7 +13,7 @@
 	<div class="container-body">
 		<div class="tab-navi">
 			<div class="tab">
-				<a href="ClothCountToProcess">待处理</a>
+				<a href="ClothCountProcessed">待处理</a>
 			</div>
 			<div class="tab tab-selected">
 				<a href="#">已处理</a>

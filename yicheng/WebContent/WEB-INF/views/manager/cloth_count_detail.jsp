@@ -23,14 +23,14 @@
 	         <div class="form-group row">
 		        <label class="col-sm-2 control-label">款号</label>
 		        <div class="col-sm-6">
-		            <label>${clothOrder.clothType}</label>
+		            <label>${clothOrder.cloth.type}</label>
 		        </div>
 		     </div>
 
              <div class="form-group row">
      	        <label for="name" class="col-sm-2 control-label">款名</label>
      	        <div class="col-sm-6">
-     	            <label>${clothOrder.clothName}</label>
+     	            <label>${clothOrder.cloth.name}</label>
      	        </div>
      	     </div>
 

@@ -33,6 +33,7 @@ public class ClothServiceImpl implements ClothService {
 			result.setData(outId);
 			CacheUtil.remove(ALL_CLOTH_CACHE_KEY);
 		}catch(DataAccessException e) {
+			e.printStackTrace();
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
 			result.setMessage(e.getMessage());
@@ -111,5 +112,11 @@ public class ClothServiceImpl implements ClothService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public NoneDataResult copyCloth(int clothId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

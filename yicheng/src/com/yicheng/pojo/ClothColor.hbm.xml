@@ -5,14 +5,12 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="com.yicheng.pojo">
-    <class name="ClothCount" table="cloth_count">
+    <class name="ClothColor" table="cloth_color">
         <id name="id" column="id">
             <generator class="increment" />
         </id>
-        <property name="orderId" type="integer" column="order_id" />
         <property name="clothId" type="integer" column="cloth_id" />
-        <property name="sizeType" type="integer" column="size_type" />
-        <property name="count" type="integer" column="count" />
+        <property name="color" type="string" column="color" />
     </class>
 
 </hibernate-mapping>

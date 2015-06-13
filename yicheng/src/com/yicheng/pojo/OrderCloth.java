@@ -59,4 +59,19 @@ public class OrderCloth implements Serializable {
 		this.id = id;
 	}
 	
+	public OrderCloth(int id, String orderNumber, int clothId, Date deliveryDate, Integer count) {
+		this.id = id;
+		this.orderNumber = orderNumber;
+		this.clothId = clothId;
+		this.deliveryDate = deliveryDate;
+		this.count = count;
+	}
+	
+	public OrderCloth(String orderNumber, int clothId, Date deliveryDate, Integer count) {
+		this.orderNumber = orderNumber;
+		this.clothId = clothId;
+		this.deliveryDate = deliveryDate;
+		this.count = count;
+	}
+	
 }

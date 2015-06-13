@@ -76,30 +76,36 @@ public class ManagerController {
 	@RequestMapping(value = "/Manager/ClothMaterialDetail", method = RequestMethod.GET)
 	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		Map<String, Object> model = getClothMaterialInfo(clothId);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+		
+		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		return new ModelAndView("manager/cloth_material_detail", "model", model);
 	}
 	
 	@RequestMapping(value = "/Manager/ClothPriceDetail", method = RequestMethod.GET)
 	public ModelAndView clothPriceDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		Map<String, Object> model = getClothMaterialInfo(clothId);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+		
+		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		return new ModelAndView("manager/cloth_price_detail", "model", model);
 	}
 	
 	@RequestMapping(value = "/Manager/ClothCountDetail", method = RequestMethod.GET)
 	public ModelAndView clothCountDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		Map<String, Object> model = getClothMaterialInfo(clothId);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+		
+		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		return new ModelAndView("manager/cloth_count_detail", "model", model);
 	}
 	
-	private Map<String, Object> getClothMaterialInfo(int clothId) {
+	private Map<String, Object> getClothMaterialInfo(int clothId, int clothColorId) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<ClothOrderDetailData> clothOrderDetailResult = orderClothService.search(null, clothId);
-		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_LEATHER);
-		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_FABRIC);
-		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_SUPPORT);
+		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
+		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
+		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
 		
 		double clothTotalPrice = 0.0;
 		boolean hasCount = false;

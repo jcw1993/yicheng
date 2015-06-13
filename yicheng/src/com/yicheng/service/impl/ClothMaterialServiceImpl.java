@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 
 import com.yicheng.dao.ClothMaterialDao;
 import com.yicheng.pojo.Cloth;
+import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
 import com.yicheng.pojo.OrderCloth;
+import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
 import com.yicheng.service.MaterialService;
@@ -26,29 +28,33 @@ import com.yicheng.util.ResultCode;
 
 @Service
 public class ClothMaterialServiceImpl implements ClothMaterialService {
-	
-	private static Logger logger = LoggerFactory.getLogger(ClothMaterialServiceImpl.class);
-	
+
+	private static Logger logger = LoggerFactory
+			.getLogger(ClothMaterialServiceImpl.class);
+
 	private static final String CLOTH_MATERIAL_CACHE_KEY = "cloth_material_cache_%d";
-	
+
 	@Autowired
 	private ClothMaterialDao clothMaterialDao;
-	
+
 	@Autowired
 	private MaterialService materialService;
 	@Autowired
 	private ClothService clothService;
 	@Autowired
 	private OrderClothService orderClothService;
-	
+	@Autowired
+	private ClothColorService clothColorService;
+
 	@Override
 	public GenericResult<Integer> create(ClothMaterial clothMaterial) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
 			int outId = clothMaterialDao.create(clothMaterial);
 			result.setData(outId);
-			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY, clothMaterial.getClothId()));
-		}catch(DataAccessException e) {
+			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY,
+					clothMaterial.getClothId()));
+		} catch (DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
 			result.setMessage(e.getMessage());
@@ -59,10 +65,11 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	@Override
 	public NoneDataResult update(ClothMaterial clothMaterial) {
 		NoneDataResult result = new NoneDataResult();
-		try{
+		try {
 			clothMaterialDao.update(clothMaterial);
-			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY, clothMaterial.getClothId()));
-		}catch(DataAccessException e) {
+			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY,
+					clothMaterial.getClothId()));
+		} catch (DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
 			result.setMessage(e.getMessage());
@@ -73,17 +80,17 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	@Override
 	public NoneDataResult delete(int id, int clothId) {
 		NoneDataResult result = new NoneDataResult();
-		try{
+		try {
 			clothMaterialDao.delete(id);
 			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY, clothId));
-		}catch(DataAccessException e) {
+		} catch (DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
 			result.setMessage(e.getMessage());
 		}
 		return result;
 	}
-
+	
 	@Override
 	public GenericResult<List<ClothMaterial>> getByCloth(int clothId) {
 		GenericResult<List<ClothMaterial>> result = new GenericResult<List<ClothMaterial>>();
@@ -108,47 +115,76 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 		}
 		return result;
 	}
-	
+
 	@Override
-	public GenericResult<ClothMaterial> getById(int clothId, int clothMaterialId) {
-		GenericResult<ClothMaterial> result = new GenericResult<ClothMaterial>();
+	public GenericResult<List<ClothMaterial>> getByClothColor(int clothId, int clothColorId) {
+		GenericResult<List<ClothMaterial>> result = new GenericResult<List<ClothMaterial>>();
 		GenericResult<List<ClothMaterial>> allResult = getByCloth(clothId);
 		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<ClothMaterial> resultList = new ArrayList<ClothMaterial>();
 			for(ClothMaterial clothMaterial : allResult.getData()) {
-				if(clothMaterial.getId() == clothMaterialId) {
-					result.setData(clothMaterial);
-					break;
+				if(clothMaterial.getClothColorId() == clothColorId) {
+					resultList.add(clothMaterial);
 				}
+			}
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
 			}
 		}else {
 			result.setResultCode(allResult.getResultCode());
-			result.setMessage(allResult.getMessage());;
+			result.setMessage(allResult.getMessage());
 		}
 		return result;
 	}
 
 	@Override
-	public GenericResult<List<ClothMaterialDetailData>> getDetailByCloth(int clothId) {
+	public GenericResult<ClothMaterial> getById(int clothId, int clothColorId, int clothMaterialId) {
+		GenericResult<ClothMaterial> result = new GenericResult<ClothMaterial>();
+		GenericResult<List<ClothMaterial>> allResult = getByClothColor(clothId, clothColorId);
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			for (ClothMaterial clothMaterial : allResult.getData()) {
+				if (clothMaterial.getId() == clothMaterialId) {
+					result.setData(clothMaterial);
+					break;
+				}
+			}
+		} else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<ClothMaterialDetailData>> getDetailByCloth(
+			int clothId, int clothColorId) {
 		GenericResult<List<ClothMaterialDetailData>> result = new GenericResult<List<ClothMaterialDetailData>>();
 		
-		GenericResult<List<ClothMaterial>> clothMaterialResult = getByCloth(clothId);
-		if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+		GenericResult<ClothColor> clothColorResult = clothColorService.getById(clothId, clothColorId);
+		GenericResult<List<ClothMaterial>> clothMaterialResult = getByClothColor(clothId, clothColorId);
+		if (clothColorResult.getResultCode() == ResultCode.NORMAL
+				&& clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
 			List<ClothMaterialDetailData> dataList = new ArrayList<ClothMaterialDetailData>();
-			for(ClothMaterial clothMaterial : clothMaterialResult.getData()) {
+			for (ClothMaterial clothMaterial : clothMaterialResult.getData()) {
 				int materialId = clothMaterial.getMaterialId();
-				GenericResult<Material> materialResult = materialService.getById(materialId);
-				if(materialResult.getResultCode() == ResultCode.NORMAL) {
-					ClothMaterialDetailData data = new ClothMaterialDetailData(clothMaterial, materialResult.getData());
+				GenericResult<Material> materialResult = materialService
+						.getById(materialId);
+				if (materialResult.getResultCode() == ResultCode.NORMAL) {
+					ClothMaterialDetailData data = new ClothMaterialDetailData(
+							clothMaterial, clothColorResult.getData(), materialResult.getData());
 					dataList.add(data);
 				}
 			}
-			if(!dataList.isEmpty()) {
+			if (!dataList.isEmpty()) {
 				result.setData(dataList);
-			}else {
+			} else {
 				result.setResultCode(ResultCode.E_NO_DATA);
-				result.setMessage("no cloth material detail data, clothId: " + clothId);
+				result.setMessage("no cloth material detail data, clothId: "
+						+ clothId);
 			}
-		}else {
+		} else {
 			result.setResultCode(clothMaterialResult.getResultCode());
 			result.setMessage(clothMaterialResult.getMessage());
 		}
@@ -157,52 +193,55 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	}
 
 	@Override
-	public GenericResult<List<ClothMaterialDetailData>> getTypeDetailByCloth(int clothId, int type) {
+	public GenericResult<List<ClothMaterialDetailData>> getTypeDetailByCloth(
+			int clothId, int clothColorId, int type) {
 		GenericResult<List<ClothMaterialDetailData>> result = new GenericResult<List<ClothMaterialDetailData>>();
-		GenericResult<List<ClothMaterialDetailData>> allResult = getDetailByCloth(clothId);
-		if(allResult.getResultCode() == ResultCode.NORMAL) {
+		GenericResult<List<ClothMaterialDetailData>> allResult = getDetailByCloth(clothId, clothColorId);
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
 			List<ClothMaterialDetailData> dataList = new ArrayList<ClothMaterialDetailData>();
-			for(ClothMaterialDetailData data : allResult.getData()) {
-				if(null == data) {
+			for (ClothMaterialDetailData data : allResult.getData()) {
+				if (null == data) {
 					continue;
 				}
-				
-				if(data.getMaterialType() == type) {
+
+				if (data.getMaterialType() == type) {
 					dataList.add(data);
 				}
 			}
-			if(!dataList.isEmpty()) {
+			if (!dataList.isEmpty()) {
 				result.setData(dataList);
-			}else {
+			} else {
 				result.setResultCode(ResultCode.E_NO_DATA);
-				result.setMessage("no clothMaterial, clothId: " + clothId + ", type: " + type);
+				result.setMessage("no clothMaterial, clothId: " + clothId
+						+ ", type: " + type);
 			}
-		}else {
+		} else {
 			result.setResultCode(allResult.getResultCode());
 			result.setMessage(allResult.getMessage());
 		}
 		return result;
 	}
-	
+
 	@Override
 	public GenericResult<List<Cloth>> getNeedPricing() {
 		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
 		GenericResult<List<Cloth>> allResult = clothService.getAll();
-		if(allResult.getResultCode() == ResultCode.NORMAL) {
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
 			List<Cloth> resultList = new ArrayList<Cloth>();
-			for(Cloth cloth : allResult.getData()) {
-				if(null != cloth && !isEmpty(cloth.getId()) && !isPriced(cloth.getId())) {
+			for (Cloth cloth : allResult.getData()) {
+				if (null != cloth && !isEmpty(cloth.getId())
+						&& !isPriced(cloth.getId())) {
 					resultList.add(cloth);
 				}
 			}
-			
-			if(!resultList.isEmpty()) {
+
+			if (!resultList.isEmpty()) {
 				result.setData(resultList);
-			}else {
+			} else {
 				result.setResultCode(ResultCode.E_NO_DATA);
 				result.setMessage("none cloth need to be priced");
 			}
-		}else {
+		} else {
 			result.setResultCode(allResult.getResultCode());
 			result.setMessage(allResult.getMessage());
 		}
@@ -213,47 +252,48 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	public GenericResult<List<Cloth>> getNeedCount() {
 		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
 		GenericResult<List<Cloth>> allResult = clothService.getAll();
-		if(allResult.getResultCode() == ResultCode.NORMAL) {
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
 			List<Cloth> resultList = new ArrayList<Cloth>();
-			for(Cloth cloth : allResult.getData()) {
-				if(null != cloth && !isEmpty(cloth.getId()) && isPriced(cloth.getId()) && !isCounted(cloth.getId())) {
+			for (Cloth cloth : allResult.getData()) {
+				if (null != cloth && !isEmpty(cloth.getId())
+						&& isPriced(cloth.getId()) && !isCounted(cloth.getId())) {
 					resultList.add(cloth);
 				}
 			}
-			
-			if(!resultList.isEmpty()) {
+
+			if (!resultList.isEmpty()) {
 				result.setData(resultList);
-			}else {
+			} else {
 				result.setResultCode(ResultCode.E_NO_DATA);
 				result.setMessage("none cloth need to be counted");
 			}
-		}else {
+		} else {
 			result.setResultCode(allResult.getResultCode());
 			result.setMessage(allResult.getMessage());
 		}
 		return result;
 	}
-	
 
 	@Override
 	public GenericResult<List<Cloth>> getPriced() {
 		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
 		GenericResult<List<Cloth>> allResult = clothService.getAll();
-		if(allResult.getResultCode() == ResultCode.NORMAL) {
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
 			List<Cloth> resultList = new ArrayList<Cloth>();
-			for(Cloth cloth : allResult.getData()) {
-				if(null != cloth && !isEmpty(cloth.getId()) && isPriced(cloth.getId())) {
+			for (Cloth cloth : allResult.getData()) {
+				if (null != cloth && !isEmpty(cloth.getId())
+						&& isPriced(cloth.getId())) {
 					resultList.add(cloth);
 				}
 			}
-			
-			if(!resultList.isEmpty()) {
+
+			if (!resultList.isEmpty()) {
 				result.setData(resultList);
-			}else {
+			} else {
 				result.setResultCode(ResultCode.E_NO_DATA);
 				result.setMessage("none cloth need to be priced");
 			}
-		}else {
+		} else {
 			result.setResultCode(allResult.getResultCode());
 			result.setMessage(allResult.getMessage());
 		}
@@ -264,21 +304,22 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	public GenericResult<List<Cloth>> getCounted() {
 		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
 		GenericResult<List<Cloth>> allResult = clothService.getAll();
-		if(allResult.getResultCode() == ResultCode.NORMAL) {
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
 			List<Cloth> resultList = new ArrayList<Cloth>();
-			for(Cloth cloth : allResult.getData()) {
-				if(null != cloth && !isEmpty(cloth.getId()) && isPriced(cloth.getId()) && isCounted(cloth.getId())) {
+			for (Cloth cloth : allResult.getData()) {
+				if (null != cloth && !isEmpty(cloth.getId())
+						&& isPriced(cloth.getId()) && isCounted(cloth.getId())) {
 					resultList.add(cloth);
 				}
 			}
-			
-			if(!resultList.isEmpty()) {
+
+			if (!resultList.isEmpty()) {
 				result.setData(resultList);
-			}else {
+			} else {
 				result.setResultCode(ResultCode.E_NO_DATA);
 				result.setMessage("none cloth need to be counted");
 			}
-		}else {
+		} else {
 			result.setResultCode(allResult.getResultCode());
 			result.setMessage(allResult.getMessage());
 		}
@@ -287,19 +328,18 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 
 	/**
 	 * 
-	 * check if cloth has been priced
-	 * true: priced, false:not priced
+	 * check if cloth has been priced true: priced, false:not priced
 	 *
 	 * 
 	 * @param clothId
 	 * @return
 	 */
 	private boolean isPriced(int clothId) {
-		boolean result = true; 
+		boolean result = true;
 		GenericResult<List<ClothMaterial>> allResult = getByCloth(clothId);
-		if(allResult.getResultCode() == ResultCode.NORMAL) {
-			for(ClothMaterial clothMaterial : allResult.getData()) {
-				if(null == clothMaterial.getPrice()) {
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			for (ClothMaterial clothMaterial : allResult.getData()) {
+				if (null == clothMaterial.getPrice()) {
 					result = false;
 					break;
 				}
@@ -311,24 +351,25 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 
 	/**
 	 * 
-	 * check if cloth has count recorded
-	 * true: counted, false: not counted
+	 * check if cloth has count recorded true: counted, false: not counted
 	 *
 	 * 
 	 * @param clothId
 	 * @return
 	 */
 	private boolean isCounted(int clothId) {
-		boolean result = true; 
+		boolean result = true;
 		GenericResult<List<ClothMaterial>> allResult = getByCloth(clothId);
-		GenericResult<OrderCloth> orderClothResult = orderClothService.getFirstbyCloth(clothId);
-		if((orderClothResult.getResultCode() == ResultCode.NORMAL && null == orderClothResult.getData().getCount()) 
+		GenericResult<OrderCloth> orderClothResult = orderClothService
+				.getFirstbyCloth(clothId);
+		if ((orderClothResult.getResultCode() == ResultCode.NORMAL && null == orderClothResult
+				.getData().getCount())
 				|| (orderClothResult.getResultCode() != ResultCode.NORMAL)) {
 			result = false;
 		}
-		if(allResult.getResultCode() == ResultCode.NORMAL) {
-			for(ClothMaterial clothMaterial : allResult.getData()) {
-				if(null == clothMaterial.getCount()) {
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			for (ClothMaterial clothMaterial : allResult.getData()) {
+				if (null == clothMaterial.getCount()) {
 					result = false;
 					break;
 				}
@@ -337,11 +378,10 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 
-	 * check if cloth has material related
-	 * true: empty, false: not empty
+	 * check if cloth has material related true: empty, false: not empty
 	 * 
 	 * @param clothId
 	 * @return
@@ -349,7 +389,8 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	private boolean isEmpty(int clothId) {
 		boolean result = true;
 		GenericResult<List<ClothMaterial>> allResult = getByCloth(clothId);
-		if(allResult.getResultCode() == ResultCode.NORMAL && !allResult.getData().isEmpty()) {
+		if (allResult.getResultCode() == ResultCode.NORMAL
+				&& !allResult.getData().isEmpty()) {
 			result = false;
 		}
 		return result;

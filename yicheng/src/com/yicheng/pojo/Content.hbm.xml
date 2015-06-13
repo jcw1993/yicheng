@@ -5,16 +5,12 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="com.yicheng.pojo">
-    <class name="Cloth" table="cloth">
+    <class name="Content" table="content">
         <id name="id" column="id">
             <generator class="increment" />
         </id>
-        <property name="name" type="string" column="name" />
-        <property name="type" type="string" column="type" />
-        <property name="client" type="string" column="client" />
-        <property name="supplier" type="string" column="supplier" />
-        <property name="imageId" type="integer" column="image_id" />
-        <property name="remark" type="string" column="remark" />
+        <property name="originFileName" type="string" column="origin_file_name" />
+        <property name="destFileName" type="string" column="dest_file_name" />
         <property name="createdTime" type="timestamp" column="created_time" />
     </class>
 

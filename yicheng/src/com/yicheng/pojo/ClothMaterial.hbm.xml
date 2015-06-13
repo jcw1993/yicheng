@@ -10,7 +10,9 @@
             <generator class="increment" />
         </id>
         <property name="clothId" type="integer" column="cloth_id" />
+        <property name="clothColorId" type="integer" column="cloth_color_id" />
         <property name="materialId" type="integer" column="material_id" />
+        <property name="color" type="string" column="color" />
         <property name="part" type="string" column="part" />
         <property name="unitName" type="string" column="unit_name" />
         <property name="count" type="integer" column="count" />

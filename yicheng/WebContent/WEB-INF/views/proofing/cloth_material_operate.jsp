@@ -14,13 +14,18 @@
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
 	<c:set value="${model.supportDetails}" var="supportDetails" />
 
-	<div class="container-body">
-		<h3>皮衣详情
-		<a href="ClothMaterialDetail?clothId=${cloth.id}" class="btn btn-primary create-button">查看详情</a>
+	<div class="row container-body-with-left">
+		<div class="col-sm-2 left-navi-div">
+			<jsp:include page="../left_color_navi.jsp" flush="true" />
+		</div>	
+		
+		<div class="col-sm-9">
+			<h3>皮衣详情
+		<a href="ClothMaterialDetail?clothId=${cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">查看详情</a>
 		</h3>
 		<hr />
 		<div>
-			<p>基本信息</p>
+			<p class="info-title">基本信息</p>
 	         <div class="form-group row">
 		        <label class="col-sm-2 control-label">款号</label>
 		        <div class="col-sm-6">
@@ -34,10 +39,38 @@
      	        <label>${cloth.name}</label>
      	        </div>
      	     </div>
+
+              <div class="form-group row">
+      	        <label for="name" class="col-sm-2 control-label">颜色</label>
+      	        <div class="col-sm-6">
+ 	     	        <label>${cloth.color}</label>
+      	        </div>
+      	     </div>
+
+              <div class="form-group row">
+      	        <label for="name" class="col-sm-2 control-label">买手</label>
+      	        <div class="col-sm-6">
+ 	     	        <label>${cloth.client}</label>
+      	        </div>
+      	     </div>
+
+              <div class="form-group row">
+      	        <label for="name" class="col-sm-2 control-label">供应商</label>
+      	        <div class="col-sm-6">
+ 	     	        <label>${cloth.supplier}</label>
+      	        </div>
+      	     </div>
+
+              <div class="form-group row">
+      	        <label for="name" class="col-sm-2 control-label">备注</label>
+      	        <div class="col-sm-6">
+ 	     	        <label class="remark">${cloth.remark}</label>
+      	        </div>
+      	     </div>     	     
 			
 			<div class="margin-top-little">
 				<div class="row title-area">
-					<p class="col-sm-7">皮料信息</p>
+					<p class="col-sm-7 info-title">皮料信息</p>
 					<div class="col-sm-2">
 						<a href="#" id="add_leather_btn" class="btn btn-success btn-sm" >添加</a>	
 					</div>
@@ -47,6 +80,7 @@
 				<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
 					<tr>
 						<th>项目</th>
+						<th>颜色</th>
 						<th>部位</th>
 						<th>单位</th>
 						<th>用料</th>
@@ -57,6 +91,7 @@
 					<c:forEach items="${leatherDetails}" var="leatherDetail">
 						<tr clothMaterialId="${leatherDetail.id}">
 							<td>${leatherDetail.materialName}</td>
+							<td>${leatherDetail.materialColor}</td>
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
 							<td>${leatherDetail.consumption}</td>
@@ -77,7 +112,7 @@
 
 			<div class="margin-top-little">
 		 	     <div class="row title-area">
-			     	<p class="col-sm-7">面料信息</p>
+			     	<p class="col-sm-7 info-title">面料信息</p>
 			     	<div class="col-sm-2">
 			     		<a href="#" id="add_fabric_btn" class="btn btn-success btn-sm" >添加</a>	
 			     	</div>
@@ -86,6 +121,7 @@
 			     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
 			     	<tr>
 			     		<th>项目</th>
+			     		<th>颜色</th>
 			     		<th>部位</th>
 			     		<th>单位</th>
 			     		<th>用料</th>
@@ -96,6 +132,7 @@
 			     	<c:forEach items="${fabricDetails}" var="fabricDetail" >
 						<tr clothMaterialId="${fabricDetail.id}">
 							<td>${fabricDetail.materialName}</td>
+							<td>${leatherDetail.materialColor}</td>
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
 							<td>${fabricDetail.consumption}</td>
@@ -117,7 +154,7 @@
 
 			<div class="margin-top-little">
 				 <div class="row title-area">
-			     	<p class="col-sm-7">辅料信息</p>
+			     	<p class="col-sm-7 info-title">辅料信息</p>
 					<div class="col-sm-2">
 						<a href="#" id="add_support_btn" class="btn btn-success btn-sm" >添加</a>	
 					</div>
@@ -127,6 +164,7 @@
 	     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">
 	     	     	<tr>
 	     	     		<th>项目</th>
+	     	     		<th>颜色</th>
 	     	     		<th>部位</th>
 	     	     		<th>单位</th>
 	     	     		<th>用料</th>
@@ -137,6 +175,7 @@
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
 						<tr clothMaterialId="${supportDetail.id}">
 							<td>${supportDetail.materialName}</td>
+							<td>${leatherDetail.materialColor}</td>
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.consumption}</td>
@@ -164,6 +203,8 @@
 			</div>
       	   
 		</div>
+		</div>
+		
 	</div>
 
 	<div id="material_create_modal" class="modal fade">
@@ -184,6 +225,12 @@
 					            </select>
 					        </div>
 					    </div>				
+				        <div class="form-group row">
+					        <label for="color" class="col-sm-2 control-label">颜色</label>
+					        <div class="col-sm-6">
+					            <input type="text" id="color" class="form-control" name="color" placeholder="颜色" />
+					        </div>
+					    </div>						    
 				        <div class="form-group row">
 					        <label for="part" class="col-sm-2 control-label">部位</label>
 					        <div class="col-sm-6">
@@ -230,6 +277,8 @@
 <script type="text/javascript">
 /*variables*/
 var clothId;
+var clothColorId;
+
 var materials;
 var currentMaterialType;
 
@@ -262,6 +311,7 @@ var $remark = $("#remark");
 
 $(function() {
 	clothId = "${model.cloth.id}";
+	clothColorId = "${model.clothColorId}";
 
 	$deleteLeatherBtn.click(function(e) {
 		var clothMaterialId = $(this).parent().parent().attr("clothMaterialId");
@@ -354,7 +404,7 @@ function fillMaterialSelect() {
 function saveClothMaterial(saveType) {
 	if(saveType == SAVE_TYPE_CREATE) {
 		$.ajax({
-			url: "CreateClothMaterial?clothId=" + clothId,
+			url: "CreateClothMaterial?clothId=" + clothId + "&clothColorId=" + clothColorId,
 			data: $material_create_form.serialize(),
 			method: "post",
 			success: function(result) {
@@ -417,7 +467,13 @@ function appendClothMaterialItem(materialType, clothMaterialId, materialName, pa
 
 function deleteClothMaterial(clothMaterialId) {
 	$.ajax({
-		url: "DeleteClothMaterial?clothMaterialId=" + clothMaterialId + "&clothId=" + clothId,
+		url: "DeleteClothMaterial",
+		method: "post",
+		data: {
+			clothMaterialId: clothMaterialId,
+			clothId: clothId,
+			clothColorId: clothColorId
+		},
 		success: function(result) {
 			if(result.resultCode == 0) {
 				location.reload();

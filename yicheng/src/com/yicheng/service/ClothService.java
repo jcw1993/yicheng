@@ -18,4 +18,6 @@ public interface ClothService {
 	
 	public GenericResult<Cloth> getById(int clothId);
 
+	public NoneDataResult copyCloth(int clothId);
+	
 }

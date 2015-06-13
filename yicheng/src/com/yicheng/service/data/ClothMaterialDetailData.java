@@ -3,6 +3,7 @@ package com.yicheng.service.data;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
 
@@ -13,10 +14,14 @@ public class ClothMaterialDetailData implements Serializable {
 	private int id;
 	
 	private int clothId;
-
+	
+	private int clothColorId;
+	private String clothColor;
+	
 	private int materialId;
 	private int materialType;
 	private String materialName;
+	private String materialColor;
 	
 	private String part;
 	private String unitName;
@@ -43,7 +48,18 @@ public class ClothMaterialDetailData implements Serializable {
 	public void setClothId(int clothId) {
 		this.clothId = clothId;
 	}
-
+	public int getClothColorId() {
+		return clothColorId;
+	}
+	public void setClothColorId(int clothColorId) {
+		this.clothColorId = clothColorId;
+	}
+	public String getClothColor() {
+		return clothColor;
+	}
+	public void setClothColor(String clothColor) {
+		this.clothColor = clothColor;
+	}
 	public int getMaterialId() {
 		return materialId;
 	}
@@ -61,6 +77,12 @@ public class ClothMaterialDetailData implements Serializable {
 	}
 	public void setMaterialName(String materialName) {
 		this.materialName = materialName;
+	}
+	public String getMaterialColor() {
+		return materialColor;
+	}
+	public void setMaterialColor(String materialColor) {
+		this.materialColor = materialColor;
 	}
 	public String getPart() {
 		return part;
@@ -128,11 +150,12 @@ public class ClothMaterialDetailData implements Serializable {
 	
 	public ClothMaterialDetailData() {}
 	
-	public ClothMaterialDetailData(ClothMaterial clothMaterial, Material material) {
+	public ClothMaterialDetailData(ClothMaterial clothMaterial, ClothColor clothColor, Material material) {
 		if(null != clothMaterial) {
 			this.id = clothMaterial.getId();
 			this.clothId = clothMaterial.getId();
 			this.materialId = clothMaterial.getMaterialId();
+			this.materialColor = clothMaterial.getColor();
 			this.part = clothMaterial.getPart();
 			this.unitName = clothMaterial.getUnitName();
 			this.consumption = clothMaterial.getConsumption();
@@ -142,6 +165,11 @@ public class ClothMaterialDetailData implements Serializable {
 			this.price = clothMaterial.getPrice();
 			this.orderDate = clothMaterial.getOrderDate();
 			this.remark = clothMaterial.getRemark();
+		}
+		
+		if(null != clothColor) {
+			this.clothColorId = clothColor.getId();
+			this.clothColor = clothColor.getColor();
 		}
 
 		if(null != material) {

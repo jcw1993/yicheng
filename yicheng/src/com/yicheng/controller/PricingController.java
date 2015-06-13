@@ -20,9 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.yicheng.common.MaterialType;
 import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
+import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
+import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
+import com.yicheng.service.data.ClothDetailData;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataJsonResult;
@@ -40,6 +43,9 @@ public class PricingController {
 	
 	@Autowired
 	private ClothMaterialService clothMaterialService;
+	
+	@Autowired
+	private ClothColorService clothColorService;
 	
 	@RequestMapping(value = "/Pricing/ClothPriceToProcess", method = RequestMethod.GET)
 	public ModelAndView clothPriceToProcess(HttpServletRequest request, HttpServletResponse response) {
@@ -61,7 +67,7 @@ public class PricingController {
 			model.put("pageIndex", pageIndex);
 			model.put("itemCount", itemCount);
 			model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
-			model.put("clothToPrice", resultList);
+			model.put("clothToPrice", convertClothToDetailData(resultList));
 		}else {
 			logger.warn("cloth get need pricing exception");
 		}
@@ -89,7 +95,7 @@ public class PricingController {
 			model.put("pageIndex", pageIndex);
 			model.put("itemCount", itemCount);
 			model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
-			model.put("clothPriced", resultList);
+			model.put("clothPriced", convertClothToDetailData(resultList));
 		}else {
 			logger.warn("cloth get priced exception");
 		}
@@ -99,14 +105,30 @@ public class PricingController {
 	@RequestMapping(value = "/Pricing/ClothPriceDetail", method = RequestMethod.GET)
 	public ModelAndView clothPriceDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		Map<String, Object> model = getClothMaterialInfo(clothId);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+		if(clothColorId == 0) {
+			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
+				clothColorId = clothColorResult.getData().get(0).getId();
+			}
+		}
+		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
+		model.put("baseUrl", "ClothPriceDetail?clothId=" + clothId);
 		return new ModelAndView("pricing/cloth_price_detail", "model", model);
 	}
 
 	@RequestMapping(value = "/Pricing/ClothPriceOperate", method = RequestMethod.GET)
 	public ModelAndView clothPriceOperate(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		Map<String, Object> model = getClothMaterialInfo(clothId);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+		if(clothColorId == 0) {
+			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
+				clothColorId = clothColorResult.getData().get(0).getId();
+			}
+		}
+		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
+		model.put("baseUrl", "ClothPriceOperate?clothId=" + clothId);
 		return new ModelAndView("pricing/cloth_price_operate", "model", model);
 	}
 	
@@ -114,11 +136,12 @@ public class PricingController {
 	@RequestMapping(value = "/Pricing/ClothMaterialSavePrice", method = RequestMethod.POST)
 	public NoneDataJsonResult saveClothMaterialPrice(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", true);
 		int clothMaterialId = Utils.getRequestIntValue(request, "clothMaterialId", true);
 		double price = Utils.getRequestDoubleValue(request, "price", true);
 		String remark = request.getParameter("remark");
 		
-		GenericResult<ClothMaterial> clothMaterialResult = clothMaterialService.getById(clothId, clothMaterialId);
+		GenericResult<ClothMaterial> clothMaterialResult = clothMaterialService.getById(clothId, clothColorId, clothMaterialId);
 		if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
 			ClothMaterial clothMaterial = clothMaterialResult.getData();
 			clothMaterial.setPrice(price);
@@ -130,15 +153,20 @@ public class PricingController {
 		}
 	}
 	
-	private Map<String, Object> getClothMaterialInfo(int clothId) {
+	private Map<String, Object> getClothMaterialInfo(int clothId, int clothColorId) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<Cloth> clothResult = clothService.getById(clothId);
-		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_LEATHER);
-		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_FABRIC);
-		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, MaterialType.MATERIAL_TYPE_SUPPORT);
+		GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
+		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
+		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
 		
-		if(clothResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("cloth", clothResult.getData());
+		model.put("clothColorId", clothColorId);
+		
+		if(clothResult.getResultCode() == ResultCode.NORMAL 
+				&& clothColorResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("cloth", new ClothDetailData(clothResult.getData(), clothColorResult.getData()));
+			model.put("clothColors", clothColorResult.getData());
 		}
 		if(leatherDetailResult.getResultCode() == ResultCode.NORMAL) {
 			model.put("leatherDetails", leatherDetailResult.getData());
@@ -150,5 +178,19 @@ public class PricingController {
 			model.put("supportDetails", supportDetailResult.getData());
 		}
 		return model;
+	}
+	
+	private List<ClothDetailData> convertClothToDetailData(List<Cloth> clothList) {
+		if(null == clothList || clothList.isEmpty()) {
+			return null;
+		}
+		List<ClothDetailData> resultList = new ArrayList<ClothDetailData>();
+		for(Cloth cloth : clothList) {
+			GenericResult<List<ClothColor>> colorResult = clothColorService.getByCloth(cloth.getId());
+			if(colorResult.getResultCode() == ResultCode.NORMAL) {
+				resultList.add(new ClothDetailData(cloth, colorResult.getData()));
+			}
+		}
+		return resultList;
 	}
 }

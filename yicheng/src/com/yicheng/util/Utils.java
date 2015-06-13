@@ -28,6 +28,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.yicheng.common.Config;
+import com.yicheng.pojo.Cloth;
+import com.yicheng.service.data.ClothDetailData;
+
 public class Utils {
 	
 	private static Logger logger = LoggerFactory.getLogger(Utils.class);
@@ -260,4 +264,35 @@ public class Utils {
 			return cell.getStringCellValue();
 		}
 	}
+	
+	public static String getFileExtensionWithDot(String fileName) {
+		if(StringUtils.isBlank(fileName)) {
+			return null;
+		}
+		String[] strArr = fileName.split("\\.");
+		if(strArr.length > 1) {
+			return "." + strArr[strArr.length - 1];
+		}else {
+			return null;
+		}
+		
+	}
+	
+	public static Date convertToDate(String dateString, String dateFormatString) throws ParseException {
+		SimpleDateFormat dateFormat = (SimpleDateFormat)DateFormat.getDateInstance();  
+		dateFormat.applyPattern(dateFormatString);  
+		Date result = dateFormat.parse(dateString);
+		return result;
+		
+	}
+	
+	public static String[] parseColors(String colorString) {
+		if(StringUtils.isBlank(colorString)) {
+			return null;
+		}
+		
+		String[] colorArr = colorString.split(Config.COLOR_SEPERATOR);
+		return colorArr;
+	}
+	
 }

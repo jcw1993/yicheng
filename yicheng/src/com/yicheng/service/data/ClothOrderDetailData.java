@@ -11,15 +11,11 @@ public class ClothOrderDetailData implements Serializable {
 	private static final long serialVersionUID = -7312010418088691530L;
 
 	private int id;
-	
-	private int clothId;
-	private String clothName;
-	private String clothType;
-	
 	private String orderNumber;
 	private Date deliveryDate;
-	
 	private Integer count;
+	
+	private Cloth cloth;
 
 	public int getId() {
 		return id;
@@ -27,30 +23,6 @@ public class ClothOrderDetailData implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getClothId() {
-		return clothId;
-	}
-
-	public void setClothId(int clothId) {
-		this.clothId = clothId;
-	}
-
-	public String getClothName() {
-		return clothName;
-	}
-
-	public void setClothName(String clothName) {
-		this.clothName = clothName;
-	}
-
-	public String getClothType() {
-		return clothType;
-	}
-
-	public void setClothType(String clothType) {
-		this.clothType = clothType;
 	}
 
 	public String getOrderNumber() {
@@ -77,6 +49,14 @@ public class ClothOrderDetailData implements Serializable {
 		this.count = count;
 	}
 	
+	public Cloth getCloth() {
+		return cloth;
+	}
+
+	public void setCloth(Cloth cloth) {
+		this.cloth = cloth;
+	}
+
 	public ClothOrderDetailData() {}
 	
 	public ClothOrderDetailData(OrderCloth orderCloth, Cloth cloth) {
@@ -87,11 +67,7 @@ public class ClothOrderDetailData implements Serializable {
 			this.count = orderCloth.getCount();
 		}
 		
-		if(null != cloth) {
-			this.clothId = cloth.getId();
-			this.clothName = cloth.getName();
-			this.clothType = cloth.getType();
-		}
+		this.cloth = cloth;
 		
 	}
 

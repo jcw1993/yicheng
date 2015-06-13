@@ -8,26 +8,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.yicheng.dao.ClothCountDao;
-import com.yicheng.pojo.ClothCount;
-import com.yicheng.service.ClothCountService;
+import com.yicheng.dao.ClothSizeDao;
+import com.yicheng.pojo.ClothSize;
+import com.yicheng.service.ClothSizeService;
 import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataResult;
 import com.yicheng.util.ResultCode;
 
 @Service
-public class ClothCountServiceImpl implements ClothCountService {
+public class ClothSizeServiceImpl implements ClothSizeService {
 
-	private static Logger logger = LoggerFactory.getLogger(ClothCountService.class);
+	private static Logger logger = LoggerFactory.getLogger(ClothSizeService.class);
 	
 	private static final String CLOTH_COUNT_CACHE_KEY = "cloth_count_cache_%d";
 	
 	@Autowired
-	private ClothCountDao clothCountDao;
+	private ClothSizeDao clothCountDao;
 
 	@Override
-	public GenericResult<Integer> create(ClothCount clothCount) {
+	public GenericResult<Integer> create(ClothSize clothCount) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
 			int outId = clothCountDao.create(clothCount);
@@ -42,7 +42,7 @@ public class ClothCountServiceImpl implements ClothCountService {
 	}
 
 	@Override
-	public NoneDataResult update(ClothCount clothCount) {
+	public NoneDataResult update(ClothSize clothCount) {
 		NoneDataResult result = new NoneDataResult();
 		try{
 			clothCountDao.update(clothCount);
@@ -70,10 +70,10 @@ public class ClothCountServiceImpl implements ClothCountService {
 	}
 
 	@Override
-	public GenericResult<List<ClothCount>> getByCloth(int clothId) {
-		GenericResult<List<ClothCount>> result = new GenericResult<List<ClothCount>>();
+	public GenericResult<List<ClothSize>> getByCloth(int clothId) {
+		GenericResult<List<ClothSize>> result = new GenericResult<List<ClothSize>>();
 		@SuppressWarnings("unchecked")
-		List<ClothCount> clothCountList = (List<ClothCount>) CacheUtil.get(String.format(CLOTH_COUNT_CACHE_KEY, clothId));
+		List<ClothSize> clothCountList = (List<ClothSize>) CacheUtil.get(String.format(CLOTH_COUNT_CACHE_KEY, clothId));
 		if(null != clothCountList && !clothCountList.isEmpty()) {
 			result.setData(clothCountList);
 		}else {
