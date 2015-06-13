@@ -56,7 +56,6 @@ public class ProofingController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ProofingController.class);
 	
-	
 	@Autowired
 	 private ClothService clothService;
 	
@@ -74,6 +73,9 @@ public class ProofingController {
 	
 	@Autowired
 	private ClothColorService clothColorService;
+	
+	@Autowired
+	private ContentService contentServie;
 	
 	@RequestMapping(value = "/Proofing/ClothMaterialManage", method = RequestMethod.GET)
 	public ModelAndView clothMaterialList(HttpServletRequest request, HttpServletResponse response) {
@@ -102,6 +104,40 @@ public class ProofingController {
 		}
 		return new ModelAndView("proofing/cloth_material_manage", "model", model);
 	}
+	
+	@RequestMapping(value = "/Proofing/SearchInAll", method = RequestMethod.GET)
+	public ModelAndView searchInAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String keyword = request.getParameter("keyword");
+		if(StringUtils.isNotBlank(keyword)) {
+			Map<String, Object> model = new HashMap<String, Object>();
+			GenericResult<List<Cloth>> clothResult = clothService.searchInAll(keyword);
+			if(clothResult.getResultCode() == ResultCode.NORMAL) {
+				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+				
+				List<Cloth> allList = clothResult.getData();
+				int itemCount = allList.size();
+				List<Cloth> resultList = new ArrayList<Cloth>();
+				for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+					if(i < itemCount) {
+						resultList.add(allList.get(i));
+					}
+				}
+				model.put("baseUrl", "SearchInAll");
+				model.put("keyword", keyword);
+				model.put("pageIndex", pageIndex);
+				model.put("itemCount", itemCount);
+				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+				model.put("clothes", convertClothToDetailData(resultList));
+			}else {
+				logger.warn("cloth get all exception");
+			}
+			return new ModelAndView("proofing/cloth_material_manage", "model", model);
+		}else {	
+			response.sendRedirect(request.getContextPath() + "/Error");
+			return null;
+		}
+	}
 
 	@RequestMapping(value = "/Proofing/ClothMaterialDetail", method = RequestMethod.GET)
 	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
@@ -116,8 +152,6 @@ public class ProofingController {
 		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		model.put("baseUrl", "ClothMaterialDetail?clothId=" + clothId);
 		return new ModelAndView("proofing/cloth_material_detail", "model", model);
-	
-
 	}
 	
 	@RequestMapping(value = "/Proofing/CreateCloth", method = RequestMethod.GET)
@@ -313,11 +347,8 @@ public class ProofingController {
 	public GenericJsonResult<Integer> createMaterial(HttpServletRequest request, HttpServletResponse response) {
 		int type = Utils.getRequestIntValue(request, "type", true);
 		String name = request.getParameter("name");
-		name = name.trim();
-		// color 0
-		int colorType = 0;
 		
-		Material material = new Material(name, colorType, type);
+		Material material = new Material(name,  type);
 		GenericResult<Integer> createResult = materialService.create(material);
 		return new GenericJsonResult<Integer>(createResult);
 	}
@@ -372,7 +403,16 @@ public class ProofingController {
 		
 		if(clothResult.getResultCode() == ResultCode.NORMAL 
 				&& clothColorResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("cloth", new ClothDetailData(clothResult.getData(), clothColorResult.getData()));
+			ClothDetailData cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
+			if(null != cloth.getImageId() && cloth.getImageId() != 0) {
+				GenericResult<String> contentResult = contentService.getContentCodeById(cloth.getImageId());
+				if(contentResult.getResultCode() == ResultCode.NORMAL) {
+					cloth.setImageContent(contentResult.getData());
+				}
+				
+			}
+			model.put("cloth", cloth);
+	 
 			model.put("clothColors", clothColorResult.getData());
 		}
 

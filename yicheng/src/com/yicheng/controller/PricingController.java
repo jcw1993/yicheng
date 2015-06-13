@@ -1,5 +1,6 @@
 package com.yicheng.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
+import com.yicheng.service.ContentService;
 import com.yicheng.service.data.ClothDetailData;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.GenericResult;
@@ -46,11 +49,13 @@ public class PricingController {
 	
 	@Autowired
 	private ClothColorService clothColorService;
+	@Autowired
+	private ContentService contentService;
 	
 	@RequestMapping(value = "/Pricing/ClothPriceToProcess", method = RequestMethod.GET)
 	public ModelAndView clothPriceToProcess(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothToPriceResult = clothMaterialService.getNeedPricing();
+		GenericResult<List<Cloth>> clothToPriceResult = clothService.getNeedPricing();
 		if(clothToPriceResult.getResultCode() == ResultCode.NORMAL) {
 			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -78,7 +83,7 @@ public class PricingController {
 	@RequestMapping(value = "/Pricing/ClothPriceProcessed", method = RequestMethod.GET)
 	public ModelAndView clothPriceProcessed(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothPricedResult = clothMaterialService.getPriced();
+		GenericResult<List<Cloth>> clothPricedResult = clothService.getPriced();
 		if(clothPricedResult.getResultCode() == ResultCode.NORMAL) {
 			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -100,6 +105,74 @@ public class PricingController {
 			logger.warn("cloth get priced exception");
 		}
 		return new ModelAndView("pricing/cloth_price_processed", "model", model);
+	}
+	
+	@RequestMapping(value = "/Pricing/SearchInToPrice", method = RequestMethod.GET)
+	public ModelAndView searchInToPrice(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String keyword = request.getParameter("keyword");
+		if(StringUtils.isNotBlank(keyword)) {
+			Map<String, Object> model = new HashMap<String, Object>();
+			GenericResult<List<Cloth>> clothResult = clothService.searchInNeedPricing(keyword);
+			if(clothResult.getResultCode() == ResultCode.NORMAL) {
+				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+				
+				List<Cloth> allList = clothResult.getData();
+				int itemCount = allList.size();
+				List<Cloth> resultList = new ArrayList<Cloth>();
+				for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+					if(i < itemCount) {
+						resultList.add(allList.get(i));
+					}
+				}
+				model.put("baseUrl", "SearchInToPrice");
+				model.put("keyword", keyword);
+				model.put("pageIndex", pageIndex);
+				model.put("itemCount", itemCount);
+				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+				model.put("clothes", convertClothToDetailData(resultList));
+			}else {
+				logger.warn("cloth get need pricing exception");
+			}
+			return new ModelAndView("pricing/cloth_price_to_process", "model", model);
+		}else {	
+			response.sendRedirect(request.getContextPath() + "/Error");
+			return null;
+		}
+	}
+	
+	@RequestMapping(value = "/Pricing/SearchInPriced", method = RequestMethod.GET)
+	public ModelAndView searchInPriced(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String keyword = request.getParameter("keyword");
+		if(StringUtils.isNotBlank(keyword)) {
+			Map<String, Object> model = new HashMap<String, Object>();
+			GenericResult<List<Cloth>> clothResult = clothService.searchInPriced(keyword);
+			if(clothResult.getResultCode() == ResultCode.NORMAL) {
+				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+				
+				List<Cloth> allList = clothResult.getData();
+				int itemCount = allList.size();
+				List<Cloth> resultList = new ArrayList<Cloth>();
+				for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+					if(i < itemCount) {
+						resultList.add(allList.get(i));
+					}
+				}
+				model.put("baseUrl", "SearchInPriced");
+				model.put("keyword", keyword);
+				model.put("pageIndex", pageIndex);
+				model.put("itemCount", itemCount);
+				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+				model.put("clothes", convertClothToDetailData(resultList));
+			}else {
+				logger.warn("cloth get need pricing exception");
+			}
+			return new ModelAndView("pricing/cloth_price_processed", "model", model);
+		}else {	
+			response.sendRedirect(request.getContextPath() + "/Error");
+			return null;
+		}
 	}
 	
 	@RequestMapping(value = "/Pricing/ClothPriceDetail", method = RequestMethod.GET)
@@ -165,7 +238,16 @@ public class PricingController {
 		
 		if(clothResult.getResultCode() == ResultCode.NORMAL 
 				&& clothColorResult.getResultCode() == ResultCode.NORMAL) {
-			model.put("cloth", new ClothDetailData(clothResult.getData(), clothColorResult.getData()));
+			ClothDetailData cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
+			if(null != cloth.getImageId() && cloth.getImageId() != 0) {
+				GenericResult<String> contentResult = contentService.getContentCodeById(cloth.getImageId());
+				if(contentResult.getResultCode() == ResultCode.NORMAL) {
+					cloth.setImageContent(contentResult.getData());
+				}
+				
+			}
+			model.put("cloth", cloth);
+	 
 			model.put("clothColors", clothColorResult.getData());
 		}
 		if(leatherDetailResult.getResultCode() == ResultCode.NORMAL) {

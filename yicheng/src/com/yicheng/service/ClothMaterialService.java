@@ -2,7 +2,6 @@ package com.yicheng.service;
 
 import java.util.List;
 
-import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.GenericResult;
@@ -20,14 +19,6 @@ public interface ClothMaterialService {
 	public GenericResult<List<ClothMaterial>> getByClothColor(int clothId, int clothColorId);
 	
 	public GenericResult<ClothMaterial> getById(int clothId, int clothColorId, int clothMaterialId);
-	
-	public GenericResult<List<Cloth>> getNeedPricing();
-	
-	public GenericResult<List<Cloth>> getNeedCount();
-	
-	public GenericResult<List<Cloth>> getPriced();
-	
-	public GenericResult<List<Cloth>> getCounted();
 	
 	public GenericResult<List<ClothMaterialDetailData>> getDetailByCloth(int clothId, int clothColorId);
 	

@@ -12,4 +12,6 @@ public interface ContentService {
 	public GenericResult<List<Content>> getAll();
 	
 	public GenericResult<Content> getById(int contentId);
+	
+	public GenericResult<String> getContentCodeById(Integer contentId);
 }

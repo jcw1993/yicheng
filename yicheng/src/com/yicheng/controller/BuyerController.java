@@ -1,5 +1,6 @@
 package com.yicheng.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import com.yicheng.pojo.OrderCloth;
 import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
+import com.yicheng.service.ContentService;
 import com.yicheng.service.OrderClothService;
 import com.yicheng.service.data.ClothDetailData;
 import com.yicheng.service.data.ClothMaterialDetailData;
@@ -53,10 +56,13 @@ public class BuyerController {
 	@Autowired
 	private ClothColorService clothColorService;
 	
+	@Autowired
+	private ContentService contentService;
+	
 	@RequestMapping(value = "/Buyer/ClothCountToProcess", method = RequestMethod.GET)
 	public ModelAndView clothCountToProcess(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothToCountResult = clothMaterialService.getNeedCount();
+		GenericResult<List<Cloth>> clothToCountResult = clothService.getNeedCount();
 		if(clothToCountResult.getResultCode() == ResultCode.NORMAL) {
 			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -84,7 +90,7 @@ public class BuyerController {
 	@RequestMapping(value = "/Buyer/ClothCountProcessed", method = RequestMethod.GET)
 	public ModelAndView clothCountProcessed(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothCountedResult = clothMaterialService.getCounted();
+		GenericResult<List<Cloth>> clothCountedResult = clothService.getCounted();
 		if(clothCountedResult.getResultCode() == ResultCode.NORMAL) {
 			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -107,6 +113,74 @@ public class BuyerController {
 		}
 		
 		return new ModelAndView("buyer/cloth_count_processed", "model", model);
+	}
+	
+	@RequestMapping(value = "/Buyer/SearchInToCount", method = RequestMethod.GET)
+	public ModelAndView searchInToCount(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String keyword = request.getParameter("keyword");
+		if(StringUtils.isNotBlank(keyword)) {
+			Map<String, Object> model = new HashMap<String, Object>();
+			GenericResult<List<Cloth>> clothResult = clothService.searchInNeedCount(keyword);
+			if(clothResult.getResultCode() == ResultCode.NORMAL) {
+				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+				
+				List<Cloth> allList = clothResult.getData();
+				int itemCount = allList.size();
+				List<Cloth> resultList = new ArrayList<Cloth>();
+				for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+					if(i < itemCount) {
+						resultList.add(allList.get(i));
+					}
+				}
+				model.put("baseUrl", "SearchInToCount");
+				model.put("keyword", keyword);
+				model.put("pageIndex", pageIndex);
+				model.put("itemCount", itemCount);
+				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+				model.put("clothes", convertClothToDetailData(resultList));
+			}else {
+				logger.warn("cloth get need pricing exception");
+			}
+			return new ModelAndView("buyer/cloth_count_processed", "model", model);
+		}else {	
+			response.sendRedirect(request.getContextPath() + "/Error");
+			return null;
+		}
+	}
+	
+	@RequestMapping(value = "/Buyer/SearchInCounted", method = RequestMethod.GET)
+	public ModelAndView searchInCounted(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String keyword = request.getParameter("keyword");
+		if(StringUtils.isNotBlank(keyword)) {
+			Map<String, Object> model = new HashMap<String, Object>();
+			GenericResult<List<Cloth>> clothResult = clothService.searchInCounted(keyword);
+			if(clothResult.getResultCode() == ResultCode.NORMAL) {
+				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
+				
+				List<Cloth> allList = clothResult.getData();
+				int itemCount = allList.size();
+				List<Cloth> resultList = new ArrayList<Cloth>();
+				for(int i = startIndex; i < startIndex + Pagination.ITEMS_PER_PAGE; i++) {
+					if(i < itemCount) {
+						resultList.add(allList.get(i));
+					}
+				}
+				model.put("baseUrl", "SearchInCounted");
+				model.put("keyword", keyword);
+				model.put("pageIndex", pageIndex);
+				model.put("itemCount", itemCount);
+				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
+				model.put("clothes", convertClothToDetailData(resultList));
+			}else {
+				logger.warn("cloth get need pricing exception");
+			}
+			return new ModelAndView("buyer/cloth_count_processed", "model", model);
+		}else {	
+			response.sendRedirect(request.getContextPath() + "/Error");
+			return null;
+		}
 	}
 	
 	@RequestMapping(value = "/Buyer/ClothCountDetail", method = RequestMethod.GET)
@@ -195,9 +269,17 @@ public class BuyerController {
 		model.put("clothColorId", clothColorId);
 		if(clothResult.getResultCode() == ResultCode.NORMAL 
 				&& clothColorResult.getResultCode() == ResultCode.NORMAL) {
+			ClothDetailData cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
+			if(null != cloth.getImageId() && cloth.getImageId() != 0) {
+				GenericResult<String> contentResult = contentService.getContentCodeById(cloth.getImageId());
+				if(contentResult.getResultCode() == ResultCode.NORMAL) {
+					cloth.setImageContent(contentResult.getData());
+				}
+				
+			}
+			model.put("cloth", cloth);
 			model.put("clothColors", clothColorResult.getData());
 		}
-		
 		double clothTotalPrice = 0.0;
 		boolean hasCount = false;
 		

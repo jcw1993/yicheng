@@ -8,7 +8,7 @@
 
 <body>
 	<jsp:include page="buyer_navi.jsp" flush="true" />
-
+	<c:set value="${model.cloth}" var="cloth" />
 	<c:set value="${model.clothOrder}" var="clothOrder" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
@@ -24,7 +24,7 @@
 			</h3>
 			<hr />
 			<div>
-				<p>基本信息</p>
+				<p class="info-title">基本信息</p>
 		         <div class="form-group row">
 			        <label class="col-sm-2 control-label">款号</label>
 			        <div class="col-sm-6">
@@ -38,7 +38,43 @@
 	     	        <label>${clothOrder.cloth.name}</label>
 	     	        </div>
 	     	     </div>
+       		     <div class="form-group row">
+	      	        <label for="name" class="col-sm-2 control-label">颜色</label>
+	      	        <div class="col-sm-6">
+	 	     	        <label>${cloth.color}</label>
+	      	        </div>
+	      	     </div>
 
+	              <div class="form-group row">
+	      	        <label for="name" class="col-sm-2 control-label">买手</label>
+	      	        <div class="col-sm-6">
+	 	     	        <label>${cloth.client}</label>
+	      	        </div>
+	      	     </div>
+
+	              <div class="form-group row">
+	      	        <label for="name" class="col-sm-2 control-label">供应商</label>
+	      	        <div class="col-sm-6">
+	 	     	        <label>${cloth.supplier}</label>
+	      	        </div>
+	      	     </div>
+
+	              <div class="form-group row">
+	      	        <label for="name" class="col-sm-2 control-label">备注</label>
+	      	        <div class="col-sm-6">
+	 	     	        <label class="remark">${cloth.remark}</label>
+	      	        </div>
+	      	     </div>	     
+
+	      	     <c:if test="${null != cloth.imageContent}">
+                  <div class="form-group row">
+          	        <label for="name" class="col-sm-2 control-label">效果图</label>
+          	        <div class="col-sm-6">
+     	     	        <img src="data:image;base64,${cloth.imageContent}" class="image-preview" />
+          	        </div>
+          	     </div>		
+          	     </c:if>		     
+			     
 	             <div class="form-group row">
 	     	        <label for="name" class="col-sm-2 control-label">采购数量</label>
 	     	        <div class="col-sm-6">
@@ -62,7 +98,7 @@
 				
 				<div class="margin-top-little">
 					<div class="row title-area">
-						<p class="col-sm-7">皮料信息</p>
+						<p class="col-sm-7 info-title">皮料信息</p>
 					</div>		
 					<c:if test="${null != leatherDetails}">
 					<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
@@ -103,7 +139,7 @@
 
 				<div class="margin-top-little">
 			 	     <div class="row title-area">
-				     	<p class="col-sm-7">面料信息</p>
+				     	<p class="col-sm-7 info-title">面料信息</p>
 				     </div>		
 				     <c:if test="${null != fabricDetails}">
 				     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
@@ -145,7 +181,7 @@
 
 				<div class="margin-top-little">
 					 <div class="row title-area">
-				     	<p class="col-sm-7">辅料信息</p>
+				     	<p class="col-sm-7 info-title">辅料信息</p>
 		     	     </div>		
 		     	     <c:if test="${null != supportDetails}">
 		     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">

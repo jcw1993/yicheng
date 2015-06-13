@@ -11,8 +11,17 @@
 	<jsp:include page="proofing_navi.jsp" flush="true" />
 
 	<div class="container-body">
-		<h3>历史记录<a id="cloth-create" href="CreateCloth" class="btn btn-primary create-button">创建皮衣</a></h3>
+		<h3>
+		历史记录
+		<a id="cloth-create" href="CreateCloth" class="btn btn-primary create-button">创建皮衣</a></h3>
 		<hr />
+
+		<div class="navbar-form search-div">
+		        <div class="form-group">
+		          <input id="search_input" type="text" class="form-control" placeholder="请输入款号或款名">
+		        </div>
+		        <button id="search_submit" type="submit" class="btn btn-default">搜索</button>
+		</div>
 
 		<table class="table table-striped table-bordered table-hover table-responsive">
 			<tr>
@@ -75,7 +84,11 @@ var $colorInput = $("#color-input");
 var $submitBtn = $("#color_create_submit");
 var $createColorBtn = $(".create-color");
 
+var $searchInput = $("#search_input");
+var $searchSubmit = $("#search_submit");
+
 var currentClothId;
+var searchUrl = "SearchInAll";
 
 $createColorBtn.click(function(e) {
 	$createColorModal.modal();
@@ -106,6 +119,20 @@ $submitBtn.click(function(e) {
 			}
 		} 
 	});
+});
+
+$searchInput.keyup(function(e){
+	if(e.keyCode == 13) {
+		$searchSubmit.trigger("click");
+	}
+});
+
+$searchSubmit.click(function(e) {
+	var keyword = $searchInput.val();
+	if(keyword || keyword.trim() != "") {
+		keyword = keyword.trim();
+		window.location = searchUrl + "?keyword=" + keyword;
+	}
 });
 </script>	
 </body>

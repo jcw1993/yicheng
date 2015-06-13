@@ -43,14 +43,6 @@
           	        </div>
           	     </div>
 
-     	         <div class="form-group row">
-     		        <label for="type" class="col-sm-2 control-label">上传图片</label>
-     		        <div class="col-sm-6">
-     		            <input id="image_input" type="file" name="image" />
-     		            <img id="image_preview" class="image-preview" src="#" style="display: none"/>
-     		        </div>
-     		     </div>
-
 	             <div class="form-group row">
 	     	        <label for="name" class="col-sm-2 control-label">颜色</label>
 	     	        <div class="col-sm-6">
@@ -71,6 +63,14 @@
   	     	            <input id="delivery_date_input" type="text" class="form-control" name="deliveryDate" placeholder="yyyy-MM-dd(选填)" />
   	     	        </div>
   	     	     </div>
+
+ 	              <div class="form-group row">
+ 	     	        <label for="type" class="col-sm-2 control-label">上传图片</label>
+ 	     	        <div class="col-sm-6">
+ 	     	            <input id="image_input" type="file" name="image" />
+ 	     	            <img id="image_preview" class="image-preview" src="#" style="display: none"/>
+ 	     	        </div>
+ 	     	     </div>
 
 	     	     <div class="form-group row">
 		     	     <div class="col-sm-2"></div>

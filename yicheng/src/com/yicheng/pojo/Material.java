@@ -8,7 +8,6 @@ public class Material implements Serializable {
 	
 	private int id;
 	private String name;
-	private int colorType;
 	private int type;
 	
 	public int getId() {
@@ -23,12 +22,6 @@ public class Material implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getColorType() {
-		return colorType;
-	}
-	public void setColorType(int colorType) {
-		this.colorType = colorType;
-	}
 	public int getType() {
 		return type;
 	}
@@ -42,16 +35,14 @@ public class Material implements Serializable {
 		this.id = id;
 	}
 
-	public Material(int id, String name, int colorType, int type) {
+	public Material(int id, String name, int type) {
 		this.id = id;
 		this.name = name;
-		this.colorType = colorType;
 		this.type = type;
 	}
 	
-	public Material(String name, int colorType, int type) {
+	public Material(String name, int type) {
 		this.name = name;
-		this.colorType = colorType;
 		this.type = type;
 	}	
 }

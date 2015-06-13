@@ -13,7 +13,7 @@
 	<div class="container-body">
 		<div class="tab-navi">
 			<div class="tab">
-				<a href="ClothCountProcessed">待处理</a>
+				<a href="ClothCountToProcess">待处理</a>
 			</div>
 			<div class="tab tab-selected">
 				<a href="#">已处理</a>
@@ -21,6 +21,12 @@
 		</div>
 
 		<c:if test="${null != model.clothCounted}">
+			<div class="navbar-form search-div">
+			        <div class="form-group">
+			          <input id="search_input" type="text" class="form-control" placeholder="请输入款号或款名">
+			        </div>
+			        <button id="search_submit" type="submit" class="btn btn-default">搜索</button>
+			</div>
 			<table class="table table-striped table-bordered table-hover table-responsive">
 				<tr>
 					<th>款号</th>
@@ -50,6 +56,27 @@
 <jsp:include page="../footer.jsp" flush="true" />
 
 <script type="text/javascript">
+
+var searchUrl = "SearchInCounted";
+
+var $searchInput = $("#search_input");
+var $searchSubmit = $("#search_submit");
+
+
+
+$searchInput.keyup(function(e){
+	if(e.keyCode == 13) {
+		$searchSubmit.trigger("click");
+	}
+});
+
+$searchSubmit.click(function(e) {
+	var keyword = $searchInput.val();
+	if(keyword || keyword.trim() != "") {
+		keyword = keyword.trim();
+		window.location = searchUrl + "?keyword=" + keyword;
+	}
+});
 
 </script>	
 </body>

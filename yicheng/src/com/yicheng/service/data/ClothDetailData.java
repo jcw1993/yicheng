@@ -21,11 +21,11 @@ public class ClothDetailData implements Serializable {
 	private String remark;
 	// TODO maybe change to image type
 	private Integer imageId;
+	private String imageContent;
 	
 	private Date createdTime;
 	
 	private String color;
-	
 	
 	public int getId() {
 		return id;
@@ -81,6 +81,14 @@ public class ClothDetailData implements Serializable {
 
 	public void setImageId(Integer imageId) {
 		this.imageId = imageId;
+	}
+
+	public String getImageContent() {
+		return imageContent;
+	}
+
+	public void setImageContent(String imageContent) {
+		this.imageContent = imageContent;
 	}
 
 	public Date getCreatedTime() {

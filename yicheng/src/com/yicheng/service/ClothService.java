@@ -17,7 +17,25 @@ public interface ClothService {
 	public GenericResult<List<Cloth>> getAll();
 	
 	public GenericResult<Cloth> getById(int clothId);
+	
+	public GenericResult<List<Cloth>> getNeedPricing();
+	
+	public GenericResult<List<Cloth>> getNeedCount();
+	
+	public GenericResult<List<Cloth>> getPriced();
+	
+	public GenericResult<List<Cloth>> getCounted();
+	
+	public GenericResult<List<Cloth>> searchInAll(String keyword);
+	
+	public GenericResult<List<Cloth>> searchInNeedPricing(String keyword);
+	
+	public GenericResult<List<Cloth>> searchInNeedCount(String keyword);
+	
+	public GenericResult<List<Cloth>> searchInPriced(String keyword);
+	
+	public GenericResult<List<Cloth>> searchInCounted(String keyword);
 
-	public NoneDataResult copyCloth(int clothId);
+	public GenericResult<Integer> copyCloth(int clothId);
 	
 }

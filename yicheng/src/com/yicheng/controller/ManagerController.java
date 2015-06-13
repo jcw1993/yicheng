@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.yicheng.common.MaterialType;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.service.ClothMaterialService;
+import com.yicheng.service.ClothService;
 import com.yicheng.service.OrderClothService;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.service.data.ClothOrderDetailData;
@@ -36,10 +37,13 @@ public class ManagerController {
 	@Autowired
 	private OrderClothService orderClothService;
 	
+	@Autowired
+	private ClothService clothService;
+	
 	@RequestMapping(value = "/Manager/ClothMaterialManage", method = RequestMethod.GET)
 	public ModelAndView clothMaterialManage(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothResult = clothMaterialService.getNeedPricing();
+		GenericResult<List<Cloth>> clothResult = clothService.getNeedPricing();
 		
 		if(clothResult.getResultCode() == ResultCode.NORMAL) {
 			model.put("clothes", clothResult.getData());
@@ -52,7 +56,7 @@ public class ManagerController {
 	@RequestMapping(value = "/Manager/ClothPriceManage", method = RequestMethod.GET)
 	public ModelAndView clothPriceManage(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothPricedResult = clothMaterialService.getPriced();
+		GenericResult<List<Cloth>> clothPricedResult = clothService.getPriced();
 		if(clothPricedResult.getResultCode() == ResultCode.NORMAL) {
 			model.put("clothPriced", clothPricedResult.getData());
 		}else {
@@ -64,7 +68,7 @@ public class ManagerController {
 	@RequestMapping(value = "/Manager/ClothCountManage", method = RequestMethod.GET)
 	public ModelAndView clothCountManage(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothCountedResult = clothMaterialService.getCounted();
+		GenericResult<List<Cloth>> clothCountedResult = clothService.getCounted();
 		if(clothCountedResult.getResultCode() == ResultCode.NORMAL) {
 			model.put("clothCounted", clothCountedResult.getData());
 		}else {

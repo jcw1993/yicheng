@@ -19,7 +19,7 @@
 		<h3>皮衣详情<a href="ExportCountExcel?clothId=${clothOrder.clothId}" class="btn btn-primary create-button">导出采购表</a></h3>
 		<hr />
 		<div>
-			<p>基本信息</p>
+			<p class="info-title">基本信息</p>
 	         <div class="form-group row">
 		        <label class="col-sm-2 control-label">款号</label>
 		        <div class="col-sm-6">
@@ -53,7 +53,7 @@
 			
 			<div class="margin-top-little">
 				<div class="row title-area">
-					<p class="col-sm-7">皮料信息</p>
+					<p class="col-sm-7 info-title">皮料信息</p>
 				</div>		
 				<c:if test="${null != leatherDetails}">
 				<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
@@ -92,7 +92,7 @@
 
 			<div class="margin-top-little">
 		 	     <div class="row title-area">
-			     	<p class="col-sm-7">面料信息</p>
+			     	<p class="col-sm-7 info-title">面料信息</p>
 			     </div>		
 			     <c:if test="${null != fabricDetails}">
 			     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
@@ -132,7 +132,7 @@
 
 			<div class="margin-top-little">
 				 <div class="row title-area">
-	     	     	<p class="col-sm-7">辅料信息</p>
+	     	     	<p class="col-sm-7 info-title">辅料信息</p>
 	     	     </div>		
  	          	     <c:if test="${null != supportDetails}">
  	          	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">

@@ -1,13 +1,18 @@
 package com.yicheng.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.yicheng.common.Config;
 import com.yicheng.dao.ContentDao;
 import com.yicheng.pojo.Content;
 import com.yicheng.service.ContentService;
@@ -88,4 +93,42 @@ public class ContentServiceImpl implements ContentService {
 		return result;
 	}
 
+	public GenericResult<String> getContentCodeById(Integer contentId) {
+		GenericResult<String> result = new GenericResult<String>();
+		if(null == contentId) {
+			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
+		}
+		GenericResult<Content> contentResult = getById(contentId);
+		if(contentResult.getResultCode() == ResultCode.NORMAL) {
+			String filePath = Config.UPLOAD_FOLDER + File.separator + contentResult.getData().getDestFileName();
+
+			FileInputStream fin = null;
+			try {
+				File photoFile = new File(filePath);
+				fin = new FileInputStream(photoFile);
+				byte[] fileContent = new byte[(int) photoFile.length()];
+				fin.read(fileContent);
+
+				String photoBase64Code = Base64.encodeBase64String(fileContent);
+				result.setData(photoBase64Code);
+			} catch (Exception e) {
+				result.setResultCode(ResultCode.E_OTHER_ERROR);
+				result.setMessage(e.getMessage());
+			} finally {
+				try {
+					if (null != fin) {
+						fin.close();
+					}
+				} catch (IOException ioException) {
+					result.setResultCode(ResultCode.E_OTHER_ERROR);
+					result.setMessage(ioException.getMessage());
+				}
+			}
+		}else {
+			result.setResultCode(contentResult.getResultCode());
+			result.setMessage(contentResult.getMessage());
+		}
+		
+		return result;
+	}
 }

@@ -1,7 +1,11 @@
 package com.yicheng.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +14,15 @@ import org.springframework.stereotype.Service;
 
 import com.yicheng.dao.ClothDao;
 import com.yicheng.pojo.Cloth;
+import com.yicheng.pojo.ClothColor;
+import com.yicheng.pojo.ClothMaterial;
+import com.yicheng.pojo.ClothSize;
+import com.yicheng.pojo.OrderCloth;
+import com.yicheng.service.ClothColorService;
+import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
+import com.yicheng.service.ClothSizeService;
+import com.yicheng.service.OrderClothService;
 import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataResult;
@@ -24,6 +36,16 @@ public class ClothServiceImpl implements ClothService {
 	
 	@Autowired
 	private ClothDao clothDao;
+	
+	@Autowired
+	private ClothColorService clothColorService;
+	@Autowired
+	private ClothSizeService clothSizeService;
+	@Autowired
+	private OrderClothService orderClothService;
+	@Autowired
+	private ClothMaterialService clothMaterialServie;
+	
 	
 	@Override
 	public GenericResult<Integer> create(Cloth cloth) {
@@ -113,10 +135,434 @@ public class ClothServiceImpl implements ClothService {
 		
 		return result;
 	}
+	
+	@Override
+	public GenericResult<List<Cloth>> getNeedPricing() {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		GenericResult<List<Cloth>> allResult = getAll();
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for (Cloth cloth : allResult.getData()) {
+				if (null != cloth && !isEmpty(cloth.getId())
+						&& !isPriced(cloth.getId())) {
+					resultList.add(cloth);
+				}
+			}
+
+			if (!resultList.isEmpty()) {
+				result.setData(resultList);
+			} else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("none cloth need to be priced");
+			}
+		} else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
 
 	@Override
-	public NoneDataResult copyCloth(int clothId) {
-		// TODO Auto-generated method stub
-		return null;
+	public GenericResult<List<Cloth>> getNeedCount() {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		GenericResult<List<Cloth>> allResult = getAll();
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for (Cloth cloth : allResult.getData()) {
+				if (null != cloth && !isEmpty(cloth.getId())
+						&& isPriced(cloth.getId()) && !isCounted(cloth.getId())) {
+					resultList.add(cloth);
+				}
+			}
+
+			if (!resultList.isEmpty()) {
+				result.setData(resultList);
+			} else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("none cloth need to be counted");
+			}
+		} else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<Cloth>> getPriced() {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		GenericResult<List<Cloth>> allResult = getAll();
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for (Cloth cloth : allResult.getData()) {
+				if (null != cloth && !isEmpty(cloth.getId())
+						&& isPriced(cloth.getId())) {
+					resultList.add(cloth);
+				}
+			}
+
+			if (!resultList.isEmpty()) {
+				result.setData(resultList);
+			} else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("none cloth need to be priced");
+			}
+		} else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<Cloth>> getCounted() {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		GenericResult<List<Cloth>> allResult = getAll();
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for (Cloth cloth : allResult.getData()) {
+				if (null != cloth && !isEmpty(cloth.getId())
+						&& isPriced(cloth.getId()) && isCounted(cloth.getId())) {
+					resultList.add(cloth);
+				}
+			}
+
+			if (!resultList.isEmpty()) {
+				result.setData(resultList);
+			} else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("none cloth need to be counted");
+			}
+		} else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Transactional
+	@Override
+	public GenericResult<Integer> copyCloth(int clothId) {
+		GenericResult<Integer> result = new GenericResult<Integer>();
+		// Step1 copy from cloth info and create cloth, get inserted clothId
+		if(clothId <= 0) {
+			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
+			result.setMessage("clothId must great than 0");
+		}
+		
+		GenericResult<Cloth> clothResult = getById(clothId);
+		int insertClothId = 0;
+		if(clothResult.getResultCode() == ResultCode.NORMAL) {
+			Cloth cloth = clothResult.getData();
+			cloth.setId(0);
+			GenericResult<Integer> createResult = create(cloth);
+			if(createResult.getResultCode() == ResultCode.NORMAL) {
+				insertClothId = createResult.getData();
+			}else {
+				result.setResultCode(createResult.getResultCode());
+				result.setMessage(createResult.getMessage());
+				return result;
+			}
+		}else {
+			result.setResultCode(clothResult.getResultCode());
+			result.setMessage(clothResult.getMessage());
+			return result;
+		}
+		
+		// Step2 copy cloth_color data
+		List<Integer> originColorIdList = new ArrayList<Integer>();
+		List<Integer> insertColorIdList = new ArrayList<Integer>();
+		if(insertClothId > 0) {
+			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(insertClothId);
+			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
+				for(ClothColor clothColor : clothColorResult.getData()) {
+					int originColorId = clothColor.getId();
+					originColorIdList.add(originColorId);
+					clothColor.setId(0);
+					GenericResult<Integer> createColorResult = clothColorService.create(clothColor);
+					if(createColorResult.getResultCode() == ResultCode.NORMAL) {
+						insertColorIdList.add(createColorResult.getData());
+					}else {
+						// 0 : fail
+						insertColorIdList.add(0);
+						logger.error("copy color error, origin clothColorId: " + originColorId 
+								+ ", error message: " + createColorResult.getMessage());
+					}
+				}
+			}
+		}
+		
+		// Step3 copy order_cloth data
+		if(insertClothId > 0) {
+			GenericResult<OrderCloth> orderClothResult = orderClothService.getFirstbyCloth(insertClothId);
+			if(orderClothResult.getResultCode() == ResultCode.NORMAL) {
+				OrderCloth orderCloth = orderClothResult.getData();
+				orderCloth.setId(0);
+				orderCloth.setClothId(insertClothId);
+				GenericResult<Integer> insertOrderResult = orderClothService.create(orderCloth);
+				if(insertOrderResult.getResultCode() != ResultCode.NORMAL) {
+					logger.error("copy orderCloth error, error messag: "
+							+ insertOrderResult.getMessage());
+				}
+			}
+			
+		}
+		
+		// Step4 copy cloth_size data
+		// TODO cloth size need clothColorId
+		if(insertClothId > 0) {
+			GenericResult<List<ClothSize>> clothSizeResult = clothSizeService.getByCloth(insertClothId);
+			if(clothSizeResult.getResultCode() == ResultCode.NORMAL) {
+				for(ClothSize clothSize : clothSizeResult.getData()) {
+					clothSize.setId(0);
+					GenericResult<Integer> createSizeResult = clothSizeService.create(clothSize);
+					if(createSizeResult.getResultCode() != ResultCode.NORMAL) {
+						logger.error("copy size error, origin clothSizeId: " + clothSize.getId() 
+								+ ", error message: " + createSizeResult.getMessage());
+					}
+				}
+			}
+
+		}
+		
+		// Step5 copy cloth_material_data
+		// TODO
+		if(insertClothId > 0 && !originColorIdList.isEmpty() && ! insertColorIdList.isEmpty()) {
+			for(int originClothColorId : originColorIdList) {
+				GenericResult<List<ClothMaterial>> clothMaterialResult = clothMaterialServie.getByClothColor(insertClothId, originClothColorId);
+				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+					int index = 0;
+					for(ClothMaterial clothMaterial : clothMaterialResult.getData()) {
+						clothMaterial.setId(0);
+						clothMaterial.setClothColorId(insertClothId);
+						clothMaterial.setClothColorId(insertColorIdList.get(index));
+						GenericResult<Integer> createClothMaterailResult = clothMaterialServie.create(clothMaterial);
+						if(createClothMaterailResult.getResultCode() != ResultCode.NORMAL) {
+							logger.error("copy material error, origin clothMaterialId: " + clothMaterial.getId() 
+									+ ", error message: " + createClothMaterailResult.getMessage());
+						}
+						index++;
+					}
+				}
+			}
+		} 
+		
+		result.setData(insertClothId);
+		return result;
+	}
+	
+	/**
+	 * 
+	 * check if cloth has been priced true: priced, false:not priced
+	 *
+	 * 
+	 * @param clothId
+	 * @return
+	 */
+	private boolean isPriced(int clothId) {
+		boolean result = true;
+		GenericResult<List<ClothMaterial>> allResult = clothMaterialServie.getByCloth(clothId);
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			for (ClothMaterial clothMaterial : allResult.getData()) {
+				if (null == clothMaterial.getPrice()) {
+					result = false;
+					break;
+				}
+			}
+
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * check if cloth has count recorded true: counted, false: not counted
+	 *
+	 * 
+	 * @param clothId
+	 * @return
+	 */
+	private boolean isCounted(int clothId) {
+		boolean result = true;
+		GenericResult<List<ClothMaterial>> allResult = clothMaterialServie.getByCloth(clothId);
+		GenericResult<OrderCloth> orderClothResult = orderClothService
+				.getFirstbyCloth(clothId);
+		if ((orderClothResult.getResultCode() == ResultCode.NORMAL && null == orderClothResult
+				.getData().getCount())
+				|| (orderClothResult.getResultCode() != ResultCode.NORMAL)) {
+			result = false;
+		}
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			for (ClothMaterial clothMaterial : allResult.getData()) {
+				if (null == clothMaterial.getCount()) {
+					result = false;
+					break;
+				}
+			}
+
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * check if cloth has material related true: empty, false: not empty
+	 * 
+	 * @param clothId
+	 * @return
+	 */
+	private boolean isEmpty(int clothId) {
+		boolean result = true;
+		GenericResult<List<ClothMaterial>> allResult = clothMaterialServie.getByCloth(clothId);
+		if (allResult.getResultCode() == ResultCode.NORMAL
+				&& !allResult.getData().isEmpty()) {
+			result = false;
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<Cloth>> searchInAll(String keyword) {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		if(StringUtils.isBlank(keyword)) {
+			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
+			result.setMessage("search keyword cannot be null");
+		}
+		
+		GenericResult<List<Cloth>> allResult = getAll();
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(Cloth cloth : allResult.getData()) {
+				if(cloth.getType().contains(keyword) || cloth.getName().contains(keyword)) {
+					resultList.add(cloth);
+				}
+			}
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no data, keyword: " + keyword);
+			}
+ 		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<Cloth>> searchInNeedPricing(String keyword) {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		if(StringUtils.isBlank(keyword)) {
+			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
+			result.setMessage("search keyword cannot be null");
+		}
+		
+		GenericResult<List<Cloth>> allResult = getNeedPricing();
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(Cloth cloth : allResult.getData()) {
+				if(cloth.getType().contains(keyword) || cloth.getName().contains(keyword)) {
+					resultList.add(cloth);
+				}
+			}
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no data, keyword: " + keyword);
+			}
+ 		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<Cloth>> searchInNeedCount(String keyword) {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		if(StringUtils.isBlank(keyword)) {
+			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
+			result.setMessage("search keyword cannot be null");
+		}
+		
+		GenericResult<List<Cloth>> allResult = getNeedCount();
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(Cloth cloth : allResult.getData()) {
+				if(cloth.getType().contains(keyword) || cloth.getName().contains(keyword)) {
+					resultList.add(cloth);
+				}
+			}
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no data, keyword: " + keyword);
+			}
+ 		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<Cloth>> searchInPriced(String keyword) {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		if(StringUtils.isBlank(keyword)) {
+			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
+			result.setMessage("search keyword cannot be null");
+		}
+		
+		GenericResult<List<Cloth>> allResult = getPriced();
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(Cloth cloth : allResult.getData()) {
+				if(cloth.getType().contains(keyword) || cloth.getName().contains(keyword)) {
+					resultList.add(cloth);
+				}
+			}
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no data, keyword: " + keyword);
+			}
+ 		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<List<Cloth>> searchInCounted(String keyword) {
+		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
+		if(StringUtils.isBlank(keyword)) {
+			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
+			result.setMessage("search keyword cannot be null");
+		}
+		
+		GenericResult<List<Cloth>> allResult = getCounted();
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<Cloth> resultList = new ArrayList<Cloth>();
+			for(Cloth cloth : allResult.getData()) {
+				if(cloth.getType().contains(keyword) || cloth.getName().contains(keyword)) {
+					resultList.add(cloth);
+				}
+			}
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no data, keyword: " + keyword);
+			}
+ 		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
 	}
 }

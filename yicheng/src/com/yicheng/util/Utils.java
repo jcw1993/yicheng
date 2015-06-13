@@ -29,8 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yicheng.common.Config;
-import com.yicheng.pojo.Cloth;
-import com.yicheng.service.data.ClothDetailData;
 
 public class Utils {
 	
