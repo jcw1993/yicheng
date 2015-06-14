@@ -293,4 +293,16 @@ public class Utils {
 		return colorArr;
 	}
 	
+	public static <T> List<T> copyFromList(List<T> srcList) {
+		if(null == srcList || srcList.isEmpty()) {
+			return null;
+		}
+		
+		List<T> resultList = new ArrayList<T>();
+		for(T t : srcList) {
+			resultList.add(t);
+		}
+		return resultList;
+	}
+	
 }

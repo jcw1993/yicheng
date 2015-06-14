@@ -1,6 +1,7 @@
 package com.yicheng.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -27,6 +28,7 @@ import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataResult;
 import com.yicheng.util.ResultCode;
+import com.yicheng.util.Utils;
 
 @Service
 public class ClothServiceImpl implements ClothService {
@@ -249,14 +251,15 @@ public class ClothServiceImpl implements ClothService {
 		// Step1 copy from cloth info and create cloth, get inserted clothId
 		if(clothId <= 0) {
 			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
-			result.setMessage("clothId must great than 0");
+			result.setMessage("clothId must be greater than 0");
 		}
 		
 		GenericResult<Cloth> clothResult = getById(clothId);
 		int insertClothId = 0;
 		if(clothResult.getResultCode() == ResultCode.NORMAL) {
-			Cloth cloth = clothResult.getData();
+			Cloth cloth = new Cloth(clothResult.getData());
 			cloth.setId(0);
+			cloth.setCreatedTime(new Date());
 			GenericResult<Integer> createResult = create(cloth);
 			if(createResult.getResultCode() == ResultCode.NORMAL) {
 				insertClothId = createResult.getData();
@@ -275,13 +278,18 @@ public class ClothServiceImpl implements ClothService {
 		List<Integer> originColorIdList = new ArrayList<Integer>();
 		List<Integer> insertColorIdList = new ArrayList<Integer>();
 		if(insertClothId > 0) {
-			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(insertClothId);
+			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
-				for(ClothColor clothColor : clothColorResult.getData()) {
+				// copy data from list to invoid reference error
+				List<ClothColor> clothColorListCopy = Utils.copyFromList(clothColorResult.getData());
+				
+				for(ClothColor clothColor : clothColorListCopy) {
 					int originColorId = clothColor.getId();
 					originColorIdList.add(originColorId);
-					clothColor.setId(0);
-					GenericResult<Integer> createColorResult = clothColorService.create(clothColor);
+					ClothColor clothColorCopy = new ClothColor(clothColor);
+					clothColorCopy.setId(0);
+					clothColorCopy.setClothId(insertClothId);
+					GenericResult<Integer> createColorResult = clothColorService.create(clothColorCopy);
 					if(createColorResult.getResultCode() == ResultCode.NORMAL) {
 						insertColorIdList.add(createColorResult.getData());
 					}else {
@@ -296,54 +304,63 @@ public class ClothServiceImpl implements ClothService {
 		
 		// Step3 copy order_cloth data
 		if(insertClothId > 0) {
-			GenericResult<OrderCloth> orderClothResult = orderClothService.getFirstbyCloth(insertClothId);
+			GenericResult<OrderCloth> orderClothResult = orderClothService.getFirstbyCloth(clothId);
 			if(orderClothResult.getResultCode() == ResultCode.NORMAL) {
-				OrderCloth orderCloth = orderClothResult.getData();
-				orderCloth.setId(0);
-				orderCloth.setClothId(insertClothId);
-				GenericResult<Integer> insertOrderResult = orderClothService.create(orderCloth);
+				OrderCloth orderClothCopy = new OrderCloth(orderClothResult.getData());
+				orderClothCopy.setId(0);
+				orderClothCopy.setClothId(insertClothId);
+				
+				GenericResult<Integer> insertOrderResult = orderClothService.create(orderClothCopy);
 				if(insertOrderResult.getResultCode() != ResultCode.NORMAL) {
 					logger.error("copy orderCloth error, error messag: "
 							+ insertOrderResult.getMessage());
 				}
 			}
-			
 		}
+		
+		int colorSize = originColorIdList.size();
 		
 		// Step4 copy cloth_size data
 		// TODO cloth size need clothColorId
-		if(insertClothId > 0) {
-			GenericResult<List<ClothSize>> clothSizeResult = clothSizeService.getByCloth(insertClothId);
-			if(clothSizeResult.getResultCode() == ResultCode.NORMAL) {
-				for(ClothSize clothSize : clothSizeResult.getData()) {
-					clothSize.setId(0);
-					GenericResult<Integer> createSizeResult = clothSizeService.create(clothSize);
-					if(createSizeResult.getResultCode() != ResultCode.NORMAL) {
-						logger.error("copy size error, origin clothSizeId: " + clothSize.getId() 
-								+ ", error message: " + createSizeResult.getMessage());
+		if(insertClothId > 0 && !originColorIdList.isEmpty() && !insertColorIdList.isEmpty()) {
+			for(int index = 0; index < colorSize; index++) {
+				int originClothColorId = originColorIdList.get(index);
+				GenericResult<List<ClothSize>> clothSizeResult = clothSizeService.getByClothColor(clothId, originClothColorId);
+				if(clothSizeResult.getResultCode() == ResultCode.NORMAL) {
+					List<ClothSize> clothSizeListCopy = Utils.copyFromList(clothSizeResult.getData());
+					for(ClothSize clothSize : clothSizeListCopy) {
+						ClothSize clothSizeCopy = new ClothSize(clothSize);
+						clothSizeCopy.setId(0);
+						clothSizeCopy.setClothId(insertClothId);
+						clothSizeCopy.setClothColorId(insertColorIdList.get(index));
+						GenericResult<Integer> createSizeResult = clothSizeService.create(clothSizeCopy);
+						if(createSizeResult.getResultCode() != ResultCode.NORMAL) {
+							logger.error("copy size error, origin clothSizeId: " + clothSize.getId() 
+									+ ", error message: " + createSizeResult.getMessage());
+						}
 					}
 				}
 			}
-
-		}
+		} 
 		
 		// Step5 copy cloth_material_data
 		// TODO
 		if(insertClothId > 0 && !originColorIdList.isEmpty() && ! insertColorIdList.isEmpty()) {
-			for(int originClothColorId : originColorIdList) {
-				GenericResult<List<ClothMaterial>> clothMaterialResult = clothMaterialServie.getByClothColor(insertClothId, originClothColorId);
-				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
-					int index = 0;
-					for(ClothMaterial clothMaterial : clothMaterialResult.getData()) {
-						clothMaterial.setId(0);
-						clothMaterial.setClothColorId(insertClothId);
-						clothMaterial.setClothColorId(insertColorIdList.get(index));
-						GenericResult<Integer> createClothMaterailResult = clothMaterialServie.create(clothMaterial);
+			for(int index = 0; index < colorSize; index++) {
+				int originClothColorId = originColorIdList.get(index);
+				GenericResult<List<ClothMaterial>> clothMaterialResult = clothMaterialServie.getByClothColor(clothId, originClothColorId);
+				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) { 
+					List<ClothMaterial> clothMaterialListCopy = Utils.copyFromList(clothMaterialResult.getData());
+					for(ClothMaterial clothMaterial : clothMaterialListCopy) {
+						ClothMaterial clothMaterialCopy = new ClothMaterial(clothMaterial);
+						clothMaterialCopy.setId(0);
+						clothMaterialCopy.setClothId(insertClothId);
+						clothMaterialCopy.setClothColorId(insertColorIdList.get(index));
+						GenericResult<Integer> createClothMaterailResult = clothMaterialServie.create(clothMaterialCopy);
 						if(createClothMaterailResult.getResultCode() != ResultCode.NORMAL) {
 							logger.error("copy material error, origin clothMaterialId: " + clothMaterial.getId() 
 									+ ", error message: " + createClothMaterailResult.getMessage());
 						}
-						index++;
 					}
 				}
 			}

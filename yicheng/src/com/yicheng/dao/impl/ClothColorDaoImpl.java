@@ -28,7 +28,7 @@ public class ClothColorDaoImpl extends HibernateDaoBase implements ClothColorDao
 		Session session = super.getSession(true);
 		Query query = null;
 		try {
-			query = session.createQuery("from ClothColor where clothId = " + clothId);
+			query = session.createQuery("from ClothColor where clothId = " + clothId + " order by id asc");
 			return query.list();
 		}catch(Exception e) {
 			logger.error(e.getMessage());

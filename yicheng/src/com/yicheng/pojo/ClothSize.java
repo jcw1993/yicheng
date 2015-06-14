@@ -63,4 +63,12 @@ public class ClothSize implements Serializable {
 		this.sizeType = sizeType;
 		this.count = count;
 	}
+	
+	public ClothSize(ClothSize clothSize) {
+		this.id = clothSize.getId();
+		this.clothId = clothSize.getId();
+		this.clothColorId = clothSize.getClothColorId();
+		this.sizeType = clothSize.getSizeType();
+		this.count = clothSize.getSizeType();
+	}
 }

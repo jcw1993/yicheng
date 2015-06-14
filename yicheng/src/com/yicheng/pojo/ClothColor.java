@@ -46,5 +46,11 @@ public class ClothColor implements Serializable {
 		this.color = color;
 	}
 	
+	public ClothColor(ClothColor clothColor) {
+		this.id = clothColor.getId();
+		this.clothId = clothColor.getClothId();
+		this.color = clothColor.getColor();
+	}
+	
 
 }

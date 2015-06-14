@@ -92,6 +92,17 @@ public class Cloth implements Serializable {
 		this.createdTime = createdTime;
 	}	
 	
+	public Cloth(Cloth cloth) {
+		this.id = cloth.getId();
+		this.type = cloth.getType();
+		this.name = cloth.getType();
+		this.client = cloth.getClient();
+		this.supplier = cloth.getSupplier();
+		this.remark = cloth.getRemark();
+		this.imageId = cloth.getImageId();
+		this.createdTime = cloth.getCreatedTime();
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Cloth) {

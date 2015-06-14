@@ -156,4 +156,21 @@ public class ClothMaterial implements Serializable {
 		this.orderDate = orderDate;
 		this.remark = remark;
 	}
+	
+	public ClothMaterial(ClothMaterial clothMaterial) {
+		this.id = clothMaterial.getId();
+		this.clothId = clothMaterial.getClothId();
+		this.clothColorId = clothMaterial.getClothColorId();
+		this.materialId = clothMaterial.getMaterialId();
+		this.color = clothMaterial.getColor();
+		this.part = clothMaterial.getPart();
+		this.unitName = clothMaterial.getUnitName();
+		this.consumption = clothMaterial.getConsumption();
+		this.estimatedPrice = clothMaterial.getEstimatedPrice();
+		this.count = clothMaterial.getCount();
+		this.orderCount = clothMaterial.getOrderCount();
+		this.price = clothMaterial.getPrice();
+		this.orderDate = clothMaterial.getOrderDate();
+		this.remark = clothMaterial.getRemark();
+	}
 }

@@ -33,7 +33,7 @@ public class ClothMaterialDaoImpl extends HibernateDaoBase implements ClothMater
 		Session session = super.getSession(true);
 		Query query = null;
 		try {
-			query = session.createQuery("from ClothMaterial where clothId = " + clothId);
+			query = session.createQuery("from ClothMaterial where clothId = " + clothId + " order by id asc");
 			return query.list();
 		}catch(Exception e) {
 			logger.error(e.getMessage());

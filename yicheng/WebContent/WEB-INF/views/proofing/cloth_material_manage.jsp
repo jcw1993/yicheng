@@ -45,7 +45,7 @@
 					<td>
 						<a href="ClothMaterialDetail?clothId=${cloth.id}">详情</a>
 						<a href="ClothMaterialOperate?clothId=${cloth.id}">修改</a>
-						<a href"#">新建版本</a>
+						<a href"#" class="new_version_btn">新建版本</a>
 						<a href"#" class="create-color">添加颜色</a>
 					</td>
 				</tr>
@@ -83,6 +83,7 @@ var $createColorModal = $("#color_create_modal");
 var $colorInput = $("#color-input");
 var $submitBtn = $("#color_create_submit");
 var $createColorBtn = $(".create-color");
+var $newVersionBtn = $(".new_version_btn");
 
 var $searchInput = $("#search_input");
 var $searchSubmit = $("#search_submit");
@@ -95,6 +96,26 @@ $createColorBtn.click(function(e) {
 	var clothId = $(this).parent().parent().attr("clothId");
 	currentClothId = clothId;
 
+});
+
+$newVersionBtn.click(function(e) {
+	var clothId = $(this).parent().parent().attr("clothId");
+	$.ajax({
+		url: "CreateNewVersion",
+		method: "post",
+		data: {
+			clothId: clothId
+		},
+		success: function(result) {
+			if(result.resultCode == 0) {
+				alert("创建成功");
+				location.reload();
+			}else {
+				console.log("create new version error, " + result.message);
+				alert("创建新版本失败");
+			}
+		}
+	});
 });
 
 $submitBtn.click(function(e) {

@@ -391,6 +391,13 @@ public class ProofingController {
 		return new NoneDataJsonResult(ResultCode.E_INVALID_PARAMETER, "color can not null");
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/Proofing/CreateNewVersion", method = RequestMethod.POST)
+	public NoneDataJsonResult createNewVersion(HttpServletRequest request, HttpServletResponse response) {
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		return new NoneDataJsonResult(clothService.copyCloth(clothId));
+	}
+	
 	private Map<String, Object> getClothMaterialInfo(int clothId, int clothColorId) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<Cloth> clothResult = clothService.getById(clothId);

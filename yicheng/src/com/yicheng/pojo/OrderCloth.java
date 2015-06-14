@@ -74,4 +74,12 @@ public class OrderCloth implements Serializable {
 		this.count = count;
 	}
 	
+	public OrderCloth(OrderCloth orderCloth) {
+		this.id = orderCloth.getId();
+		this.clothId = orderCloth.getClothId();
+		this.orderNumber = orderCloth.getOrderNumber();
+		this.deliveryDate = orderCloth.getDeliveryDate();
+		this.count = orderCloth.getCount();
+	}
+	
 }
