@@ -10,6 +10,7 @@
 <body>
 	<jsp:include page="buyer_navi.jsp" flush="true" />
 	<c:set value="${model.cloth}" var="cloth" />
+	<c:set value="${model.clothSizes}" var="clothSizes" />
 	<c:set value="${model.clothOrder}" var="clothOrder" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
@@ -79,10 +80,23 @@
 	            <div class="form-group row">
 	     	        <label for="name" class="col-sm-2 control-label">采购数量</label>
 	     	        <div class="col-sm-6">
-	     	        <label>
-	     	        	<c:if test="${null != clothOrder.count}">${clothOrder.count}</c:if>
-	     	        	<c:if test="${null == clothOrder.count}">暂无</c:if>
-	     	        </label>
+	     	        <table class="table-bordered table-striped table-responsive table-condensed">
+	     	        	<tr>
+	     	        		<th>XS</th>
+	     	        		<th>S</th>
+	     	        		<th>M</th>
+	     	        		<th>L</th>
+	     	        		<th>XL</th>
+	     	        		<th>XXL</th>
+	     	        		<th>总计</th>
+	     	        	</tr>
+	     	        	<tr>
+							<c:forEach items="${clothSizes}" var="clothSize">
+								<td><label>${clothSize.count}</label></td>
+	     	        		</c:forEach>
+	     	        		<td><label>${clothOrder.count}</label></td>
+	     	        	</tr>
+	     	        </table>
 	     	        </div>
 	     	     </div>     
 	             <div class="form-group row">

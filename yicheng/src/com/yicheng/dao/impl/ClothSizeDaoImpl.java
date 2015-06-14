@@ -13,13 +13,13 @@ import com.yicheng.pojo.ClothSize;
 public class ClothSizeDaoImpl extends HibernateDaoBase implements ClothSizeDao {
 
 	@Override
-	public int create(ClothSize clothCount) {
-		return (Integer) getHibernateTemplate().save(clothCount);
+	public int create(ClothSize clothSize) {
+		return (Integer) getHibernateTemplate().save(clothSize);
 	}
 
 	@Override
-	public void update(ClothSize clothCount) {
-		getHibernateTemplate().update(clothCount);
+	public void update(ClothSize clothSize) {
+		getHibernateTemplate().update(clothSize);
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class ClothSizeDaoImpl extends HibernateDaoBase implements ClothSizeDao {
 		Session session = super.getSession(true);
 		Query query = null;
 		try {
-			query = session.createQuery("from ClothCount where clothId = " + clothId);
+			query = session.createQuery("from ClothSize where clothId = " + clothId + "order by sizeType asc");
 			return query.list();
 		}catch(Exception e) {
 			logger.error(e.getMessage());

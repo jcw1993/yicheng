@@ -130,7 +130,7 @@ public class PricingController {
 				model.put("pageIndex", pageIndex);
 				model.put("itemCount", itemCount);
 				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
-				model.put("clothes", convertClothToDetailData(resultList));
+				model.put("clothToPrice", convertClothToDetailData(resultList));
 			}else {
 				logger.warn("cloth get need pricing exception");
 			}
@@ -164,7 +164,7 @@ public class PricingController {
 				model.put("pageIndex", pageIndex);
 				model.put("itemCount", itemCount);
 				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
-				model.put("clothes", convertClothToDetailData(resultList));
+				model.put("clothPriced", convertClothToDetailData(resultList));
 			}else {
 				logger.warn("cloth get need pricing exception");
 			}

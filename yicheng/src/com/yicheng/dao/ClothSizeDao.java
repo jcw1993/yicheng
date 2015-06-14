@@ -6,9 +6,9 @@ import com.yicheng.pojo.ClothSize;
 
 public interface ClothSizeDao {
 	
-	public int create(ClothSize clothCount);
+	public int create(ClothSize clothSize);
 	
-	public void update(ClothSize clothCount);
+	public void update(ClothSize clothSize);
 	
 	public void delete(int id);
 	

@@ -19,15 +19,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.yicheng.common.ClothSizeType;
 import com.yicheng.common.MaterialType;
 import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
+import com.yicheng.pojo.ClothSize;
 import com.yicheng.pojo.OrderCloth;
 import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
+import com.yicheng.service.ClothSizeService;
 import com.yicheng.service.ContentService;
 import com.yicheng.service.OrderClothService;
 import com.yicheng.service.data.ClothDetailData;
@@ -58,6 +61,9 @@ public class BuyerController {
 	
 	@Autowired
 	private ContentService contentService;
+	
+	@Autowired
+	private ClothSizeService clothSizeService;
 	
 	@RequestMapping(value = "/Buyer/ClothCountToProcess", method = RequestMethod.GET)
 	public ModelAndView clothCountToProcess(HttpServletRequest request, HttpServletResponse response) {
@@ -138,11 +144,11 @@ public class BuyerController {
 				model.put("pageIndex", pageIndex);
 				model.put("itemCount", itemCount);
 				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
-				model.put("clothes", convertClothToDetailData(resultList));
+				model.put("clothToCount", convertClothToDetailData(resultList));
 			}else {
 				logger.warn("cloth get need pricing exception");
 			}
-			return new ModelAndView("buyer/cloth_count_processed", "model", model);
+			return new ModelAndView("buyer/cloth_count_to_process", "model", model);
 		}else {	
 			response.sendRedirect(request.getContextPath() + "/Error");
 			return null;
@@ -172,7 +178,7 @@ public class BuyerController {
 				model.put("pageIndex", pageIndex);
 				model.put("itemCount", itemCount);
 				model.put("itemsPerPage", Pagination.ITEMS_PER_PAGE);
-				model.put("clothes", convertClothToDetailData(resultList));
+				model.put("clothCounted", convertClothToDetailData(resultList));
 			}else {
 				logger.warn("cloth get need pricing exception");
 			}
@@ -217,18 +223,41 @@ public class BuyerController {
 	@RequestMapping(value = "/Buyer/OrderClothSaveCount", method = RequestMethod.POST)
 	public NoneDataJsonResult saveClothCount(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int buyCount = Utils.getRequestIntValue(request, "buyCount", true);
+		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", true);
+		
+		int xsCount = Utils.getRequestIntValue(request, "xsCount", false);
+		int sCount = Utils.getRequestIntValue(request, "sCount", false);
+		int mCount = Utils.getRequestIntValue(request, "mCount", false);
+		int lCount = Utils.getRequestIntValue(request, "lCount", false);
+		int xlCount = Utils.getRequestIntValue(request, "xlCount", false);
+		int xxlCount = Utils.getRequestIntValue(request, "xxlCount", false);
+		
+		ClothSize xsSize = new ClothSize(clothId, clothColorId, ClothSizeType.CLOTH_SIZE_XS, xsCount);
+		ClothSize sSize = new ClothSize(clothId, clothColorId, ClothSizeType.CLOTH_SIZE_S, sCount);
+		ClothSize mSize = new ClothSize(clothId, clothColorId, ClothSizeType.CLOTH_SIZE_M, mCount);
+		ClothSize lSize = new ClothSize(clothId, clothColorId, ClothSizeType.CLOTH_SIZE_L, lCount);
+		ClothSize xlSize = new ClothSize(clothId, clothColorId, ClothSizeType.CLOTH_SIZE_XL, xlCount);
+		ClothSize xxlSize = new ClothSize(clothId, clothColorId, ClothSizeType.CLOTH_SIZE_XXL, xxlCount);
+		
+		int totalBuyCount = xsCount + sCount + mCount + lCount + xlCount + xxlCount;
+
+		clothSizeService.save(xsSize);
+		clothSizeService.save(sSize);
+		clothSizeService.save(mSize);
+		clothSizeService.save(lSize);
+		clothSizeService.save(xlSize);
+		clothSizeService.save(xxlSize);
 		
 		GenericResult<OrderCloth> orderClothResult = orderClothService.getFirstbyCloth(clothId);
 		if(orderClothResult.getResultCode() == ResultCode.NORMAL) {
 			OrderCloth orderCloth = orderClothResult.getData();
-			orderCloth.setCount(buyCount);
+			orderCloth.setCount(totalBuyCount);
 			NoneDataResult updateResult = orderClothService.update(orderCloth);
 			return new NoneDataJsonResult(updateResult);
 		}else {
 			OrderCloth orderCloth = new OrderCloth();
 			orderCloth.setClothId(clothId);
-			orderCloth.setCount(buyCount);
+			orderCloth.setCount(totalBuyCount);
 			GenericResult<Integer> createResult = orderClothService.create(orderCloth);
 			return new NoneDataJsonResult(createResult);
 		}
@@ -261,6 +290,7 @@ public class BuyerController {
 		GenericResult<Cloth> clothResult = clothService.getById(clothId);
 		GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
 		
+		GenericResult<List<ClothSize>> clothSizeResult = clothSizeService.getByClothColor(clothId, clothColorId);
 		GenericResult<ClothOrderDetailData> clothOrderDetailResult = orderClothService.search(null, clothId);
 		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
 		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
@@ -280,6 +310,12 @@ public class BuyerController {
 			model.put("cloth", cloth);
 			model.put("clothColors", clothColorResult.getData());
 		}
+		
+		if(clothSizeResult.getResultCode() == ResultCode.NORMAL) {
+			model.put("clothSizes", clothSizeResult.getData());
+		}
+		
+		
 		double clothTotalPrice = 0.0;
 		boolean hasCount = false;
 		
@@ -340,4 +376,5 @@ public class BuyerController {
 		}
 		return resultList;
 	}
+	
 }

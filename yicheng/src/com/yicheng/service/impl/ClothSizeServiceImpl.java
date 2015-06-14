@@ -1,5 +1,6 @@
 package com.yicheng.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -27,12 +28,12 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 	private ClothSizeDao clothCountDao;
 
 	@Override
-	public GenericResult<Integer> create(ClothSize clothCount) {
+	public GenericResult<Integer> create(ClothSize clothSize) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = clothCountDao.create(clothCount);
+			int outId = clothCountDao.create(clothSize);
 			result.setData(outId);
-			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothCount.getClothId()));
+			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothSize.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
@@ -42,11 +43,11 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 	}
 
 	@Override
-	public NoneDataResult update(ClothSize clothCount) {
+	public NoneDataResult update(ClothSize clothSize) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			clothCountDao.update(clothCount);
-			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothCount.getClothId()));
+			clothCountDao.update(clothSize);
+			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothSize.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
@@ -92,6 +93,65 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public GenericResult<List<ClothSize>> getByClothColor(int clothId,
+			int clothColorId) {
+		GenericResult<List<ClothSize>> result = new GenericResult<List<ClothSize>>();
+ 		GenericResult<List<ClothSize>> allResult = getByCloth(clothId);
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<ClothSize> resultList = new ArrayList<ClothSize>();
+			for(ClothSize clothSize : allResult.getData()) {
+				if(clothSize.getClothColorId() == clothColorId) {
+					resultList.add(clothSize);
+				}
+			}
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+			}
+		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public GenericResult<ClothSize> search(int clothId, int clothColorId,
+			int sizeType) {
+		GenericResult<ClothSize> result = new GenericResult<ClothSize>();
+		GenericResult<List<ClothSize>> allResult = getByClothColor(clothId, clothColorId);
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			for(ClothSize clothSize : allResult.getData()) {
+				if(clothSize.getSizeType() == sizeType) {
+					result.setData(clothSize);
+					break;
+				}
+			}
+			if(null == result.getData()) {
+				result.setResultCode(ResultCode.E_NO_DATA);
+			}
+		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	@Override
+	public NoneDataResult save(ClothSize clothSize) {
+		GenericResult<ClothSize> clothSizeResult = search(clothSize.getClothColorId(), 
+				clothSize.getClothColorId(), clothSize.getSizeType());
+		if(clothSizeResult.getResultCode() == ResultCode.NORMAL) {
+			clothSize.setId(clothSizeResult.getData().getId());
+			return update(clothSize);
+		}else {
+			GenericResult<Integer> createResult = create(clothSize);
+			return new NoneDataResult(createResult.getResultCode());
+		}
 	}
 	
 	

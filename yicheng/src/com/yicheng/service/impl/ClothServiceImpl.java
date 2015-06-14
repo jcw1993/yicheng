@@ -170,7 +170,8 @@ public class ClothServiceImpl implements ClothService {
 			List<Cloth> resultList = new ArrayList<Cloth>();
 			for (Cloth cloth : allResult.getData()) {
 				if (null != cloth && !isEmpty(cloth.getId())
-						&& isPriced(cloth.getId()) && !isCounted(cloth.getId())) {
+						&& isPriced(cloth.getId()) 
+						&& !(isClothMaterialCounted(cloth.getId()) && isClothSizeCounted(cloth.getId()))) {
 					resultList.add(cloth);
 				}
 			}
@@ -222,7 +223,8 @@ public class ClothServiceImpl implements ClothService {
 			List<Cloth> resultList = new ArrayList<Cloth>();
 			for (Cloth cloth : allResult.getData()) {
 				if (null != cloth && !isEmpty(cloth.getId())
-						&& isPriced(cloth.getId()) && isCounted(cloth.getId())) {
+						&& isPriced(cloth.getId()) && isClothMaterialCounted(cloth.getId())
+						&& isClothSizeCounted(cloth.getId())) {
 					resultList.add(cloth);
 				}
 			}
@@ -382,7 +384,7 @@ public class ClothServiceImpl implements ClothService {
 	 * @param clothId
 	 * @return
 	 */
-	private boolean isCounted(int clothId) {
+	private boolean isClothMaterialCounted(int clothId) {
 		boolean result = true;
 		GenericResult<List<ClothMaterial>> allResult = clothMaterialServie.getByCloth(clothId);
 		GenericResult<OrderCloth> orderClothResult = orderClothService
@@ -400,6 +402,29 @@ public class ClothServiceImpl implements ClothService {
 				}
 			}
 
+		}
+		return result;
+	}
+	
+	private boolean isClothSizeCounted(int clothId) {
+		boolean result = true;
+		GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+		if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
+			for(ClothColor clothColor : clothColorResult.getData()) {
+				int clothColorId = clothColor.getId();
+				GenericResult<List<ClothSize>> clothSizeResult = clothSizeService.getByClothColor(clothId, clothColorId);
+				if(clothSizeResult.getResultCode() == ResultCode.NORMAL) {
+					if(clothSizeResult.getData().size() < 6) {
+						result = false;
+						break;
+					}
+				}else {
+					result = false;
+					break;
+				}
+			}
+		}else {
+			result = false;
 		}
 		return result;
 	}

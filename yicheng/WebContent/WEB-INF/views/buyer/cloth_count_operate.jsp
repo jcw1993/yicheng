@@ -9,6 +9,7 @@
 <body>
 	<jsp:include page="buyer_navi.jsp" flush="true" />
 	<c:set value="${model.cloth}" var="cloth" />
+	<c:set value="${model.clothSizes}" var="clothSizes" />
 	<c:set value="${model.clothOrder}" var="clothOrder" />
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
@@ -78,7 +79,27 @@
 	             <div class="form-group row">
 	     	        <label for="name" class="col-sm-2 control-label">采购数量</label>
 	     	        <div class="col-sm-6">
-	     	        <input type="text" name="buyCount" id="buyCount" value="${null == clothOrder.count ? 0 : clothOrder.count}" />
+	     	        <!-- <input type="text" name="buyCount" id="buyCount" value="${null == clothOrder.count ? 0 : clothOrder.count}" /> -->
+	     	        <table class="table-bordered table-striped table-responsive table-condensed">
+	     	        	<tr>
+	     	        		<th>XS</th>
+	     	        		<th>S</th>
+	     	        		<th>M</th>
+	     	        		<th>L</th>
+	     	        		<th>XL</th>
+	     	        		<th>XXL</th>
+	     	        		<th>总计</th>
+	     	        	</tr>
+	     	        	<tr>
+	     	        		<td><input type="text" name="xsCount" id="xsCount" value="${clothSizes[0].count}" placeholder="XS(整数)" /></td>
+	     	        		<td><input type="text" name="sCount" id="sCount" value="${clothSizes[1].count}"  placeholder="S(整数)" /></td>
+	     	        		<td><input type="text" name="mCount" id="mCount" value="${clothSizes[2].count}"  placeholder="M(整数)" /></td>
+	     	        		<td><input type="text" name="lCount" id="lCount" value="${clothSizes[3].count}"  placeholder="L(整数)" /></td>
+	     	        		<td><input type="text" name="xlCount" id="xlCount" value="${clothSizes[4].count}"  placeholder="XL(整数)" /></td>
+	     	        		<td><input type="text" name="xxlCount" id="xxlCount" value="${clothSizes[5].count}"  placeholder="XXL(整数)" /></td>
+	     	        		<td><label>${clothOrder.count}</label></td>
+	     	        	</tr>
+	     	        </table>
 	     	        </div>
 	     	     </div>     
 	             <div class="form-group row">
@@ -241,7 +262,12 @@ var clothColorId;
 
 var $saveCountBtn = $(".save_count_btn");
 var $saveClothCountBtn = $("#save_cloth_count");
-var $buyCountInput = $("#buyCount");
+var $xsCountInput = $("#xsCount");
+var $sCountInput = $("#sCount");
+var $mCountInput = $("#mCount");
+var $lCountInput = $("#lCount");
+var $xlCountInput = $("#xlCount");
+var $xxlCountInput = $("#xxlCount");
 
 $(function() {
 	clothId = "${model.clothOrder.cloth.id}";
@@ -260,16 +286,27 @@ $(function() {
 	});
 
 	$saveClothCountBtn.click(function(e) {
-		var buyCount = $buyCountInput.val();
-		console.log("clothId", clothId);
-		console.log("buyCount: " + buyCount);
-		if(checkInt(buyCount)) {
+		var xsCount = $xsCountInput.val();
+		var sCount = $sCountInput.val();
+		var mCount = $mCountInput.val();
+		var lCount = $lCountInput.val();
+		var xlCount = $xlCountInput.val();
+		var xxlCount = $xxlCountInput.val();
+
+		if(checkInt(xsCount) && checkInt(sCount) && checkInt(mCount) && checkInt(lCount) 
+			&& checkInt(xlCount) && checkInt(xxlCount)) {
 			$.ajax({
 				url: "OrderClothSaveCount",
 				method: "post",
 				data: {
 					clothId: clothId,
-					buyCount: buyCount
+					clothColorId: clothColorId,
+					xsCount: xsCount,
+					sCount: sCount,
+					mCount: mCount,
+					lCount: lCount,
+					xlCount: xlCount,
+					xxlCount: xxlCount
 				},
 				success: function(result) {
 					if(result.resultCode == 0) {
