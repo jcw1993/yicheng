@@ -73,7 +73,7 @@ public class IdentityController {
 				result.setData("Buyer/ClothCountToProcess");
 				break;
 			case UserType.USER_TYPE_MANAGER:
-				response.sendRedirect(request.getContextPath() + "/Manager/ClothMaterialManage");
+//				response.sendRedirect(request.getContextPath() + "/Manager/ClothMaterialManage");
 				result.setData("Manager/ClothMaterialManage");
 				break;
 			default:

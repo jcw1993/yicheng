@@ -182,59 +182,6 @@
 				</div>
 			</div>
 	</div>
-
-	<div id="material_create_modal" class="modal fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">材料信息</h4>
-				</div>
-				<form id="material_create_form">
-					<div id="material_create_content" class="modal-body">
-						<input type="hidden" name="clothId" value="" />
-				        <div class="form-group row">
-					        <label class="col-sm-2 control-label">项目</label>
-					        <div class="col-sm-6">
-					            <!-- <input type="text" class="form-control" name="material_name" placeholder="项目" /> -->
-					            <select id="material_select" name="materialId">
-					            	
-					            </select>
-					        </div>
-					    </div>				
-				        <div class="form-group row">
-					        <label for="part" class="col-sm-2 control-label">部位</label>
-					        <div class="col-sm-6">
-					            <input type="text" id="part" class="form-control" name="part" placeholder="部位" />
-					        </div>
-					    </div>
-				        <div class="form-group row">
-					        <label class="col-sm-2 control-label">单位</label>
-					        <div class="col-sm-6">
-					            <input type="text" id="unitName" class="form-control" name="unitName" placeholder="单位" />
-					        </div>
-					    </div>
-				        <div class="form-group row">
-					        <label for="consumption" class="col-sm-2 control-label">用料</label>
-					        <div class="col-sm-6">
-					            <input type="text" id="consumption" class="form-control" name="consumption" placeholder="用料" />
-					        </div>
-					    </div>
-				        <div class="form-group row">
-					        <label for="remark" class="col-sm-2 control-label">备注</label>
-					        <div class="col-sm-6">
-					            <input type="text" id="remark" class="form-control" name="remark" placeholder="备注" />
-					        </div>
-					    </div>	
-					</div>
-					<div class="modal-footer">
-						<button id="material_create_submit" type="button"
-							class="btn btn-primary" data-dismiss="modal">保存</button>
-					</div>
-				</form>
-			
-			</div>
-		</div>
-	</div>
 <jsp:include page="../footer.jsp" flush="true" />
 	
 </body>

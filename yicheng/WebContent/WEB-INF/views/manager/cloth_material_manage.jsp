@@ -3,6 +3,7 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <jsp:include page="../header.jsp" flush="true" />
 
@@ -10,21 +11,65 @@
 	<jsp:include page="manager_navi.jsp" flush="true" />
 
 	<div class="container-body">
-		<h3>面辅料清单</h3>
+		<h3>面辅料清单
 		<hr />
-		<c:forEach items="${model.clothes}" var="cloth">
-			<div class="list-item row">
-				<p class="col-sm-5">${cloth.name}</p>
-				<p class="col-sm-5">${cloth.type}</p>
-				<a href="ClothMaterialDetail?clothId=${cloth.id}" class="col-sm-1">详情</a>
-			</div>
-		</c:forEach>									
+
+		<div class="navbar-form search-div">
+		        <div class="form-group">
+		          <input id="search_input" type="text" class="form-control" placeholder="请输入款号或款名">
+		        </div>
+		        <button id="search_submit" type="submit" class="btn btn-default">搜索</button>
+		</div>
+
+		<table class="table table-striped table-bordered table-hover table-responsive">
+			<tr>
+				<th>款号</th>
+				<th>款名</th>
+				<th>颜色</th>
+				<th>买手</th>
+				<th>供应商</th>
+				<!-- <th>交货期</th> -->
+				<th>创建时间</th>
+				<th>操作</th>
+			</tr>
+			<c:forEach items="${model.clothes}" var="cloth">
+				<tr clothId="${cloth.id}">
+					<td>${cloth.type}</td>
+					<td>${cloth.name}</td>
+					<td>${cloth.color}</td>
+					<td>${cloth.client}</td>
+					<td>${cloth.supplier}</td>
+					<td><fmt:formatDate value="${cloth.createdTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+					<td>
+						<a href="ClothMaterialDetail?clothId=${cloth.id}">详情</a>
+					</td>
+				</tr>
+			</c:forEach>			
+		</table>
+		<jsp:include page="../pagination.jsp" flush="true" />			
 	</div>
 
 <jsp:include page="../footer.jsp" flush="true" />
 
 <script type="text/javascript">
+var $searchInput = $("#search_input");
+var $searchSubmit = $("#search_submit");
 
-</script>	
+var searchUrl = "SearchInMaterialManage";
+
+$searchInput.keyup(function(e){
+	if(e.keyCode == 13) {
+		$searchSubmit.trigger("click");
+	}
+});
+
+$searchSubmit.click(function(e) {
+	var keyword = $searchInput.val();
+	if(keyword || keyword.trim() != "") {
+		keyword = keyword.trim();
+		window.location = searchUrl + "?keyword=" + keyword;
+	}
+});
+</script>
 </body>
 </html>

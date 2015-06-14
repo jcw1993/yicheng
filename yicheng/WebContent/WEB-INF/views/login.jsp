@@ -87,13 +87,9 @@
 		$errorInfo = $("#error-info");
 		
 		$loginLink.click(function(e) {
-			console.log("log");
 			var name = $nameInput.val();
 			var password = $passwordInput.val();
 			var userType = $("select[name='userType'] option:selected").val();
-			console.log("name: " + name);
-			console.log("password: " + password);
-			console.log("userType: " + userType);
 			if(checkParameters(name, password, userType)) {
 				name = name.trim();
 				password = password.trim();
