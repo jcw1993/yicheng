@@ -91,17 +91,26 @@
 	     	        		<th>总计</th>
 	     	        	</tr>
 	     	        	<tr>
-	     	        		<td><input type="text" name="xsCount" id="xsCount" value="${clothSizes[0].count}" placeholder="XS(整数)" /></td>
-	     	        		<td><input type="text" name="sCount" id="sCount" value="${clothSizes[1].count}"  placeholder="S(整数)" /></td>
-	     	        		<td><input type="text" name="mCount" id="mCount" value="${clothSizes[2].count}"  placeholder="M(整数)" /></td>
-	     	        		<td><input type="text" name="lCount" id="lCount" value="${clothSizes[3].count}"  placeholder="L(整数)" /></td>
-	     	        		<td><input type="text" name="xlCount" id="xlCount" value="${clothSizes[4].count}"  placeholder="XL(整数)" /></td>
-	     	        		<td><input type="text" name="xxlCount" id="xxlCount" value="${clothSizes[5].count}"  placeholder="XXL(整数)" /></td>
-	     	        		<td><label>${clothOrder.count}</label></td>
+	     	        		<td><input type="text" name="xsCount" id="xsCount" value="${clothSizes.clothSizes[0].count}" placeholder="XS(整数)" /></td>
+	     	        		<td><input type="text" name="sCount" id="sCount" value="${clothSizes.clothSizes[1].count}"  placeholder="S(整数)" /></td>
+	     	        		<td><input type="text" name="mCount" id="mCount" value="${clothSizes.clothSizes[2].count}"  placeholder="M(整数)" /></td>
+	     	        		<td><input type="text" name="lCount" id="lCount" value="${clothSizes.clothSizes[3].count}"  placeholder="L(整数)" /></td>
+	     	        		<td><input type="text" name="xlCount" id="xlCount" value="${clothSizes.clothSizes[4].count}"  placeholder="XL(整数)" /></td>
+	     	        		<td><input type="text" name="xxlCount" id="xxlCount" value="${clothSizes.clothSizes[5].count}"  placeholder="XXL(整数)" /></td>
+	     	        		<td><label>${null == clothSizes.totalCount ? "0" : clothSizes.totalCount}</label></td>
 	     	        	</tr>
 	     	        </table>
 	     	        </div>
-	     	     </div>     
+	     	     </div>   
+
+ 	             <div class="form-group row">
+ 	      	        <label class="col-sm-2">总采购数量</label>
+ 	     	        <label id="orderPrice" class="col-sm-4">
+ 	     	        	<c:if test="${null != model.clothTotalCount}">${model.clothTotalCount}</c:if>
+ 	     	        	<c:if test="${null == model.clothTotalCount}">暂无</c:if>
+ 	     	        </label>     	     
+ 	     	     </div>    
+
 	             <div class="form-group row">
 	      	        <label class="col-sm-2">订货单总价</label>
 	     	        <label id="orderPrice" class="col-sm-4">

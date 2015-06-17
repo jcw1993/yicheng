@@ -95,7 +95,7 @@ public class Cloth implements Serializable {
 	public Cloth(Cloth cloth) {
 		this.id = cloth.getId();
 		this.type = cloth.getType();
-		this.name = cloth.getType();
+		this.name = cloth.getName();
 		this.client = cloth.getClient();
 		this.supplier = cloth.getSupplier();
 		this.remark = cloth.getRemark();

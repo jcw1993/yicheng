@@ -91,14 +91,27 @@
 	     	        		<th>总计</th>
 	     	        	</tr>
 	     	        	<tr>
-							<c:forEach items="${clothSizes}" var="clothSize">
-								<td><label>${clothSize.count}</label></td>
-	     	        		</c:forEach>
-	     	        		<td><label>${clothOrder.count}</label></td>
+	     	        		<td><label>${null == clothSizes.clothSizes[0].count ? "暂无" : clothSizes.clothSizes[0].count}</label></td>
+	     	        		<td><label>${null == clothSizes.clothSizes[1].count ? "暂无" : clothSizes.clothSizes[1].count}</label></td>
+	     	        		<td><label>${null == clothSizes.clothSizes[2].count ? "暂无" : clothSizes.clothSizes[2].count}</label></td>
+	     	        		<td><label>${null == clothSizes.clothSizes[3].count ? "暂无" : clothSizes.clothSizes[3].count}</label></td>
+	     	        		<td><label>${null == clothSizes.clothSizes[4].count ? "暂无" : clothSizes.clothSizes[4].count}</label></td>
+	     	        		<td><label>${null == clothSizes.clothSizes[5].count ? "暂无" : clothSizes.clothSizes[5].count}</label></td>
+
+	     	        		<td><label>${null == clothSizes.totalCount ? "0" : clothSizes.totalCount}</label></td>
 	     	        	</tr>
 	     	        </table>
 	     	        </div>
 	     	     </div>     
+
+ 	             <div class="form-group row">
+ 	      	        <label class="col-sm-2">总采购数量</label>
+ 	     	        <label class="col-sm-4">
+ 	     	        	<c:if test="${null != model.clothTotalCount}">${model.clothTotalCount}</c:if>
+ 	     	        	<c:if test="${null == model.clothTotalCount}">暂无</c:if>
+ 	     	        </label>     	     
+ 	     	     </div>  				
+
 	             <div class="form-group row">
 	      	        <label class="col-sm-2">订货单总价</label>
 	     	        <label id="orderPrice" class="col-sm-4">
