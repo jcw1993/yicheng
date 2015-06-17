@@ -179,3 +179,20 @@ div.margin-top-little {
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
 	background-color: #2d96ff;
 }
+
+.navbar-default .navbar-nav>li>a {
+  color: #3C3B40; 
+  font-size: 1.2em;
+  font-weight: bold;
+}
+.navbar-default .navbar-nav>li>a:hover {
+  color: #228FE2;
+}
+
+#footerbox {
+	background-color: #E6E6E6 !important;
+}
+.navbar-right
+{
+	margin-right : 10%;
+}

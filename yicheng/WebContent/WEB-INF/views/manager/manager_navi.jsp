@@ -16,7 +16,7 @@
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					
+					<a class="navbar-brand" href="#">江阴怡诚</a>
 				</div>
 			</div>
 			<div class="col-xs-10">
@@ -26,8 +26,10 @@
 						<li><a href="ClothMaterialManage">面辅料明细表</a></li>
 						<li><a href="ClothPriceManage">报价单</a></li>
 						<li><a href="ClothCountManage">采购单</a></li>
-						<li><a href="../Logout">退出</a></li>
 					</ul>
+					<ul class="nav navbar-nav navbar-right">
+				        <li ><a href="../Logout">退出</a></li>
+				    </ul>
 				</div>
 			</div>
 		</div>
