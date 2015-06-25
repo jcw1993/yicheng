@@ -61,19 +61,15 @@ public class IdentityController {
 			UserInfoStorage.putUser(sessionId, user);
 			switch (userType) {
 			case UserType.USER_TYPE_PROOFING:
-//				response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialManage");
 				result.setData("Proofing/ClothMaterialManage");
 				break;
 			case UserType.USER_TYPE_PRICING:
-//				response.sendRedirect(request.getContextPath() + "/Pricing/ClothPriceToProcess");
 				result.setData("Pricing/ClothPriceToProcess");
 				break;
 			case UserType.USER_TYPE_BUYER:
-//				response.sendRedirect(request.getContextPath() + "/Buyer/ClothCountToProcess");
 				result.setData("Buyer/ClothCountToProcess");
 				break;
 			case UserType.USER_TYPE_MANAGER:
-//				response.sendRedirect(request.getContextPath() + "/Manager/ClothMaterialManage");
 				result.setData("Manager/ClothMaterialManage");
 				break;
 			default:

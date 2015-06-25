@@ -2,6 +2,7 @@ package com.yicheng.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
 import com.yicheng.service.ClothSizeService;
 import com.yicheng.service.OrderClothService;
+import com.yicheng.service.data.ClothDetailData;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.service.data.ClothOrderDetailData;
 import com.yicheng.util.GenericResult;
@@ -203,6 +205,109 @@ public class ExportController {
 		output.close();
 
 	}
+	
+	@SuppressWarnings("deprecation")
+	@RequestMapping(value = { "/Manager/ExportRecordItems", "/Proofing/ExportRecordItems" }, method = RequestMethod.GET)
+public void exportRecordItems(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	String[] selectedIds = request.getParameterValues("selectedId");
+	List<Integer> clothIds = new ArrayList<Integer>();
+	if(null == selectedIds || selectedIds.length == 0) {
+		return;
+	}
+	
+	for(String selectIdString : selectedIds) {
+		try {
+			clothIds.add(Integer.parseInt(selectIdString));
+		} catch (NumberFormatException e) {
+			continue;
+		}
+	}
+
+	if(!clothIds.isEmpty()) {
+		String fileName = "历史记录";
+	
+		fileName = new String((fileName + ".xls").getBytes("GBK"), "ISO8859_1");
+		setResponseInfo(response, fileName);
+	
+		Workbook workbook = new HSSFWorkbook();
+		
+		String[] columns = new String[]{"款号", "款名", "颜色", "买手", "供应商", "创建时间"};
+
+		Sheet sheet = null;
+		Row row = null;
+		Cell cell = null;
+		CellStyle style = null;
+		CellStyle colorStyle = null;
+
+		if (workbook instanceof HSSFWorkbook) {
+			HSSFColor lightGray = setColor((HSSFWorkbook) workbook,
+					(byte) 0xE0, (byte) 0xE0, (byte) 0xE0);
+			colorStyle = workbook.createCellStyle();
+			colorStyle.setFillForegroundColor(lightGray.getIndex());
+			colorStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		}
+
+		style = workbook.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+		sheet = workbook.createSheet("历史记录");
+
+		int rowIndex = 0;
+		row = sheet.createRow(rowIndex);
+		for (int i = 0; i < columns.length; i++) {
+			cell = row.createCell(i);
+			cell.setCellValue(columns[i]);
+			cell.setCellStyle(colorStyle);
+		}
+		rowIndex++;
+		
+		for(int clothId : clothIds) {
+			
+			GenericResult<Cloth> clothResult = clothService.getById(clothId);
+			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			
+			if(clothResult.getResultCode() == ResultCode.NORMAL && clothColorResult.getResultCode() == ResultCode.NORMAL) {
+				row = sheet.createRow(rowIndex);
+				ClothDetailData cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
+				
+				cell = row.createCell(0);
+				cell.setCellValue(cloth.getType());
+				cell.setCellStyle(style);
+				
+				cell = row.createCell(1);
+				cell.setCellValue(cloth.getName());
+				cell.setCellStyle(style);
+				
+				cell = row.createCell(2);
+				cell.setCellValue(cloth.getColor());
+				cell.setCellStyle(style);
+				
+				cell = row.createCell(3);
+				cell.setCellValue(cloth.getClient());
+				cell.setCellStyle(style);
+				
+				cell = row.createCell(4);
+				cell.setCellValue(cloth.getSupplier());
+				cell.setCellStyle(style);
+				
+				cell = row.createCell(5);
+				cell.setCellValue(null == cloth.getCreatedTime() ? "" : cloth.getCreatedTime().toLocaleString());
+				cell.setCellStyle(style);
+				
+				rowIndex++;
+			}
+			
+		}
+		
+	
+		OutputStream output = response.getOutputStream();
+		workbook.write(output);
+		
+		output.flush();
+		output.close();
+	}
+
+}
 	
 	@SuppressWarnings("deprecation")
 	private void exportClothCountSheet(Workbook workbook, String sheetTitle,

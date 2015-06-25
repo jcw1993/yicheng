@@ -13,6 +13,7 @@
 	<div class="container-body">
 		<h3>
 		历史记录
+		<a id="export-record" href="#" class="btn btn-primary create-button">导出选择项</a>
 		<a id="cloth-create" href="CreateCloth" class="btn btn-primary create-button">创建皮衣</a></h3>
 		<hr />
 
@@ -21,12 +22,23 @@
 		          <input id="search_input" type="text" class="form-control" placeholder="请输入款号或款名">
 		        </div>
 		        <button id="search_submit" type="submit" class="btn btn-default">搜索</button>
+
+		        <div class="form-group">
+		        	<select id="page-select">
+		        		<option value="5">每页5条</option>
+		        		<option value="10">每页10条</option>
+		        		<option value="15">每页15条</option>
+		        		<option value="20">每页20条</option>
+		        	</select>
+		        </div>
 		</div>
 
 		<table class="table table-striped table-bordered table-hover table-responsive">
 			<tr>
+				<th>选择</th>
 				<th>款号</th>
 				<th>款名</th>
+				<th>预览</th>
 				<th>颜色</th>
 				<th>买手</th>
 				<th>供应商</th>
@@ -36,8 +48,17 @@
 			</tr>
 			<c:forEach items="${model.clothes}" var="cloth">
 				<tr clothId="${cloth.id}">
+					<td><input name="selectedId" type="checkbox" value="${cloth.id}" /></td>
 					<td>${cloth.type}</td>
 					<td>${cloth.name}</td>
+					<td>
+					<c:if test="${null != cloth.imageContent}">
+						<img src="data:image;base64,${cloth.imageContent}" class="image-preview" />
+					</c:if>
+					<c:if test="${null == cloth.imageContent}">
+						<p>暂无图片</p>
+					</c:if>
+					</td>
 					<td>${cloth.color}</td>
 					<td>${cloth.client}</td>
 					<td>${cloth.supplier}</td>
@@ -87,6 +108,11 @@ var $newVersionBtn = $(".new_version_btn");
 
 var $searchInput = $("#search_input");
 var $searchSubmit = $("#search_submit");
+
+var $exportBtn = $("#export-record");
+
+var $pageSelect = $("#page-select");
+
 
 var currentClothId;
 var searchUrl = "SearchInAll";
@@ -155,6 +181,35 @@ $searchSubmit.click(function(e) {
 		window.location = searchUrl + "?keyword=" + keyword;
 	}
 });
+
+$exportBtn .click(function(e) {
+	var data = $("input:checkbox:checked").serialize();
+	console.log("data: " + data);
+	if(data) {
+		window.location = "ExportRecordItems?" + data;	
+	}else {
+		alert("请选择导出项");
+	}
+	
+});
+
+$pageSelect.change(function(e) {
+	var count = $(this).val();
+	changeImtesPageCount(count);
+});
+
+function changeImtesPageCount(count) {
+	$.ajax({
+		url: "ChangeItemsPerPage?count=" + count,
+		success: function(result) {
+			if(result.resultCode == 0) {
+				location.reload();
+			}else {
+				console.log("changeImtesPageCount error");
+			}
+		}
+	});
+}
 </script>	
 </body>
 </html>

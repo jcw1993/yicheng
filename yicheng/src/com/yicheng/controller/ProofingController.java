@@ -443,8 +443,17 @@ public class ProofingController {
 		for(Cloth cloth : clothList) {
 			GenericResult<List<ClothColor>> colorResult = clothColorService.getByCloth(cloth.getId());
 			if(colorResult.getResultCode() == ResultCode.NORMAL) {
-				resultList.add(new ClothDetailData(cloth, colorResult.getData()));
+				ClothDetailData data = new ClothDetailData(cloth, colorResult.getData());
+				if(null != cloth.getImageId() && cloth.getImageId() != 0) {
+					GenericResult<String> contentResult = contentService.getContentCodeById(cloth.getImageId());
+					if(contentResult.getResultCode() == ResultCode.NORMAL) {
+						data.setImageContent(contentResult.getData());
+					}
+					
+				}
+				resultList.add(data);
 			}
+
 		}
 		return resultList;
 	}
