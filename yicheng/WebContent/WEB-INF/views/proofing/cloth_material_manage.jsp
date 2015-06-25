@@ -23,7 +23,7 @@
 		        </div>
 		        <button id="search_submit" type="submit" class="btn btn-default">搜索</button>
 
-		        <div class="form-group">
+		        <div class="form-group" style="float: right">
 		        	<select id="page-select">
 		        		<option value="5">每页5条</option>
 		        		<option value="10">每页10条</option>
