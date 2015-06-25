@@ -143,7 +143,7 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 
 	@Override
 	public NoneDataResult save(ClothSize clothSize) {
-		GenericResult<ClothSize> clothSizeResult = search(clothSize.getClothColorId(), 
+		GenericResult<ClothSize> clothSizeResult = search(clothSize.getClothId(), 
 				clothSize.getClothColorId(), clothSize.getSizeType());
 		if(clothSizeResult.getResultCode() == ResultCode.NORMAL) {
 			clothSize.setId(clothSizeResult.getData().getId());

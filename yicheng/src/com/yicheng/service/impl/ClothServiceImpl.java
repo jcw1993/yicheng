@@ -321,7 +321,6 @@ public class ClothServiceImpl implements ClothService {
 		int colorSize = originColorIdList.size();
 		
 		// Step4 copy cloth_size data
-		// TODO cloth size need clothColorId
 		if(insertClothId > 0 && !originColorIdList.isEmpty() && !insertColorIdList.isEmpty()) {
 			for(int index = 0; index < colorSize; index++) {
 				int originClothColorId = originColorIdList.get(index);
@@ -344,7 +343,6 @@ public class ClothServiceImpl implements ClothService {
 		} 
 		
 		// Step5 copy cloth_material_data
-		// TODO
 		if(insertClothId > 0 && !originColorIdList.isEmpty() && ! insertColorIdList.isEmpty()) {
 			for(int index = 0; index < colorSize; index++) {
 				int originClothColorId = originColorIdList.get(index);
