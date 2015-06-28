@@ -219,8 +219,9 @@ public class ProofingController {
 			OrderCloth orderCloth = new OrderCloth(null, clothId, null == deliveryDate ? null : Utils.parseDate(deliveryDate, Config.DATE_FORMAT), null);
 			orderClothService.create(orderCloth);
 			ClothColor clothColor = new ClothColor(clothId, color);
-			clothColorService.create(clothColor);
-			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialCreate?clothId=" + clothId);
+			
+			GenericResult<Integer> myResult = clothColorService.create(clothColor);
+			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialCreate?clothId=" + clothId + "&clothColorId=" + myResult.getData());
 		}else {
 			// TODO redirect to error page
 			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialManage");
