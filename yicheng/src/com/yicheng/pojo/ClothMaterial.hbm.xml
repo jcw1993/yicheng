@@ -15,6 +15,7 @@
         <property name="color" type="string" column="color" />
         <property name="part" type="string" column="part" />
         <property name="unitName" type="string" column="unit_name" />
+        <property name="supplier" type="string" column="supplier" />
         <property name="count" type="integer" column="count" />
         <property name="orderCount" type="integer" column="order_count" />
         <property name="consumption" type="double" column="consumption" />

@@ -12,7 +12,6 @@
         <property name="name" type="string" column="name" />
         <property name="type" type="string" column="type" />
         <property name="client" type="string" column="client" />
-        <property name="supplier" type="string" column="supplier" />
         <property name="imageId" type="integer" column="image_id" />
         <property name="remark" type="string" column="remark" />
         <property name="createdTime" type="timestamp" column="created_time" />

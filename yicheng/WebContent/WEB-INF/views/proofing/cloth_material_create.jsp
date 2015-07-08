@@ -50,13 +50,6 @@
       	     </div>
 
               <div class="form-group row">
-      	        <label for="name" class="col-sm-2 control-label">供应商</label>
-      	        <div class="col-sm-6">
- 	     	        <label>${cloth.supplier}</label>
-      	        </div>
-      	     </div>
-
-              <div class="form-group row">
       	        <label for="name" class="col-sm-2 control-label">备注</label>
       	        <div class="col-sm-6">
  	     	        <label class="remark">${cloth.remark}</label>
@@ -77,7 +70,9 @@
 						<th>项目</th>
 						<th>颜色</th>	
 						<th>部位</th>
+						
 						<th>单位</th>
+						<th>供应商</th>
 						<th>用料</th>
 						<th>估价</th>
 						<th>备注</th>
@@ -89,6 +84,7 @@
 							<td>${leatherDetail.materialColor}</td>
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
+							<td>${supportDetail.supplier}</td>
 							<td>${leatherDetail.consumption}</td>
 							<td><input type="text" name="estimatedPrice" value="${leatherDetail.estimatedPrice}" placeholder="整数或小数"></td>
 							<td>${leatherDetail.remark}</td>
@@ -119,6 +115,7 @@
 			     		<th>颜色</th>
 			     		<th>部位</th>
 			     		<th>单位</th>
+			     		<th>供应商</th>
 			     		<th>用料</th>
 			     		<th>估价</th>
 			     		<th>备注</th>
@@ -130,6 +127,7 @@
 							<td>${leatherDetail.materialColor}</td>
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
+							<td>${supportDetail.supplier}</td>
 							<td>${fabricDetail.consumption}</td>
 							<td><input type="text" value="${fabricDetail.estimatedPrice}" placeholder="整数或小数"></td>
 							<td>${fabricDetail.remark}</td>
@@ -162,6 +160,7 @@
 	     	     		<th>颜色</th>
 	     	     		<th>部位</th>
 	     	     		<th>单位</th>
+	     	     		<th>供应商</th>
 	     	     		<th>用料</th>
 	     	     		<th>估价</th>
 	     	     		<th>备注</th>
@@ -173,6 +172,7 @@
 							<td>${leatherDetail.materialColor}</td>
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
+							<td>${supportDetail.supplier}</td>
 							<td>${supportDetail.consumption}</td>
 							<td><input type="text" value="${supportDetail.estimatedPrice}" placeholder="整数或小数"></td>
 							<td>${supportDetail.remark}</td>
@@ -236,6 +236,12 @@
 					            <input type="text" id="unitName" class="form-control" name="unitName" placeholder="单位" />
 					        </div>
 					    </div>
+			            <div class="form-group row">
+			    	        <label class="col-sm-2 control-label">供应商</label>
+			    	        <div class="col-sm-6">
+			    	            <input type="text" id="supplier" class="form-control" name="supplier" placeholder="供应商" />
+			    	        </div>
+			    	    </div>
 				        <div class="form-group row">
 					        <label for="consumption" class="col-sm-2 control-label">用料</label>
 					        <div class="col-sm-6">

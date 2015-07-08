@@ -287,10 +287,6 @@ public void exportRecordItems(HttpServletRequest request, HttpServletResponse re
 				cell.setCellStyle(style);
 				
 				cell = row.createCell(4);
-				cell.setCellValue(cloth.getSupplier());
-				cell.setCellStyle(style);
-				
-				cell = row.createCell(5);
 				cell.setCellValue(null == cloth.getCreatedTime() ? "" : cloth.getCreatedTime().toLocaleString());
 				cell.setCellStyle(style);
 				

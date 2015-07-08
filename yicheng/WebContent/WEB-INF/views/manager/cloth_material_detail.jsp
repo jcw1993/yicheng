@@ -55,13 +55,6 @@
 		      	     </div>
 
 		              <div class="form-group row">
-		      	        <label for="name" class="col-sm-2 control-label">供应商</label>
-		      	        <div class="col-sm-6">
-		 	     	        <label>${cloth.supplier}</label>
-		      	        </div>
-		      	     </div>
-
-		              <div class="form-group row">
 		      	        <label for="name" class="col-sm-2 control-label">备注</label>
 		      	        <div class="col-sm-6">
 		 	     	        <label class="remark">${cloth.remark}</label>
@@ -89,6 +82,7 @@
 								<th>颜色</th>
 								<th>部位</th>
 								<th>单位</th>
+								<th>供应商</th>
 								<th>用料</th>
 								<th>估价</th>
 								<th>备注</th>
@@ -99,6 +93,7 @@
 									<td>${leatherDetail.materialColor}</td>
 									<td>${leatherDetail.part}</td>
 									<td>${leatherDetail.unitName}</td>
+									<td>${supportDetail.supplier}</td>
 									<td>${leatherDetail.consumption}</td>
 									<td>${leatherDetail.estimatedPrice}</td>
 									<td>${leatherDetail.remark}</td>
@@ -122,6 +117,7 @@
 					     		<th>颜色</th>
 					     		<th>部位</th>
 					     		<th>单位</th>
+					     		<th>供应商</th>
 					     		<th>用料</th>
 					     		<th>估价</th>
 					     		<th>备注</th>
@@ -132,6 +128,7 @@
 									<td>${fabricDetail.materialColor}</td>
 									<td>${fabricDetail.part}</td>
 									<td>${fabricDetail.unitName}</td>
+									<td>${supportDetail.supplier}</td>
 									<td>${fabricDetail.consumption}</td>
 									<td>${fabricDetail.estimatedPrice}</td>
 									<td>${fabricDetail.remark}</td>
@@ -156,6 +153,7 @@
 			     	     		<th>颜色</th>
 			     	     		<th>部位</th>
 			     	     		<th>单位</th>
+			     	     		<th>供应商</th>
 			     	     		<th>用料</th>
 			     	     		<th>估价</th>
 			     	     		<th>备注</th>
@@ -166,6 +164,7 @@
 									<td>${supportDetail.materialColor}</td>
 									<td>${supportDetail.part}</td>
 									<td>${supportDetail.unitName}</td>
+									<td>${supportDetail.supplier}</td>
 									<td>${supportDetail.consumption}</td>
 									<td>${supportDetail.estimatedPrice}</td>
 									<td>${supportDetail.remark}</td>

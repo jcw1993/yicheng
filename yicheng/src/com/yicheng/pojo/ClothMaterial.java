@@ -14,6 +14,7 @@ public class ClothMaterial implements Serializable {
 	private String color;
 	private String part;
 	private String unitName;
+	private String supplier;
 	private double consumption;
 	private Double estimatedPrice;
 	private Integer count;
@@ -63,6 +64,13 @@ public class ClothMaterial implements Serializable {
 	}
 	public void setUnitName(String unitName) {
 		this.unitName = unitName;
+	}
+	
+	public String getSupplier() {
+		return supplier;
+	}
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
 	}
 	public double getConsumption() {
 		return consumption;
@@ -140,7 +148,7 @@ public class ClothMaterial implements Serializable {
 		this.remark = remark;
 	}
 	
-	public ClothMaterial(int clothId, int clothColorId, int materialId, String color, String part, String unitName, double consumption, 
+	public ClothMaterial(int clothId, int clothColorId, int materialId, String color, String part, String unitName, String supplier, double consumption, 
 			Double estimatedPrice, Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
 		this.clothId = clothId;
 		this.clothColorId = clothColorId;
@@ -148,6 +156,7 @@ public class ClothMaterial implements Serializable {
 		this.color = color;
 		this.part = part;
 		this.unitName = unitName;
+		this.supplier =supplier;
 		this.consumption = consumption;
 		this.estimatedPrice = estimatedPrice;
 		this.count = count;
@@ -165,6 +174,7 @@ public class ClothMaterial implements Serializable {
 		this.color = clothMaterial.getColor();
 		this.part = clothMaterial.getPart();
 		this.unitName = clothMaterial.getUnitName();
+		this.supplier = clothMaterial.getSupplier();
 		this.consumption = clothMaterial.getConsumption();
 		this.estimatedPrice = clothMaterial.getEstimatedPrice();
 		this.count = clothMaterial.getCount();

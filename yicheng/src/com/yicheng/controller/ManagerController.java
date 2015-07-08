@@ -413,7 +413,14 @@ public class ManagerController {
 		for(Cloth cloth : clothList) {
 			GenericResult<List<ClothColor>> colorResult = clothColorService.getByCloth(cloth.getId());
 			if(colorResult.getResultCode() == ResultCode.NORMAL) {
-				resultList.add(new ClothDetailData(cloth, colorResult.getData()));
+				ClothDetailData data = null;
+				GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = clothMaterialService.getTypeDetailByCloth(cloth.getId(), colorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
+				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+					data = new ClothDetailData(cloth, colorResult.getData(), clothMaterialResult.getData());
+				}else {
+					data = new ClothDetailData(cloth, colorResult.getData());
+				}
+				resultList.add(data);
 			}
 		}
 		return resultList;

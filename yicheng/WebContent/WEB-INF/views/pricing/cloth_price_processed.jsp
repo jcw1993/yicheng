@@ -30,22 +30,27 @@
 			</div>
 			<table class="table table-striped table-bordered table-hover table-responsive">
 				<tr>
+					<th>创建时间</th>
 					<th>款号</th>
 					<th>款名</th>
 					<th>颜色</th>
 					<th>买手</th>
-					<th>供应商</th>
-					<th>创建时间</th>
+					<th>皮料</th>
 					<th>操作</th>
 				</tr>
 				<c:forEach items="${model.clothPriced}" var="cloth">
 					<tr>
+						<td><fmt:formatDate value="${cloth.createdTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 						<td>${cloth.type}</td>
 						<td>${cloth.name}</td>
 						<td>${cloth.color}</td>
 						<td>${cloth.client}</td>
-						<td>${cloth.supplier}</td>
-						<td><fmt:formatDate value="${cloth.createdTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+						<td>
+							<c:forEach items="${cloth.leathers}" var="leather">
+							${leather.materialName} <br/>
+							</c:forEach>
+						</td>
+						
 						<td>
 							<a href="ClothPriceDetail?clothId=${cloth.id}">详情</a>
 							<a href="ClothPriceOperate?clothId=${cloth.id}">修改</a>

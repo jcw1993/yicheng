@@ -165,7 +165,6 @@ public class ProofingController {
 		String type = request.getParameter("type");
 		String name = request.getParameter("name");
 		String client = request.getParameter("client");
-		String supplier = request.getParameter("supplier");
 		String deliveryDate = request.getParameter("deliveryDate");
 		String color = request.getParameter("color");
 		String remark = request.getParameter("remark");
@@ -207,7 +206,7 @@ public class ProofingController {
 			imageId = createContentResult.getData();
 		}
 		
-		Cloth cloth = new Cloth(type, name, client, supplier, remark, imageId, new Date());
+		Cloth cloth = new Cloth(type, name, client, remark, imageId, new Date());
 		GenericResult<Integer> createResult = clothService.create(cloth);
 		if(createResult.getResultCode() == ResultCode.NORMAL) {
 			int clothId = createResult.getData();
@@ -245,12 +244,13 @@ public class ProofingController {
 		int materialId = Utils.getRequestIntValue(request, "materialId", true);
 		String part = request.getParameter("part");
 		String unitName = request.getParameter("unitName");
+		String supplier = request.getParameter("supplier");
 		double consumption = Utils.getRequestDoubleValue(request, "consumption", true);
 		double estimatedPrice = Utils.getRequestDoubleValue(request, "estimatedPrice", false);
 		String remark = request.getParameter("remark");
 		String color = request.getParameter("color");
 	
-		ClothMaterial clothMaterial = new ClothMaterial(clothId, clothColorId, materialId, color, part, unitName, consumption, estimatedPrice, null,
+		ClothMaterial clothMaterial = new ClothMaterial(clothId, clothColorId, materialId, color, part, unitName, supplier, consumption, estimatedPrice, null,
 				null, null, null, remark);
 		GenericResult<Integer> createResult = clothMaterialService.create(clothMaterial);
 		return new GenericJsonResult<Integer>(createResult);
@@ -443,7 +443,14 @@ public class ProofingController {
 		for(Cloth cloth : clothList) {
 			GenericResult<List<ClothColor>> colorResult = clothColorService.getByCloth(cloth.getId());
 			if(colorResult.getResultCode() == ResultCode.NORMAL) {
-				ClothDetailData data = new ClothDetailData(cloth, colorResult.getData());
+				ClothDetailData data = null;
+				GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = clothMaterialService.getTypeDetailByCloth(cloth.getId(), colorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
+				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+					data = new ClothDetailData(cloth, colorResult.getData(), clothMaterialResult.getData());
+				}else {
+					data = new ClothDetailData(cloth, colorResult.getData());
+				}
+				
 				if(null != cloth.getImageId() && cloth.getImageId() != 0) {
 					GenericResult<String> contentResult = contentService.getContentCodeById(cloth.getImageId());
 					if(contentResult.getResultCode() == ResultCode.NORMAL) {

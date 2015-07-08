@@ -17,7 +17,6 @@ public class ClothDetailData implements Serializable {
 	private String name;
 	
 	private String client;
-	private String supplier;
 	private String remark;
 	// TODO maybe change to image type
 	private Integer imageId;
@@ -26,6 +25,8 @@ public class ClothDetailData implements Serializable {
 	private Date createdTime;
 	
 	private String color;
+	
+	private List<ClothMaterialDetailData> leathers;
 	
 	public int getId() {
 		return id;
@@ -57,14 +58,6 @@ public class ClothDetailData implements Serializable {
 
 	public void setClient(String client) {
 		this.client = client;
-	}
-
-	public String getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(String supplier) {
-		this.supplier = supplier;
 	}
 
 	public String getRemark() {
@@ -106,6 +99,14 @@ public class ClothDetailData implements Serializable {
 	public void setColor(String color) {
 		this.color = color;
 	}
+	
+	public List<ClothMaterialDetailData> getLeathers() {
+		return leathers;
+	}
+
+	public void setLeathers(List<ClothMaterialDetailData> leathers) {
+		this.leathers = leathers;
+	}
 
 	public ClothDetailData() {}
 	
@@ -115,7 +116,6 @@ public class ClothDetailData implements Serializable {
 			this.type = cloth.getType();
 			this.name = cloth.getName();
 			this.client = cloth.getClient();
-			this.supplier = cloth.getSupplier();
 			this.remark = cloth.getRemark();
 			this.imageId = cloth.getImageId();
 			this.createdTime = cloth.getCreatedTime();
@@ -130,6 +130,13 @@ public class ClothDetailData implements Serializable {
 				color += Config.COLOR_SEPERATOR;
 			}
 			color += clothColors.get(size - 1).getColor();
+		}
+	}
+	
+	public ClothDetailData(Cloth cloth, List<ClothColor> clothColors, List<ClothMaterialDetailData> leathers) {
+		this(cloth, clothColors);
+		if(null != leathers && !leathers.isEmpty()) {
+			this.leathers = leathers;
 		}
 	}
 	

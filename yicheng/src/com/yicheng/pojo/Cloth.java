@@ -11,7 +11,6 @@ public class Cloth implements Serializable {
 	private String name;
 	
 	private String client;
-	private String supplier;
 	private String remark;
 	private Integer imageId;
 	
@@ -41,12 +40,6 @@ public class Cloth implements Serializable {
 	public void setClient(String client) {
 		this.client = client;
 	}
-	public String getSupplier() {
-		return supplier;
-	}
-	public void setSupplier(String supplier) {
-		this.supplier = supplier;
-	}
 	public String getRemark() {
 		return remark;
 	}
@@ -71,22 +64,20 @@ public class Cloth implements Serializable {
 		this.id = id;
 	}
 
-	public Cloth(int id, String type, String name, String client, String supplier, String remark, Integer imageId, Date createdTime) {
+	public Cloth(int id, String type, String name, String client, String remark, Integer imageId, Date createdTime) {
 		this.id = id;
 		this.type = type;
 		this.name = name;
 		this.client = client;
-		this.supplier = supplier;
 		this.remark = remark;
 		this.imageId = imageId;
 		this.createdTime = createdTime;
 	}
 	
-	public Cloth(String type, String name, String client, String supplier, String remark, Integer imageId, Date createdTime) {
+	public Cloth(String type, String name, String client, String remark, Integer imageId, Date createdTime) {
 		this.type = type;
 		this.name = name;
 		this.client = client;
-		this.supplier = supplier;
 		this.remark = remark;
 		this.imageId = imageId;
 		this.createdTime = createdTime;
@@ -97,7 +88,6 @@ public class Cloth implements Serializable {
 		this.type = cloth.getType();
 		this.name = cloth.getName();
 		this.client = cloth.getClient();
-		this.supplier = cloth.getSupplier();
 		this.remark = cloth.getRemark();
 		this.imageId = cloth.getImageId();
 		this.createdTime = cloth.getCreatedTime();
