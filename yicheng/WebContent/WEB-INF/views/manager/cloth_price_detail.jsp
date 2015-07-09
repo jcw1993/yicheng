@@ -91,7 +91,7 @@
 								<td>${leatherDetail.materialColor}</td>
 								<td>${leatherDetail.part}</td>
 								<td>${leatherDetail.unitName}</td>
-								<td>${supportDetail.supplier}</td>
+								<td>${leatherDetail.supplier}</td>
 								<td>${leatherDetail.consumption}</td>
 								<td>${null == leatherDetail.estimatedPrice ? "暂无" : leatherDetail.estimatedPrice}</td>
 								<td>${null == leatherDetail.price ? "暂无" : leatherDetail.price}</td>
@@ -130,7 +130,7 @@
 								<td>${fabricDetail.materialColor}</td>
 								<td>${fabricDetail.part}</td>
 								<td>${fabricDetail.unitName}</td>
-								<td>${supportDetail.supplier}</td>
+								<td>${fabricDetail.supplier}</td>
 								<td>${fabricDetail.consumption}</td>
 								<td>${null == fabricDetail.estimatedPrice ? "暂无" : fabricDetail.estimatedPrice}</td>
 								<td>${null == fabricDetail.price ? "暂无" : fabricDetail.price}</td>

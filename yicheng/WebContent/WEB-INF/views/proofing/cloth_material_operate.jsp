@@ -96,7 +96,7 @@
 							<td>${leatherDetail.materialColor}</td>
 							<td>${leatherDetail.part}</td>
 							<td>${leatherDetail.unitName}</td>
-							<td>${supportDetail.supplier}</td>
+							<td>${leatherDetail.supplier}</td>
 							<td>${leatherDetail.consumption}</td>
 							<td><input type="text" name="estimatedPrice" value="${leatherDetail.estimatedPrice}" placeholder="整数或小数"></td>
 							<td>${leatherDetail.remark}</td>
@@ -139,7 +139,7 @@
 							<td>${leatherDetail.materialColor}</td>
 							<td>${fabricDetail.part}</td>
 							<td>${fabricDetail.unitName}</td>
-							<td>${supportDetail.supplier}</td>
+							<td>${fabricDetail.supplier}</td>
 							<td>${fabricDetail.consumption}</td>
 							<td><input type="text" value="${fabricDetail.estimatedPrice}" placeholder="整数或小数"></td>
 							<td>${fabricDetail.remark}</td>
@@ -181,7 +181,7 @@
 	     	     	<c:forEach items="${supportDetails}" var="supportDetail" >
 						<tr clothMaterialId="${supportDetail.id}">
 							<td>${supportDetail.materialName}</td>
-							<td>${leatherDetail.materialColor}</td>
+							<td>${supportDetail.materialColor}</td>
 							<td>${supportDetail.part}</td>
 							<td>${supportDetail.unitName}</td>
 							<td>${supportDetail.supplier}</td>

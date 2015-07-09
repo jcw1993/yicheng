@@ -93,7 +93,7 @@
 									<td>${leatherDetail.materialColor}</td>
 									<td>${leatherDetail.part}</td>
 									<td>${leatherDetail.unitName}</td>
-									<td>${supportDetail.supplier}</td>
+									<td>${leatherDetail.supplier}</td>
 									<td>${leatherDetail.consumption}</td>
 									<td>${leatherDetail.estimatedPrice}</td>
 									<td>${leatherDetail.remark}</td>
@@ -128,7 +128,7 @@
 									<td>${fabricDetail.materialColor}</td>
 									<td>${fabricDetail.part}</td>
 									<td>${fabricDetail.unitName}</td>
-									<td>${supportDetail.supplier}</td>
+									<td>${fabricDetail.supplier}</td>
 									<td>${fabricDetail.consumption}</td>
 									<td>${fabricDetail.estimatedPrice}</td>
 									<td>${fabricDetail.remark}</td>

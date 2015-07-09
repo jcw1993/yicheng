@@ -145,7 +145,7 @@
 								<td>${leatherDetail.materialColor}</td>
 								<td>${leatherDetail.part}</td>
 								<td>${leatherDetail.unitName}</td>
-								<td>${supportDetail.supplier}</td>
+								<td>${leatherDetail.supplier}</td>
 								<td>${leatherDetail.consumption}</td>
 								<td>${leatherDetail.price}</td>
 								<td><input type="text" name="count" class="full-width count" value="${leatherDetail.count}"/></td>
@@ -188,7 +188,7 @@
 								<td>${fabricDetail.materialColor}</td>
 								<td>${fabricDetail.part}</td>
 								<td>${fabricDetail.unitName}</td>
-								<td>${supportDetail.supplier}</td>
+								<td>${fabricDetail.supplier}</td>
 								<td>${fabricDetail.consumption}</td>
 								<td>${fabricDetail.price}</td>
 								<td><input type="text" name="count" class="full-width count" value="${fabricDetail.count}"/></td>

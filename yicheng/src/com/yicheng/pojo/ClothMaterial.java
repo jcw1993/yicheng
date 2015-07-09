@@ -130,7 +130,7 @@ public class ClothMaterial implements Serializable {
 		this.id = id;
 	}
 	
-	public ClothMaterial(int id, int clothId, int clothColorId, int materialId, String color, String part, String unitName, double consumption, 
+	public ClothMaterial(int id, int clothId, int clothColorId, int materialId, String color, String part, String unitName, String supplier, double consumption, 
 			Double estimatedPrice, Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
 		this.id = id;
 		this.clothId = clothId;
@@ -139,6 +139,7 @@ public class ClothMaterial implements Serializable {
 		this.color = color;
 		this.part = part;
 		this.unitName = unitName;
+		this.supplier = supplier;
 		this.consumption = consumption;
 		this.estimatedPrice = estimatedPrice;
 		this.count = count;
