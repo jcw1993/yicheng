@@ -494,7 +494,7 @@ public void exportRecordItems(HttpServletRequest request, HttpServletResponse re
 			List<ClothMaterialDetailData> supportList) {
 
 		String[] columnNames = new String[] { "项目", "部位", "单位", "用量", "数量",
-				"订购数量", "单价", "金额", "订购日期", "备注" };
+				"订购数量", "单价", "金额", "订购日期", "备注", "需要解决的问题", "交货期"};
 
 		String[][] leatherData = getMaterialTableData(leatherList,
 				columnNames.length);
