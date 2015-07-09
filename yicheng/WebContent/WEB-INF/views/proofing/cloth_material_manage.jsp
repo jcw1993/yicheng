@@ -25,10 +25,10 @@
 
 		        <div class="form-group" style="float: right">
 		        	<select id="page-select">
-		        		<option value="5">每页5条</option>
-		        		<option value="10">每页10条</option>
-		        		<option value="15">每页15条</option>
-		        		<option value="20">每页20条</option>
+		        		<option value="5" <c:if test="${5 == model.itemsPerPage}">selected="selected"</c:if>>每页5条</option>
+		        		<option value="10" <c:if test="${10 == model.itemsPerPage}">selected="selected"</c:if>>每页10条</option>
+		        		<option value="15" <c:if test="${15 == model.itemsPerPage}">selected="selected"</c:if>>每页15条</option>
+		        		<option value="20" <c:if test="${20 == model.itemsPerPage}">selected="selected"</c:if>>每页20条</option>
 		        	</select>
 		        </div>
 		</div>
