@@ -462,26 +462,30 @@ public class ClothServiceImpl implements ClothService {
 	}
 
 	@Override
-	public GenericResult<List<Cloth>> searchInAll(String keyword) {
+	public GenericResult<List<Cloth>> searchInAll(String keywordStr) {
 		GenericResult<List<Cloth>> result = new GenericResult<List<Cloth>>();
-		if(StringUtils.isBlank(keyword)) {
+		if(StringUtils.isBlank(keywordStr)) {
 			result.setResultCode(ResultCode.E_INVALID_PARAMETER);
 			result.setMessage("search keyword cannot be null");
 		}
-		
+		String[] keywords = keywordStr.split("\\|");
 		GenericResult<List<Cloth>> allResult = getAll();
 		if(allResult.getResultCode() == ResultCode.NORMAL) {
 			List<Cloth> resultList = new ArrayList<Cloth>();
 			for(Cloth cloth : allResult.getData()) {
-				if(cloth.getType().contains(keyword) || cloth.getName().contains(keyword)) {
-					resultList.add(cloth);
+				for(String keyword : keywords) {
+					if(cloth.getType().contains(keyword) || cloth.getName().contains(keyword)) {
+						resultList.add(cloth);
+						break;
+					}
 				}
+				
 			}
 			if(!resultList.isEmpty()) {
 				result.setData(resultList);
 			}else {
 				result.setResultCode(ResultCode.E_NO_DATA);
-				result.setMessage("no data, keyword: " + keyword);
+				result.setMessage("no data, keyword: " + keywordStr);
 			}
  		}else {
 			result.setResultCode(allResult.getResultCode());
