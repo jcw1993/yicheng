@@ -25,6 +25,8 @@ public class ClothMaterialDetailData implements Serializable {
 	
 	private String part;
 	private String unitName;
+	private String supplier;
+	
 	private double consumption;
 	private Integer count;
 	private Integer orderCount;
@@ -96,6 +98,13 @@ public class ClothMaterialDetailData implements Serializable {
 	public void setUnitName(String unitName) {
 		this.unitName = unitName;
 	}
+	
+	public String getSupplier() {
+		return supplier;
+	}
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
+	}
 	public double getConsumption() {
 		return consumption;
 	}
@@ -158,6 +167,7 @@ public class ClothMaterialDetailData implements Serializable {
 			this.materialColor = clothMaterial.getColor();
 			this.part = clothMaterial.getPart();
 			this.unitName = clothMaterial.getUnitName();
+			this.supplier = clothMaterial.getSupplier();
 			this.consumption = clothMaterial.getConsumption();
 			this.count = clothMaterial.getCount();
 			this.orderCount = clothMaterial.getOrderCount();
