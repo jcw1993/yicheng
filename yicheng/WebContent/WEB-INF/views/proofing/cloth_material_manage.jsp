@@ -33,6 +33,13 @@
 		        </div>
 		</div>
 
+
+		<div class="navbar-form">
+		        <div class="form-group">
+		          <input type="checkbox" id="select-all" />&nbsp;&nbsp;全选
+		        </div>
+		</div>
+
 		<table class="table table-striped table-bordered table-hover table-responsive">
 			<tr>
 				<th>选择</th>
@@ -49,7 +56,7 @@
 			</tr>
 			<c:forEach items="${model.clothes}" var="cloth">
 				<tr clothId="${cloth.id}">
-					<td><input name="selectedId" type="checkbox" value="${cloth.id}" /></td>
+					<td><input name="selectedId" class="export_check" type="checkbox" value="${cloth.id}" /></td>
 					<td><fmt:formatDate value="${cloth.createdTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 					<td>${cloth.type}</td>
 					<td>${cloth.name}</td>
@@ -119,6 +126,7 @@ var $exportBtn = $("#export-record");
 
 var $pageSelect = $("#page-select");
 
+var $selectAllBox = $("#select-all");
 
 var currentClothId;
 var searchUrl = "SearchInAll";
@@ -188,8 +196,8 @@ $searchSubmit.click(function(e) {
 	}
 });
 
-$exportBtn .click(function(e) {
-	var data = $("input:checkbox:checked").serialize();
+$exportBtn.click(function(e) {
+	var data = $("input.export_check:checkbox:checked").serialize();
 	console.log("data: " + data);
 	if(data) {
 		window.location = "ExportRecordItems?" + data;	
@@ -202,6 +210,20 @@ $exportBtn .click(function(e) {
 $pageSelect.change(function(e) {
 	var count = $(this).val();
 	changeImtesPageCount(count);
+});
+
+$selectAllBox.click(function(e) {
+	console.log($(this).is(":checked"));
+	if($(this).is(":checked")) {
+	    $('input.export_check:checkbox').each(function() {
+	        $(this).prop("checked", true);                       
+	    });
+	}else {
+		$('input.export_check:checkbox').each(function() {
+		    $(this).prop("checked", false);                        
+		});
+	}
+
 });
 
 function changeImtesPageCount(count) {

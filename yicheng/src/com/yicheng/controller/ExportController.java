@@ -231,7 +231,7 @@ public void exportRecordItems(HttpServletRequest request, HttpServletResponse re
 	
 		Workbook workbook = new HSSFWorkbook();
 		
-		String[] columns = new String[]{"款号", "款名", "颜色", "买手", "供应商", "创建时间"};
+		String[] columns = new String[]{"款号", "款名", "颜色", "买手", "皮料", "创建时间"};
 
 		Sheet sheet = null;
 		Row row = null;
@@ -268,7 +268,14 @@ public void exportRecordItems(HttpServletRequest request, HttpServletResponse re
 			
 			if(clothResult.getResultCode() == ResultCode.NORMAL && clothColorResult.getResultCode() == ResultCode.NORMAL) {
 				row = sheet.createRow(rowIndex);
-				ClothDetailData cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
+				GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = clothMaterialService.getTypeDetailByCloth(clothResult.getData().getId(), clothColorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
+				ClothDetailData cloth = null;
+				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+					cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData(), clothMaterialResult.getData());
+				}else {
+					cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
+				}
+				
 				
 				cell = row.createCell(0);
 				cell.setCellValue(cloth.getType());
@@ -287,6 +294,19 @@ public void exportRecordItems(HttpServletRequest request, HttpServletResponse re
 				cell.setCellStyle(style);
 				
 				cell = row.createCell(4);
+				StringBuilder cellValue = new StringBuilder();
+				if(null != cloth.getLeathers() && !cloth.getLeathers().isEmpty()) {
+					for(ClothMaterialDetailData leather : cloth.getLeathers()) {
+						cellValue.append(leather.getMaterialName());
+						cellValue.append("\n");
+					}
+				}else {
+					cellValue.append("暂无数据");
+				}
+				cell.setCellValue(cellValue.toString());
+				cell.setCellStyle(style);
+				
+				cell = row.createCell(5);
 				cell.setCellValue(null == cloth.getCreatedTime() ? "" : cloth.getCreatedTime().toLocaleString());
 				cell.setCellStyle(style);
 				
