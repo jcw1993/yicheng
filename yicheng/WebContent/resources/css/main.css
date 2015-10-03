@@ -1,5 +1,10 @@
 @CHARSET "UTF-8";
 
+.navbar-brand {
+    padding: 15px 8px !important;
+    font-size: 14px !important;
+}
+
 body {
 	font-family: "微软雅黑";
 	font-size: 14px;
