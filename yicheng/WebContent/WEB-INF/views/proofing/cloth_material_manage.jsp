@@ -220,11 +220,12 @@ $deleteClothBtn.click(function(e) {
 				clothId:clothId
 			},
 			function(r) {
-				if(r.resultCode == 0) {
-					location.reload();
-				}else {
-					alert("删除失败，请重试");
-				}
+				location.reload();
+				// if(r.resultCode == 0) {
+				// 	location.reload();
+				// }else {
+				// 	alert("删除失败，请重试");
+				// }
 			}
 		});
 	}
