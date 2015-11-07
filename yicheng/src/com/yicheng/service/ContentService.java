@@ -13,5 +13,4 @@ public interface ContentService {
 	
 	public GenericResult<Content> getById(int contentId);
 	
-	public GenericResult<String> getContentCodeById(Integer contentId);
 }

@@ -61,14 +61,14 @@
 		      	        </div>
 		      	     </div>
 					
-					<c:if test="${null != cloth.imageContent}">
-		             <div class="form-group row">
-		     	        <label for="name" class="col-sm-2 control-label">效果图</label>
-		     	        <div class="col-sm-6">
-			     	        <img src="data:image;base64,${cloth.imageContent}" class="image-preview" />
-		     	        </div>
-		     	     </div>		
-		     	     </c:if>			
+	     			<c:if test="${null != cloth.imagePath}">
+	                  <div class="form-group row">
+	          	        <label for="name" class="col-sm-2 control-label">效果图</label>
+	          	        <div class="col-sm-6">
+	     	     	        <img src="${cloth.imagePath}" class="image-preview" />
+	          	        </div>
+	          	     </div>		
+	          	     </c:if>		
 					
 					<div class="margin-top-little">
 						<div class="row title-area">

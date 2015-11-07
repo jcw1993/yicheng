@@ -12,7 +12,7 @@ public class Cloth implements Serializable {
 	
 	private String client;
 	private String remark;
-	private Integer imageId;
+	private String imagePath;
 	
 	private Date createdTime;
 	
@@ -46,11 +46,11 @@ public class Cloth implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	public Integer getImageId() {
-		return imageId;
+	public String getImagePath() {
+		return imagePath;
 	}
-	public void setImageId(Integer imageId) {
-		this.imageId = imageId;
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 	public Date getCreatedTime() {
 		return createdTime;
@@ -64,22 +64,22 @@ public class Cloth implements Serializable {
 		this.id = id;
 	}
 
-	public Cloth(int id, String type, String name, String client, String remark, Integer imageId, Date createdTime) {
+	public Cloth(int id, String type, String name, String client, String remark, String imagePath, Date createdTime) {
 		this.id = id;
 		this.type = type;
 		this.name = name;
 		this.client = client;
 		this.remark = remark;
-		this.imageId = imageId;
+		this.imagePath = imagePath;
 		this.createdTime = createdTime;
 	}
 	
-	public Cloth(String type, String name, String client, String remark, Integer imageId, Date createdTime) {
+	public Cloth(String type, String name, String client, String remark, String imagePath, Date createdTime) {
 		this.type = type;
 		this.name = name;
 		this.client = client;
 		this.remark = remark;
-		this.imageId = imageId;
+		this.imagePath = imagePath;
 		this.createdTime = createdTime;
 	}	
 	
@@ -89,7 +89,7 @@ public class Cloth implements Serializable {
 		this.name = cloth.getName();
 		this.client = cloth.getClient();
 		this.remark = cloth.getRemark();
-		this.imageId = cloth.getImageId();
+		this.imagePath = cloth.getImagePath();
 		this.createdTime = cloth.getCreatedTime();
 	}
 	

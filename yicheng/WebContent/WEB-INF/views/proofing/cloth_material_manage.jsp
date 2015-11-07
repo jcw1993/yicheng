@@ -59,10 +59,10 @@
 					<td>${cloth.type}</td>
 					<td>${cloth.name}</td>
 					<td>
-					<c:if test="${null != cloth.imageContent}">
-						<img src="data:image;base64,${cloth.imageContent}" class="image-preview" />
-					</c:if>
-					<c:if test="${null == cloth.imageContent}">
+					<c:if test="${null != cloth.imagePath}">
+			             <img src="${cloth.imagePath}" class="image-preview" />
+		     	     </c:if>	
+					<c:if test="${null == cloth.imagePath}">
 						<p>暂无图片</p>
 					</c:if>
 					</td>

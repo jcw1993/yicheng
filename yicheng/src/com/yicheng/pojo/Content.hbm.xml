@@ -10,7 +10,7 @@
             <generator class="increment" />
         </id>
         <property name="originFileName" type="string" column="origin_file_name" />
-        <property name="destFileName" type="string" column="dest_file_name" />
+        <property name="destPath" type="string" column="dest_path" />
         <property name="createdTime" type="timestamp" column="created_time" />
     </class>
 

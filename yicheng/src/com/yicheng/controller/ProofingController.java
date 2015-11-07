@@ -1,9 +1,6 @@
 package com.yicheng.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +30,6 @@ import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
-import com.yicheng.pojo.Content;
 import com.yicheng.pojo.Material;
 import com.yicheng.pojo.OrderCloth;
 import com.yicheng.service.ClothColorService;
@@ -49,6 +45,7 @@ import com.yicheng.util.GenericJsonResult;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataJsonResult;
 import com.yicheng.util.NoneDataResult;
+import com.yicheng.util.QiniuUtil;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
 
@@ -177,42 +174,15 @@ public class ProofingController {
 		name = name.trim();
 		color = color.trim();
 		
-		InputStream input = file.getInputStream();
-		byte[] buffer = new byte[1024 * 1024];
-
 		String originalFileName = file.getOriginalFilename();
 		UUID uuid = UUID.randomUUID();
 		String saveName = uuid.toString() + Utils.getFileExtensionWithDot(originalFileName);
 		
-		File saveDir = new File(Config.UPLOAD_FOLDER);
-		if (!saveDir.exists()) {
-			saveDir.mkdir();
-		}
-		File imageFile = new File(saveDir, saveName);
-		if (!imageFile.exists()) {
-			imageFile.createNewFile();
-		}
-		FileOutputStream output = new FileOutputStream(imageFile);
-
-		int byteRead = 0;
-		while ((byteRead = input.read(buffer)) != -1) {
-			output.write(buffer, 0, byteRead);
-			output.flush();
-		}
-		output.close();
-		input.close();
-		
-		// write into content
-		Integer imageId = null;
-		Content content = new Content(originalFileName, saveName, new Date());
-		GenericResult<Integer> createContentResult = contentService.create(content);
-		if(createContentResult.getResultCode() == ResultCode.NORMAL) {
-			imageId = createContentResult.getData();
-		}
-		
-		Cloth cloth = new Cloth(type, name, client, remark, imageId, new Date());
+		Cloth cloth = new Cloth(type, name, client, remark, QiniuUtil.QINIU_BASE_URL + String.format(QiniuUtil.QINIU_PIC_KEY_FORMAT, saveName), new Date());
 		GenericResult<Integer> createResult = clothService.create(cloth);
 		if(createResult.getResultCode() == ResultCode.NORMAL) {
+			QiniuUtil.uploadImage(cloth.getImagePath().substring(QiniuUtil.QINIU_BASE_URL.length(), cloth.getImagePath().length()), file.getBytes());
+			
 			int clothId = createResult.getData();
 			if(StringUtils.isBlank(deliveryDate)) {
 				deliveryDate = null;
@@ -226,7 +196,6 @@ public class ProofingController {
 			GenericResult<Integer> myResult = clothColorService.create(clothColor);
 			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialCreate?clothId=" + clothId + "&clothColorId=" + myResult.getData());
 		}else {
-			// TODO redirect to error page
 			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialManage");
 		}
 		
@@ -453,15 +422,7 @@ public class ProofingController {
 		if(clothResult.getResultCode() == ResultCode.NORMAL 
 				&& clothColorResult.getResultCode() == ResultCode.NORMAL) {
 			ClothDetailData cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
-			if(null != cloth.getImageId() && cloth.getImageId() != 0) {
-				GenericResult<String> contentResult = contentService.getContentCodeById(cloth.getImageId());
-				if(contentResult.getResultCode() == ResultCode.NORMAL) {
-					cloth.setImageContent(contentResult.getData());
-				}
-				
-			}
 			model.put("cloth", cloth);
-	 
 			model.put("clothColors", clothColorResult.getData());
 		}
 
@@ -492,14 +453,7 @@ public class ProofingController {
 				}else {
 					data = new ClothDetailData(cloth, colorResult.getData());
 				}
-				
-				if(null != cloth.getImageId() && cloth.getImageId() != 0) {
-					GenericResult<String> contentResult = contentService.getContentCodeById(cloth.getImageId());
-					if(contentResult.getResultCode() == ResultCode.NORMAL) {
-						data.setImageContent(contentResult.getData());
-					}
-					
-				}
+			
 				resultList.add(data);
 			}
 

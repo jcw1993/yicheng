@@ -9,7 +9,7 @@ public class Content implements Serializable {
 	
 	private int id;
 	private String originFileName;
-	private String destFileName;
+	private String destPath;
 	private Date createdTime;
 	
 	public int getId() {
@@ -24,11 +24,11 @@ public class Content implements Serializable {
 	public void setOriginFileName(String orginFileName) {
 		this.originFileName = orginFileName;
 	}
-	public String getDestFileName() {
-		return destFileName;
+	public String getDestPath() {
+		return destPath;
 	}
-	public void setDestFileName(String destFileName) {
-		this.destFileName = destFileName;
+	public void setDestPath(String destPath) {
+		this.destPath = destPath;
 	}
 	public Date getCreatedTime() {
 		return createdTime;
@@ -39,16 +39,16 @@ public class Content implements Serializable {
 	
 	public Content() {}
 	
-	public Content(int id, String originFileName, String destFileName,  Date createdTime) {
+	public Content(int id, String originFileName, String destPath,  Date createdTime) {
 		this.id = id;
 		this.originFileName = originFileName;
-		this.destFileName = destFileName;
+		this.destPath = destPath;
 		this.createdTime = createdTime;
 	}
 	
-	public Content(String originFileName, String destFileName, Date createdTime) {
+	public Content(String originFileName, String destPath, Date createdTime) {
 		this.originFileName = originFileName;
-		this.destFileName = destFileName;
+		this.destPath = destPath;
 		this.createdTime = createdTime;
 	}
 	

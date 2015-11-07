@@ -18,9 +18,7 @@ public class ClothDetailData implements Serializable {
 	
 	private String client;
 	private String remark;
-	// TODO maybe change to image type
-	private Integer imageId;
-	private String imageContent;
+	private String imagePath;
 	
 	private Date createdTime;
 	
@@ -68,20 +66,12 @@ public class ClothDetailData implements Serializable {
 		this.remark = remark;
 	}
 
-	public Integer getImageId() {
-		return imageId;
+	public String getImagePath() {
+		return imagePath;
 	}
 
-	public void setImageId(Integer imageId) {
-		this.imageId = imageId;
-	}
-
-	public String getImageContent() {
-		return imageContent;
-	}
-
-	public void setImageContent(String imageContent) {
-		this.imageContent = imageContent;
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	public Date getCreatedTime() {
@@ -117,7 +107,7 @@ public class ClothDetailData implements Serializable {
 			this.name = cloth.getName();
 			this.client = cloth.getClient();
 			this.remark = cloth.getRemark();
-			this.imageId = cloth.getImageId();
+			this.imagePath = cloth.getImagePath();
 			this.createdTime = cloth.getCreatedTime();
 			
 		}

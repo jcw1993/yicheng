@@ -364,14 +364,6 @@ public class BuyerController {
 				&& clothColorResult.getResultCode() == ResultCode.NORMAL) {
 			ClothDetailData cloth = new ClothDetailData(clothResult.getData(),
 					clothColorResult.getData());
-			if (null != cloth.getImageId() && cloth.getImageId() != 0) {
-				GenericResult<String> contentResult = contentService
-						.getContentCodeById(cloth.getImageId());
-				if (contentResult.getResultCode() == ResultCode.NORMAL) {
-					cloth.setImageContent(contentResult.getData());
-				}
-
-			}
 			model.put("cloth", cloth);
 			model.put("clothColors", clothColorResult.getData());
 		}
