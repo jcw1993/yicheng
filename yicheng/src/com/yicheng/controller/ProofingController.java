@@ -281,6 +281,10 @@ public class ProofingController {
 		return new ModelAndView("proofing/cloth_material_create", "model", model);
 	}
 	
+	// Function to delete the clothes
+	
+	
+	
 	@ResponseBody
 	@RequestMapping(value = "/Proofing/DeleteClothMaterial", method = RequestMethod.POST)
 	 public NoneDataJsonResult deleteClothMaterial(HttpServletRequest request, HttpServletResponse response) {

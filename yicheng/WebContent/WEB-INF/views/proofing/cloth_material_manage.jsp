@@ -13,6 +13,7 @@
 	<div class="container-body">
 		<h3>
 		历史记录
+		<a id="delete-record" href="#" class="btn btn-primary create-button">删除选择项</a>
 		<a id="export-record" href="#" class="btn btn-primary create-button">导出选择项</a>
 		<a id="cloth-create" href="CreateCloth" class="btn btn-primary create-button">创建皮衣</a></h3>
 		<hr />
@@ -124,6 +125,8 @@ var $searchSubmit = $("#search_submit");
 
 var $exportBtn = $("#export-record");
 
+var $deleteBtn = $("#delete-record");
+
 var $pageSelect = $("#page-select");
 
 var $selectAllBox = $("#select-all");
@@ -205,6 +208,17 @@ $exportBtn.click(function(e) {
 		alert("请选择导出项");
 	}
 	
+});
+
+$deleteBtn.click(function(e)
+{
+	var data = $("input.export_check:checkbox:checked").serialize();
+	console.log("data: " + data);
+	if(data) {
+		window.location = "DeleteRecordItems?" + data;	
+	}else {
+		alert("请选择删除项");
+	}
 });
 
 $pageSelect.change(function(e) {
