@@ -13,6 +13,8 @@ public interface ClothMaterialService {
 	public NoneDataResult update(ClothMaterial clothMaterial);
 	
 	public NoneDataResult delete(int id, int clothId);
+	
+	public NoneDataResult deleteByCloth(int clothId);
 
 	public GenericResult<List<ClothMaterial>> getByCloth(int clothId);
 	

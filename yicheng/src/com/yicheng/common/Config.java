@@ -2,7 +2,8 @@ package com.yicheng.common;
 
 public class Config {
 	
-	public static final String UPLOAD_FOLDER= "/Users/jinchengwei/Desktop/YiChengUpload";
+//	public static final String UPLOAD_FOLDER= "/home/yicheng_upload";
+	public static final String UPLOAD_FOLDER= "/Users/jinchengwei/Desktop/yicheng_upload";
 	
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 	

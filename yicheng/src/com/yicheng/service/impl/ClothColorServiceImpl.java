@@ -53,6 +53,19 @@ public class ClothColorServiceImpl implements ClothColorService {
 		}
 		return result;
 	}
+	
+	@Override
+	public NoneDataResult deleteByCloth(int clothId) {
+		NoneDataResult result = new NoneDataResult();
+		try {
+			clothColorDao.deleteByCloth(clothId);
+		}catch(Exception e) {
+			logger.error(e.getMessage());
+			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
+			result.setMessage(e.getMessage());
+		}
+		return result;
+	}
 
 	@Override
 	public GenericResult<List<ClothColor>> getByCloth(int clothId) {

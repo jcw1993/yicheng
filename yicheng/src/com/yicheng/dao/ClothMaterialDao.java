@@ -12,6 +12,8 @@ public interface ClothMaterialDao {
 	
 	public void delete(int id);
 	
+	public void deleteByCloth(int clothId);
+	
 	public List<ClothMaterial> getByCloth(int clothId);
 
 }

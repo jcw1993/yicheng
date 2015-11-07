@@ -10,6 +10,8 @@ public interface ClothColorDao {
 	
 	public void delete(int id);
 	
+	public void deleteByCloth(int clothId);
+	
 	public List<ClothColor> getByCloth(int clothId);
 
 }

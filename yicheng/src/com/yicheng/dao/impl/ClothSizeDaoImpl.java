@@ -26,6 +26,21 @@ public class ClothSizeDaoImpl extends HibernateDaoBase implements ClothSizeDao {
 	public void delete(int id) {
 		getHibernateTemplate().delete(new ClothSize(id));
 	}
+	
+	@Override
+	public void deleteByCloth(int clothId) {
+		Session session = super.getSession(true);
+		Query query = null;
+		try {
+			query = session.createQuery("delete ClothSize where clothId = " + clothId);
+			query.executeUpdate();
+		}catch(Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}finally {
+			session.close();
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

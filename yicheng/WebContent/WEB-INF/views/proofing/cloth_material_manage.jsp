@@ -13,7 +13,6 @@
 	<div class="container-body">
 		<h3>
 		历史记录
-		<a id="delete-record" href="#" class="btn btn-primary create-button">删除选择项</a>
 		<a id="export-record" href="#" class="btn btn-primary create-button">导出选择项</a>
 		<a id="cloth-create" href="CreateCloth" class="btn btn-primary create-button">创建皮衣</a></h3>
 		<hr />
@@ -51,8 +50,6 @@
 				<th>颜色</th>
 				<th>买手</th>
 				<th>皮料</th>
-				<!-- <th>交货期</th> -->
-				
 				<th>操作</th>
 			</tr>
 			<c:forEach items="${model.clothes}" var="cloth">
@@ -82,6 +79,7 @@
 						<a href="ClothMaterialOperate?clothId=${cloth.id}">修改</a>
 						<a href"#" class="new_version_btn">新建版本</a>
 						<a href"#" class="create-color">添加颜色</a>
+						<a href"#" clothId="${cloth.id}" class="delete-cloth">删除</a>
 					</td>
 				</tr>
 			</c:forEach>			
@@ -125,7 +123,7 @@ var $searchSubmit = $("#search_submit");
 
 var $exportBtn = $("#export-record");
 
-var $deleteBtn = $("#delete-record");
+var $deleteClothBtn = $(".delete-cloth");
 
 var $pageSelect = $("#page-select");
 
@@ -210,14 +208,25 @@ $exportBtn.click(function(e) {
 	
 });
 
-$deleteBtn.click(function(e)
-{
-	var data = $("input.export_check:checkbox:checked").serialize();
-	console.log("data: " + data);
-	if(data) {
-		window.location = "DeleteRecordItems?" + data;	
-	}else {
-		alert("请选择删除项");
+$deleteClothBtn.click(function(e) {
+	var clothId = $(this).attr("clothId");
+	var r = confirm("系统将会删除衣服有关的所有信息，确认删除?");
+	if(r == true) {
+		console.log("ok");
+		$.ajax({
+			url:"DeleteCloth",
+			method:"post",
+			data:{
+				clothId:clothId
+			},
+			function(r) {
+				if(r.resultCode == 0) {
+					location.reload();
+				}else {
+					alert("删除失败，请重试");
+				}
+			}
+		});
 	}
 });
 
@@ -252,6 +261,7 @@ function changeImtesPageCount(count) {
 		}
 	});
 }
+
 </script>	
 </body>
 </html>

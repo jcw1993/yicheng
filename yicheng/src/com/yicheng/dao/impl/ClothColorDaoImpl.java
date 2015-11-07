@@ -22,6 +22,21 @@ public class ClothColorDaoImpl extends HibernateDaoBase implements ClothColorDao
 		getHibernateTemplate().delete(new ClothColor(id));
 	}
 
+	@Override
+	public void deleteByCloth(int clothId) {
+		Session session = super.getSession(true);
+		Query query = null;
+		try {
+			query = session.createQuery("delete ClothColor where clothId = " + clothId);
+			query.executeUpdate();
+		}catch(Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}finally {
+			session.close();
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ClothColor> getByCloth(int clothId) {

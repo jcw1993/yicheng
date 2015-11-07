@@ -39,6 +39,7 @@ import com.yicheng.pojo.OrderCloth;
 import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
+import com.yicheng.service.ClothSizeService;
 import com.yicheng.service.ContentService;
 import com.yicheng.service.MaterialService;
 import com.yicheng.service.OrderClothService;
@@ -76,6 +77,9 @@ public class ProofingController {
 	
 	@Autowired
 	private ContentService contentServie;
+	
+	@Autowired
+	private ClothSizeService clothSizeService;
 	
 	@RequestMapping(value = "/Proofing/ClothMaterialManage", method = RequestMethod.GET)
 	public ModelAndView clothMaterialList(HttpServletRequest request, HttpServletResponse response) {
@@ -228,6 +232,39 @@ public class ProofingController {
 		
 	}
 	
+	
+	@RequestMapping(value = "/Proofing/DeleteCloth" ,method = RequestMethod.POST) 
+	@ResponseBody
+	public NoneDataJsonResult deleteCloth(HttpServletRequest request, HttpServletResponse response) {
+		NoneDataJsonResult result = new NoneDataJsonResult();
+		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+		try {
+
+			NoneDataResult deleteResult = clothService.delete(clothId);
+			if(deleteResult.getResultCode() != ResultCode.NORMAL) {
+				return new NoneDataJsonResult(deleteResult);
+			}
+			NoneDataResult deleteMaterialResult = clothMaterialService.deleteByCloth(clothId);
+			if(deleteMaterialResult.getResultCode() != ResultCode.NORMAL) {
+				return new NoneDataJsonResult(deleteMaterialResult);
+			}
+			NoneDataResult deleteSizeResult = clothSizeService.deleteByCloth(clothId);
+			if(deleteSizeResult.getResultCode() != ResultCode.NORMAL) {
+				return new NoneDataJsonResult(deleteSizeResult);
+			}
+			NoneDataResult deleteColorResult = clothColorService.deleteByCloth(clothId);
+			if(deleteColorResult.getResultCode() != ResultCode.NORMAL) {
+				return new NoneDataJsonResult(deleteColorResult);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
+		}
+		return result;
+	}
+		
+		
 	
 	@ResponseBody
 	@RequestMapping(value = "/Proofing/GetAllMaterialByType", method = RequestMethod.GET)

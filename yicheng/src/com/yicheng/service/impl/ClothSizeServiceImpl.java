@@ -25,13 +25,13 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 	private static final String CLOTH_COUNT_CACHE_KEY = "cloth_count_cache_%d";
 	
 	@Autowired
-	private ClothSizeDao clothCountDao;
+	private ClothSizeDao clothSizeDao;
 
 	@Override
 	public GenericResult<Integer> create(ClothSize clothSize) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = clothCountDao.create(clothSize);
+			int outId = clothSizeDao.create(clothSize);
 			result.setData(outId);
 			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothSize.getClothId()));
 		}catch(DataAccessException e) {
@@ -46,7 +46,7 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 	public NoneDataResult update(ClothSize clothSize) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			clothCountDao.update(clothSize);
+			clothSizeDao.update(clothSize);
 			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothSize.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -60,7 +60,7 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 	public NoneDataResult delete(int id, int clothId) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			clothCountDao.delete(id);
+			clothSizeDao.delete(id);
 			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothId));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -71,6 +71,19 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 	}
 
 	@Override
+	public NoneDataResult deleteByCloth(int clothId) {
+		NoneDataResult result = new NoneDataResult();
+		try {
+			clothSizeDao.deleteByCloth(clothId);
+		}catch(Exception e) {
+			logger.error(e.getMessage());
+			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
+			result.setMessage(e.getMessage());
+		}
+		return result;
+	}
+	
+	@Override
 	public GenericResult<List<ClothSize>> getByCloth(int clothId) {
 		GenericResult<List<ClothSize>> result = new GenericResult<List<ClothSize>>();
 		@SuppressWarnings("unchecked")
@@ -79,7 +92,7 @@ public class ClothSizeServiceImpl implements ClothSizeService {
 			result.setData(clothCountList);
 		}else {
 			try {
-				clothCountList = clothCountDao.getByCloth(clothId);
+				clothCountList = clothSizeDao.getByCloth(clothId);
 				if(null != clothCountList && !clothCountList.isEmpty()) {
 					result.setData(clothCountList);
 					CacheUtil.put(String.format(CLOTH_COUNT_CACHE_KEY, clothId), clothCountList);

@@ -90,6 +90,19 @@ public class ClothMaterialServiceImpl implements ClothMaterialService {
 	}
 	
 	@Override
+	public NoneDataResult deleteByCloth(int clothId) {
+		NoneDataResult result = new NoneDataResult();
+		try {
+			clothMaterialDao.deleteByCloth(clothId);
+		}catch(Exception e) {
+			logger.error(e.getMessage());
+			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
+			result.setMessage(e.getMessage());
+		}
+		return result;
+	}
+	
+	@Override
 	public GenericResult<List<ClothMaterial>> getByCloth(int clothId) {
 		GenericResult<List<ClothMaterial>> result = new GenericResult<List<ClothMaterial>>();
 		@SuppressWarnings("unchecked")

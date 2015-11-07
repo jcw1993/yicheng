@@ -12,6 +12,8 @@ public interface ClothColorService {
 	
 	public NoneDataResult delete(int clothId, int clothColorId);
 	
+	public NoneDataResult deleteByCloth(int clothId);
+	
 	public GenericResult<List<ClothColor>> getByCloth(int clothId);
 	
 	public GenericResult<ClothColor> getById(int clothId, int clothColorId);
