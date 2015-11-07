@@ -27,7 +27,6 @@ import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
-import com.yicheng.service.ContentService;
 import com.yicheng.service.data.ClothDetailData;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.util.GenericResult;
@@ -38,7 +37,6 @@ import com.yicheng.util.Utils;
 
 @Controller
 public class PricingController {
-	
 	private static Logger logger = LoggerFactory.getLogger(PricingController.class);
 	
 	@Autowired
@@ -49,8 +47,6 @@ public class PricingController {
 	
 	@Autowired
 	private ClothColorService clothColorService;
-	@Autowired
-	private ContentService contentService;
 	
 	@RequestMapping(value = "/Pricing/ClothPriceToProcess", method = RequestMethod.GET)
 	public ModelAndView clothPriceToProcess(HttpServletRequest request, HttpServletResponse response) {

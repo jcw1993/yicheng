@@ -36,7 +36,6 @@ import com.yicheng.service.ClothColorService;
 import com.yicheng.service.ClothMaterialService;
 import com.yicheng.service.ClothService;
 import com.yicheng.service.ClothSizeService;
-import com.yicheng.service.ContentService;
 import com.yicheng.service.MaterialService;
 import com.yicheng.service.OrderClothService;
 import com.yicheng.service.data.ClothDetailData;
@@ -64,16 +63,10 @@ public class ProofingController {
 	private MaterialService materialService;
 	
 	@Autowired
-	private ContentService contentService;
-	
-	@Autowired
 	private OrderClothService orderClothService;
 	
 	@Autowired
 	private ClothColorService clothColorService;
-	
-	@Autowired
-	private ContentService contentServie;
 	
 	@Autowired
 	private ClothSizeService clothSizeService;
