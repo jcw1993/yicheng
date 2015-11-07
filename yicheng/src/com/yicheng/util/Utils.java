@@ -116,7 +116,6 @@ public class Utils {
 	 * @return
 	 * @throws IOException
 	 */
-	@SuppressWarnings("resource")
 	public static List<String[]> parseExcel(String filePath, int columnNum, int version)
 			throws IOException {
 		File file = new File(filePath);
@@ -185,7 +184,6 @@ public class Utils {
 	 * @param version
 	 * @throws IOException
 	 */
-	@SuppressWarnings("resource")
 	public static void exportExcel(String[] columnNames, String[][] data, OutputStream output, int version)
 			throws IOException {
 		if(null == output) {
