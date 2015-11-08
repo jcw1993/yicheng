@@ -13,7 +13,7 @@
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
 	<c:set value="${model.supportDetails}" var="supportDetails" />
-	
+
 	<div class="row container-body-with-left">
 		<div class="col-sm-2 left-navi-div">
 			<jsp:include page="../left_color_navi.jsp" flush="true" />
@@ -412,10 +412,6 @@ function saveClothMaterial(saveType) {
 				if(result.resultCode == 0) {
 					console.log("create clothMaterial succcss");
 					var clothMaterialId = result.data;
-					console.log("clothMaterialId: " + clothMaterialId);
-					// appendClothMaterialItem(currentMaterialType, clothMaterialId, $("#material_select option:selected").text(),
-					// 	$part.val(), $unitName.val(), $consumption.val(), $estimatedPrice.val(), $remark.val());
-					// resetInput();
 					location.reload();
 					
 				}else {

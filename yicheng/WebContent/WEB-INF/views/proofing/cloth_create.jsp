@@ -61,6 +61,8 @@
   	     	        <label for="name" class="col-sm-2 control-label">交货期</label>
   	     	        <div class="col-sm-6">
   	     	            <input id="delivery_date_input" type="text" class="form-control" name="deliveryDate" placeholder="yyyy-MM-dd(选填)" />
+  	     	            
+					</td>
   	     	        </div>
   	     	     </div>
 
@@ -122,11 +124,16 @@ $saveClothBtn.click(function(e) {
 	var clothType = $cloth_type_input.val();
 	var clothName = $cloth_name_input.val();
 	var color = $color_input.val();
-
+	var deliveryDate = $("#delivery_date_input").val();
 
 
 	if(!clothType || clothType.trim() == "" || !clothName || clothName.trim() == "" || !color || color.trim() == "") {
 		alert("请先填写衣服必填参数！");
+		return;
+	}
+
+	if(null != deliveryDate && !checkDateFormat(deliveryDate)) {
+		alert("日期格式不正确");
 		return;
 	}
 
@@ -135,22 +142,6 @@ $saveClothBtn.click(function(e) {
 	color = color.trim();
 
 	$createForm.submit();
-
-	// $.ajax({
-	// 	url: "CreateCloth",
-	// 	method: "post",
-	// 	data: formData,
-	// 	success: function(result) {
-	// 		if(result.resultCode == 0) {
-	// 			console.log("create cloth success");
-	// 			clothId = result.data;
-	// 			window.location = "ClothMaterialCreate?clothId=" + clothId;
-	// 		}else {
-	// 			alert("保存失败，请刷新页面重试");
-	// 			console.log("create cloth fail, " + result.message);
-	// 		}
-	// 	}
-	// });
 });
 
 function previewImage(input) {
@@ -166,6 +157,10 @@ function previewImage(input) {
         $image_preview.show();
     }
 }
+
+$(function() {
+	$("#delivery_date_input").datepicker({ dateFormat: 'yy-mm-dd' });
+});
 
 </script>	
 </body>
