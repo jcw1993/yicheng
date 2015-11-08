@@ -13,14 +13,19 @@
 	<c:set value="${model.leatherDetails}" var="leatherDetails" />
 	<c:set value="${model.fabricDetails}" var="fabricDetails" />
 	<c:set value="${model.supportDetails}" var="supportDetails" />
+	
+	<div class="row container-body-with-left">
+		<div class="col-sm-2 left-navi-div">
+			<jsp:include page="../left_color_navi.jsp" flush="true" />
+		</div>	
 
-	<div class="container-body">
-		<h3>皮衣详情
-		<a href="ClothMaterialDetail?clothId=${cloth.id}" class="btn btn-primary create-button">查看详情</a>
+		<div class="col-sm-9">
+			<h3>皮衣详情
+		<a href="ClothMaterialDetail?clothId=${cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">查看详情</a>
 		</h3>
 		<hr />
 		<div>
-			<p>基本信息</p>
+			<p class="info-title">基本信息</p>
 	         <div class="form-group row">
 		        <label class="col-sm-2 control-label">款号</label>
 		        <div class="col-sm-6">

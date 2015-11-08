@@ -167,14 +167,22 @@ public class ProofingController {
 		name = name.trim();
 		color = color.trim();
 		
-		String originalFileName = file.getOriginalFilename();
-		UUID uuid = UUID.randomUUID();
-		String saveName = uuid.toString() + Utils.getFileExtensionWithDot(originalFileName);
+		Cloth cloth = null;
+		if(null != file && !file.isEmpty()) {
+			String originalFileName = file.getOriginalFilename();
+			UUID uuid = UUID.randomUUID();
+			String saveName = uuid.toString() + Utils.getFileExtensionWithDot(originalFileName);
+			
+			cloth = new Cloth(type, name, client, remark, QiniuUtil.QINIU_BASE_URL + String.format(QiniuUtil.QINIU_PIC_KEY_FORMAT, saveName), new Date());
+		}else {
+			cloth = new Cloth(type, name, client, remark, null, new Date());
+		}
 		
-		Cloth cloth = new Cloth(type, name, client, remark, QiniuUtil.QINIU_BASE_URL + String.format(QiniuUtil.QINIU_PIC_KEY_FORMAT, saveName), new Date());
 		GenericResult<Integer> createResult = clothService.create(cloth);
 		if(createResult.getResultCode() == ResultCode.NORMAL) {
-			QiniuUtil.uploadImage(cloth.getImagePath().substring(QiniuUtil.QINIU_BASE_URL.length(), cloth.getImagePath().length()), file.getBytes());
+			if(null != file && !file.isEmpty()) {
+				QiniuUtil.uploadImage(cloth.getImagePath().substring(QiniuUtil.QINIU_BASE_URL.length(), cloth.getImagePath().length()), file.getBytes());
+			}
 			
 			int clothId = createResult.getData();
 			if(StringUtils.isBlank(deliveryDate)) {
@@ -187,7 +195,7 @@ public class ProofingController {
 			ClothColor clothColor = new ClothColor(clothId, color);
 			
 			GenericResult<Integer> myResult = clothColorService.create(clothColor);
-			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialCreate?clothId=" + clothId + "&clothColorId=" + myResult.getData());
+			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialOperate?clothId=" + clothId + "&clothColorId=" + myResult.getData());
 		}else {
 			response.sendRedirect(request.getContextPath() + "/Proofing/ClothMaterialManage");
 		}
