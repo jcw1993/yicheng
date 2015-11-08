@@ -60,7 +60,7 @@
 					<td>${cloth.name}</td>
 					<td>
 					<c:if test="${null != cloth.imagePath}">
-			             <img src="${cloth.imagePath}" class="image-preview" />
+			             <img src="${cloth.imagePath}?imageView2/0/w/200/h/265" />
 		     	     </c:if>	
 					<c:if test="${null == cloth.imagePath}">
 						<p>暂无图片</p>

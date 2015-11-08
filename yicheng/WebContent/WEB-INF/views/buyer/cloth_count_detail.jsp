@@ -65,7 +65,7 @@
                   <div class="form-group row">
           	        <label for="name" class="col-sm-2 control-label">效果图</label>
           	        <div class="col-sm-6">
-     	     	        <img src="${cloth.imagePath}" class="image-preview" />
+     	     	        <img src="${cloth.imagePath}?imageView2/0/w/200/h/265" class="image-preview" />
           	        </div>
           	     </div>		
           	     </c:if>	
