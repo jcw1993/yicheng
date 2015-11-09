@@ -13,7 +13,7 @@
 		<h3>创建皮衣</h3>
 		<hr />
 		<div>
-			<form id="create-form" class="form-horizontal" method="post" action="#" enctype="multipart/form-data">
+			<form id="create-form" class="form-horizontal" method="post" action="CreateClothPost" enctype="multipart/form-data">
 				<p>基本信息</p>
 		         <div class="form-group row">
 			        <label for="type" class="col-sm-2 control-label">款号</label>

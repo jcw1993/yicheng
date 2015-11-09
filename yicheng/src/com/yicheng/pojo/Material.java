@@ -1,11 +1,9 @@
 package com.yicheng.pojo;
 
-import java.io.Serializable;
+import com.yicheng.dao.MaterialDao;
 
-public class Material implements Serializable {
 
-	private static final long serialVersionUID = 7745338079290673602L;
-	
+public class Material {
 	private int id;
 	private String name;
 	private int type;
@@ -34,15 +32,20 @@ public class Material implements Serializable {
 	public Material(int id) {
 		this.id = id;
 	}
-
-	public Material(int id, String name, int type) {
-		this.id = id;
-		this.name = name;
-		this.type = type;
-	}
 	
-	public Material(String name, int type) {
-		this.name = name;
-		this.type = type;
-	}	
+	public Material(MaterialDao dao) {
+		id = dao.getInt("id");
+		name = dao.getStr("name");
+		type = dao.getInt("type");
+	}
+
+	public MaterialDao toDao() {
+		MaterialDao dao = new MaterialDao();
+		if(id > 0) {
+			dao.set("id", id);
+		}
+		dao.set("name", name);
+		dao.set("type", type);
+		return dao;
+	}
 }

@@ -2,25 +2,16 @@ package com.yicheng.dao;
 
 import java.util.List;
 
-import com.yicheng.pojo.Material;
+import com.jfinal.plugin.activerecord.Model;
 
-public class MaterialDao extends HibernateDaoBase {
+public class MaterialDao extends Model<MaterialDao> {
 
-	public int create(Material material) {
-		return (Integer) getHibernateTemplate().save(material);
-	}
+	private static final long serialVersionUID = 4271129470826297917L;
 
-	public void update(Material material) {
-		getHibernateTemplate().update(material);
-	}
+	public static MaterialDao dao = new MaterialDao();
 
-	public void delete(int id) {
-		getHibernateTemplate().delete(new Material(id));
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Material> getAll() {
-		return getHibernateTemplate().find("from Material");
+	public static List<MaterialDao> getAll() {
+		return dao.find("select * from material");
 	}
 
 }

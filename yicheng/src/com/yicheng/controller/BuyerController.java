@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.yicheng.common.BaseController;
 import com.yicheng.common.ClothSizeType;
 import com.yicheng.common.MaterialType;
 import com.yicheng.common.Pagination;
@@ -38,12 +39,13 @@ import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
 
 @Controller
-public class BuyerController {
+@RequestMapping(value = "/Buyer")
+public class BuyerController extends BaseController {
 
 	private static Logger logger = LoggerFactory.getLogger(BuyerController.class);
 
-	@RequestMapping(value = "/Buyer/ClothCountToProcess", method = RequestMethod.GET)
-	public ModelAndView clothCountToProcess(HttpServletRequest request,
+	@RequestMapping(value = "/ClothCountToProcess", method = RequestMethod.GET)
+	public ModelAndView ClothCountToProcess(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothToCountResult = ServiceFactory.getInstance().getClothService()
@@ -73,8 +75,8 @@ public class BuyerController {
 		return new ModelAndView("buyer/cloth_count_to_process", "model", model);
 	}
 
-	@RequestMapping(value = "/Buyer/ClothCountProcessed", method = RequestMethod.GET)
-	public ModelAndView clothCountProcessed(HttpServletRequest request,
+	@RequestMapping(value = "/ClothCountProcessed", method = RequestMethod.GET)
+	public ModelAndView ClothCountProcessed(HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothCountedResult = ServiceFactory.getInstance().getClothService()
@@ -104,8 +106,8 @@ public class BuyerController {
 		return new ModelAndView("buyer/cloth_count_processed", "model", model);
 	}
 
-	@RequestMapping(value = "/Buyer/SearchInToCount", method = RequestMethod.GET)
-	public ModelAndView searchInToCount(HttpServletRequest request,
+	@RequestMapping(value = "/SearchInToCount", method = RequestMethod.GET)
+	public ModelAndView SearchInToCount(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		String keyword = request.getParameter("keyword");
 		if (StringUtils.isNotBlank(keyword)) {
@@ -143,8 +145,8 @@ public class BuyerController {
 		}
 	}
 
-	@RequestMapping(value = "/Buyer/SearchInCounted", method = RequestMethod.GET)
-	public ModelAndView searchInCounted(HttpServletRequest request,
+	@RequestMapping(value = "/SearchInCounted", method = RequestMethod.GET)
+	public ModelAndView SearchInCounted(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 		String keyword = request.getParameter("keyword");
 		if (StringUtils.isNotBlank(keyword)) {
@@ -182,8 +184,8 @@ public class BuyerController {
 		}
 	}
 
-	@RequestMapping(value = "/Buyer/ClothCountDetail", method = RequestMethod.GET)
-	public ModelAndView clothCountDetail(HttpServletRequest request,
+	@RequestMapping(value = "/ClothCountDetail", method = RequestMethod.GET)
+	public ModelAndView ClothCountDetail(HttpServletRequest request,
 			HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId",
@@ -202,7 +204,7 @@ public class BuyerController {
 	}
 
 	@RequestMapping(value = "/Buyer/ClothCountOperate", method = RequestMethod.GET)
-	public ModelAndView clothCountOperate(HttpServletRequest request,
+	public ModelAndView ClothCountOperate(HttpServletRequest request,
 			HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId",
@@ -221,8 +223,8 @@ public class BuyerController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/Buyer/OrderClothSaveCount", method = RequestMethod.POST)
-	public NoneDataJsonResult saveClothCount(HttpServletRequest request,
+	@RequestMapping(value = "/OrderClothSaveCount", method = RequestMethod.POST)
+	public NoneDataJsonResult OrderClothSaveCount(HttpServletRequest request,
 			HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId",
@@ -244,17 +246,17 @@ public class BuyerController {
 			originTotalCount = data.getTotalCount();
 		}
 
-		ClothSize xsSize = new ClothSize(clothId, clothColorId,
+		ClothSize xsSize = new ClothSize(0, clothId, clothColorId,
 				ClothSizeType.CLOTH_SIZE_XS, xsCount);
-		ClothSize sSize = new ClothSize(clothId, clothColorId,
+		ClothSize sSize = new ClothSize(0, clothId, clothColorId,
 				ClothSizeType.CLOTH_SIZE_S, sCount);
-		ClothSize mSize = new ClothSize(clothId, clothColorId,
+		ClothSize mSize = new ClothSize(0, clothId, clothColorId,
 				ClothSizeType.CLOTH_SIZE_M, mCount);
-		ClothSize lSize = new ClothSize(clothId, clothColorId,
+		ClothSize lSize = new ClothSize(0, clothId, clothColorId,
 				ClothSizeType.CLOTH_SIZE_L, lCount);
-		ClothSize xlSize = new ClothSize(clothId, clothColorId,
+		ClothSize xlSize = new ClothSize(0, clothId, clothColorId,
 				ClothSizeType.CLOTH_SIZE_XL, xlCount);
-		ClothSize xxlSize = new ClothSize(clothId, clothColorId,
+		ClothSize xxlSize = new ClothSize(0, clothId, clothColorId,
 				ClothSizeType.CLOTH_SIZE_XXL, xxlCount);
 
 		int totalBuyCount = xsCount + sCount + mCount + lCount + xlCount
@@ -286,8 +288,8 @@ public class BuyerController {
 
 	// TODO
 	@ResponseBody
-	@RequestMapping(value = "/Buyer/ClothMaterialSaveCount", method = RequestMethod.POST)
-	public NoneDataJsonResult saveClothMaterialCount(
+	@RequestMapping(value = "/ClothMaterialSaveCount", method = RequestMethod.POST)
+	public NoneDataJsonResult ClothMaterialSaveCount(
 			HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothMaterialId = Utils.getRequestIntValue(request,

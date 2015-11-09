@@ -1,12 +1,13 @@
 package com.yicheng.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
-import com.yicheng.dao.DaoFactory;
+import com.yicheng.dao.ClothColorDao;
 import com.yicheng.pojo.ClothColor;
 import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
@@ -21,8 +22,9 @@ public class ClothColorService {
 	public GenericResult<Integer> create(ClothColor clothColor) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = DaoFactory.getInstance().getClothColorDao().create(clothColor);
-			result.setData(outId);
+			ClothColorDao clothColorDao = clothColor.toDao();
+			clothColorDao.save();
+			result.setData(clothColorDao.getInt("id"));
 			CacheUtil.remove(String.format(CLOTH_COLOR_CACHE_KEY, clothColor.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -35,7 +37,7 @@ public class ClothColorService {
 	public NoneDataResult delete(int clothId, int clothColorId) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getClothColorDao().delete(clothColorId);
+			ClothColorDao.dao.deleteById(clothColorId);
 			CacheUtil.remove(String.format(CLOTH_COLOR_CACHE_KEY, clothId));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -48,7 +50,7 @@ public class ClothColorService {
 	public NoneDataResult deleteByCloth(int clothId) {
 		NoneDataResult result = new NoneDataResult();
 		try {
-			DaoFactory.getInstance().getClothColorDao().deleteByCloth(clothId);
+			ClothColorDao.deleteByCloth(clothId);
 		}catch(Exception e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
@@ -65,8 +67,12 @@ public class ClothColorService {
 			result.setData(clothColorList);
 		}else {
 			try {
-				clothColorList = DaoFactory.getInstance().getClothColorDao().getByCloth(clothId);
-				if(null != clothColorList && !clothColorList.isEmpty()) {
+				List<ClothColorDao> daos = ClothColorDao.getByCloth(clothId);
+				if(null != daos && !daos.isEmpty()) {
+					clothColorList = new ArrayList<ClothColor>();
+					for(ClothColorDao dao : daos) {
+						clothColorList.add(new ClothColor(dao));
+					}
 					result.setData(clothColorList);
 					CacheUtil.put(String.format(CLOTH_COLOR_CACHE_KEY, clothId), clothColorList);
 				}else {

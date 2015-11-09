@@ -1,10 +1,8 @@
 package com.yicheng.pojo;
 
-import java.io.Serializable;
+import com.yicheng.dao.UserDao;
 
-public class User implements Serializable {
-
-	private static final long serialVersionUID = 4682417155747396928L;
+public class User {
 
 	private int id;
 	private String name;
@@ -38,7 +36,28 @@ public class User implements Serializable {
 	
 	public User() {}
 	
-	public User(int id) {
+	public User(int id, String name, String password, int type) {
 		this.id = id;
+		this.name = name;
+		this.password = password;
+		this.type = type;
+	}
+	
+	public User(UserDao dao) {
+		id = dao.getInt("id");
+		name = dao.getStr("name");
+		password = dao.getStr("password");
+		type = dao.getInt("type");
+	}
+	
+	public UserDao toDao() {
+		UserDao dao = new UserDao();
+		if(id > 0) {
+			dao.set("id", id);
+		}
+		dao.set("name", name);
+		dao.set("password", password);
+		dao.set("type", type);
+		return dao;
 	}
 }

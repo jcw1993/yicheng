@@ -2,49 +2,21 @@ package com.yicheng.dao;
 
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Model;
 
-import com.yicheng.pojo.ClothColor;
+public class ClothColorDao extends Model<ClothColorDao> {
+	
+	private static final long serialVersionUID = 3590018956784292831L;
 
-public class ClothColorDao extends HibernateDaoBase {
+	public static ClothColorDao dao = new ClothColorDao();
 
-	public int create(ClothColor clothColor) {
-		return (Integer) getHibernateTemplate().save(clothColor);
-	}
-
-	public void delete(int id) {
-		getHibernateTemplate().delete(new ClothColor(id));
-	}
-
-	public void deleteByCloth(int clothId) {
-		Session session = super.getSession(true);
-		Query query = null;
-		try {
-			query = session.createQuery("delete ClothColor where clothId = " + clothId);
-			query.executeUpdate();
-		}catch(Exception e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
-		}finally {
-			session.close();
-		}
+	public static void deleteByCloth(int clothId) {
+		Db.update("delete from cloth_color where cloth_id = ?", clothId);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<ClothColor> getByCloth(int clothId) {
-		Session session = super.getSession(true);
-		Query query = null;
-		try {
-			query = session.createQuery("from ClothColor where clothId = " + clothId + " order by id asc");
-			return query.list();
-		}catch(Exception e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
-		}finally {
-			session.close();
-		}
-		return null;
+	public static List<ClothColorDao> getByCloth(int clothId) {
+		return dao.find("select * from cloth_color where cloth_id = " + clothId + " order by id asc");
 	}
 	
 

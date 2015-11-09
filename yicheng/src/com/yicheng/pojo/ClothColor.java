@@ -1,10 +1,9 @@
 package com.yicheng.pojo;
 
-import java.io.Serializable;
+import com.yicheng.dao.ClothColorDao;
 
-public class ClothColor implements Serializable {
-	
-	private static final long serialVersionUID = -4075181254796437556L;
+
+public class ClothColor {
 	
 	private int id;
 	private int clothId;
@@ -34,23 +33,27 @@ public class ClothColor implements Serializable {
 	public ClothColor(int id) {
 		this.id = id;
 	}
-	
-	public ClothColor(int id, int clothId, String color) {
-		this.id = id;
-		this.clothId = clothId;
-		this.color = color;
-	}
-	
-	public ClothColor(int clothId, String color) {
-		this.clothId = clothId;
-		this.color = color;
-	}
-	
+
 	public ClothColor(ClothColor clothColor) {
-		this.id = clothColor.getId();
-		this.clothId = clothColor.getClothId();
-		this.color = clothColor.getColor();
+		id = clothColor.getId();
+		clothId = clothColor.getClothId();
+		color = clothColor.getColor();
 	}
 	
+	public ClothColor(ClothColorDao dao) {
+		id = dao.getInt("id");
+		clothId = dao.getInt("cloth_id");
+		color = dao.getStr("color");
+	}
+	
+	public ClothColorDao toDao() {
+		ClothColorDao dao = new ClothColorDao();
+		if(id > 0) {
+			dao.set("id", id);
+		}
+		dao.set("cloth_id", clothId);
+		dao.set("color", color);
+		return dao;
+	}
 
 }

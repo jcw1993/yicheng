@@ -6,7 +6,7 @@ import net.sf.ehcache.Element;
 
 
 public class CacheUtil {
-	private static final String DEFAULT_KEY_NAME = "co_platform_cache";
+	private static final String DEFAULT_KEY_NAME = "yicheng_cache";
 	private static Cache cache = null;
 	private static CacheManager cacheMaanager = null;
 	

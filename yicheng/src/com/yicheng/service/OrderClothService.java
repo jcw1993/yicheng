@@ -1,12 +1,13 @@
 package com.yicheng.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
-import com.yicheng.dao.DaoFactory;
+import com.yicheng.dao.OrderClothDao;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.OrderCloth;
 import com.yicheng.service.data.ClothOrderDetailData;
@@ -24,8 +25,9 @@ public class OrderClothService {
 	public GenericResult<Integer> create(OrderCloth orderCloth) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = DaoFactory.getInstance().getOrderClothDao().create(orderCloth);
-			result.setData(outId);
+			OrderClothDao dao = orderCloth.toDao();
+			dao.save();
+			result.setData(dao.getInt("id"));
 			CacheUtil.remove(String.format(ORDER_CLOTH_CACHE_KEY, orderCloth.getOrderNumber()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -38,7 +40,7 @@ public class OrderClothService {
 	public NoneDataResult update(OrderCloth orderCloth) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getOrderClothDao().update(orderCloth);
+			orderCloth.toDao().update();
 			CacheUtil.remove(String.format(ORDER_CLOTH_CACHE_KEY, orderCloth.getOrderNumber()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -51,7 +53,7 @@ public class OrderClothService {
 	public NoneDataResult delete(int id, String orderNumber) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getOrderClothDao().delete(id);
+			OrderClothDao.dao.deleteById(id);
 			CacheUtil.remove(String.format(ORDER_CLOTH_CACHE_KEY, orderNumber));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -69,8 +71,12 @@ public class OrderClothService {
 			result.setData(orderClothList);
 		}else {
 			try {
-				orderClothList = DaoFactory.getInstance().getOrderClothDao().getByOrderNumber(orderNumber);
-				if(null != orderClothList && !orderClothList.isEmpty()) {
+				List<OrderClothDao> daos = OrderClothDao.getByOrderNumber(orderNumber);
+				if(null != daos && !daos.isEmpty()) {
+					orderClothList = new ArrayList<OrderCloth>();
+					for(OrderClothDao dao : daos) {
+						orderClothList.add(new OrderCloth(dao));
+					}
 					result.setData(orderClothList);
 					CacheUtil.put(String.format(ORDER_CLOTH_CACHE_KEY, orderNumber), orderClothList);
 				}else {
@@ -119,10 +125,10 @@ public class OrderClothService {
 			}
 		}else {
 			try {
-				orderClothList = DaoFactory.getInstance().getOrderClothDao().getByOrderNumber(orderNumber);
-				for(OrderCloth orderCloth : orderClothList) {
-					if(orderCloth.getClothId() == clothId) {
-						ClothOrderDetailData data = convertClothOrderToDetialData(orderCloth);
+				List<OrderClothDao> daos = OrderClothDao.getByOrderNumber(orderNumber);
+				for(OrderClothDao dao : daos) {
+					if(dao.getInt("cloth_id") == clothId) {
+						ClothOrderDetailData data = convertClothOrderToDetialData(new OrderCloth(dao));
 						result.setData(data);
 						break;
 					}
@@ -153,9 +159,9 @@ public class OrderClothService {
 	public GenericResult<OrderCloth> getFirstbyCloth(int clothId) {
 		GenericResult<OrderCloth> result = new GenericResult<OrderCloth>();
 		try {
-			OrderCloth orderCloth = DaoFactory.getInstance().getOrderClothDao().getFirstByCloth(clothId);
-			if(null != orderCloth) {
-				result.setData(orderCloth);
+			OrderClothDao dao = OrderClothDao.getFirstByCloth(clothId);
+			if(null != dao) {
+				result.setData(new OrderCloth(dao));
 			}else {
 				result.setResultCode(ResultCode.E_NO_DATA);
 				result.setMessage("ordercloth no data, clothId: " + clothId);

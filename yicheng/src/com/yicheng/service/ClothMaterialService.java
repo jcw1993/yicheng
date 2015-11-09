@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
-import com.yicheng.dao.DaoFactory;
+import com.yicheng.dao.ClothMaterialDao;
 import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
 import com.yicheng.pojo.Material;
@@ -26,8 +26,9 @@ public class ClothMaterialService {
 	public GenericResult<Integer> create(ClothMaterial clothMaterial) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = DaoFactory.getInstance().getClothMaterialDao().create(clothMaterial);
-			result.setData(outId);
+			ClothMaterialDao clothMaterialDao = clothMaterial.toDao();
+			clothMaterialDao.save();
+			result.setData(clothMaterialDao.getInt("id"));
 			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY,
 					clothMaterial.getClothId()));
 		} catch (DataAccessException e) {
@@ -41,7 +42,7 @@ public class ClothMaterialService {
 	public NoneDataResult update(ClothMaterial clothMaterial) {
 		NoneDataResult result = new NoneDataResult();
 		try {
-			DaoFactory.getInstance().getClothMaterialDao().update(clothMaterial);
+			clothMaterial.toDao().update();
 			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY,
 					clothMaterial.getClothId()));
 		} catch (DataAccessException e) {
@@ -55,7 +56,7 @@ public class ClothMaterialService {
 	public NoneDataResult delete(int id, int clothId) {
 		NoneDataResult result = new NoneDataResult();
 		try {
-			DaoFactory.getInstance().getClothMaterialDao().delete(id);
+			ClothMaterialDao.dao.deleteById(id);
 			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY, clothId));
 		} catch (DataAccessException e) {
 			logger.error(e.getMessage());
@@ -68,7 +69,7 @@ public class ClothMaterialService {
 	public NoneDataResult deleteByCloth(int clothId) {
 		NoneDataResult result = new NoneDataResult();
 		try {
-			DaoFactory.getInstance().getClothMaterialDao().deleteByCloth(clothId);
+			ClothMaterialDao.deleteByCloth(clothId);
 		}catch(Exception e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
@@ -85,8 +86,12 @@ public class ClothMaterialService {
 			result.setData(clothMaterialList);
 		}else {
 			try {
-				clothMaterialList = DaoFactory.getInstance().getClothMaterialDao().getByCloth(clothId);
-				if(null != clothMaterialList && !clothMaterialList.isEmpty()) {
+				List<ClothMaterialDao> daos = ClothMaterialDao.getByCloth(clothId);
+				if(null != daos && !daos.isEmpty()) {
+					clothMaterialList = new ArrayList<ClothMaterial>();
+					for(ClothMaterialDao dao : daos) {
+						clothMaterialList.add(new ClothMaterial(dao));
+					}
 					result.setData(clothMaterialList);
 					CacheUtil.put(String.format(CLOTH_MATERIAL_CACHE_KEY, clothId), clothMaterialList);
 				}else {

@@ -16,6 +16,13 @@
 	</properties>
 	
   <dependencies>
+  		<!-- JFinal -->
+  		<dependency>
+			<groupId>com.jfinal</groupId>
+			<artifactId>jfinal</artifactId>
+			<version>2.0</version>
+		</dependency>
+  		
   		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -273,6 +280,12 @@
 			<version>3.12.0.GA</version>
 		</dependency>
 	    
+	    <!-- cos multipart -->
+	    <dependency>
+			<groupId>servlets.com</groupId>
+			<artifactId>cos</artifactId>
+			<version>05Nov2002</version>
+		</dependency>
 	</dependencies>
 	
   <build>

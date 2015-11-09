@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
-import com.yicheng.dao.DaoFactory;
+import com.yicheng.dao.MaterialDao;
 import com.yicheng.pojo.Material;
 import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
@@ -23,8 +23,9 @@ public class MaterialService {
 	public GenericResult<Integer> create(Material material) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = DaoFactory.getInstance().getMaterialDao().create(material);
-			result.setData(outId);
+			MaterialDao dao = material.toDao();
+			dao.save();
+			result.setData(dao.getInt("id"));
 			CacheUtil.remove(ALL_MATERIAL_CACHE);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -37,7 +38,7 @@ public class MaterialService {
 	public NoneDataResult update(Material material) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getMaterialDao().update(material);
+			material.toDao().update();
 			CacheUtil.remove(ALL_MATERIAL_CACHE);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -50,7 +51,7 @@ public class MaterialService {
 	public NoneDataResult delete(int id) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getMaterialDao().delete(id);
+			MaterialDao.dao.deleteById(id);
 			CacheUtil.remove(ALL_MATERIAL_CACHE);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -68,8 +69,12 @@ public class MaterialService {
 			result.setData(materialList);
 		}else {
 			try {
-				materialList = DaoFactory.getInstance().getMaterialDao().getAll();
-				if(null != materialList && !materialList.isEmpty()) {
+				List<MaterialDao> daos = MaterialDao.getAll();
+				if(null != daos && !daos.isEmpty()) {
+					materialList = new ArrayList<Material>();
+					for(MaterialDao dao : daos) {
+						materialList.add(new Material(dao));
+					}
 					result.setData(materialList);
 					CacheUtil.put(ALL_MATERIAL_CACHE, materialList);
 				}else {

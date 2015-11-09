@@ -1,12 +1,12 @@
 package com.yicheng.pojo;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class ClothMaterial implements Serializable {
+import com.yicheng.dao.ClothMaterialDao;
+import com.yicheng.util.DateUtil;
 
-	private static final long serialVersionUID = 2750552457138856125L;
-	
+public class ClothMaterial {
+
 	private int id;
 	private int clothId;
 	private int clothColorId;
@@ -149,39 +149,61 @@ public class ClothMaterial implements Serializable {
 		this.remark = remark;
 	}
 	
-	public ClothMaterial(int clothId, int clothColorId, int materialId, String color, String part, String unitName, String supplier, double consumption, 
-			Double estimatedPrice, Integer count, Integer orderCount, Double price, Date orderDate, String remark) {
-		this.clothId = clothId;
-		this.clothColorId = clothColorId;
-		this.materialId = materialId;
-		this.color = color;
-		this.part = part;
-		this.unitName = unitName;
-		this.supplier =supplier;
-		this.consumption = consumption;
-		this.estimatedPrice = estimatedPrice;
-		this.count = count;
-		this.orderCount = orderCount;
-		this.price = price;
-		this.orderDate = orderDate;
-		this.remark = remark;
+	public ClothMaterial(ClothMaterial clothMaterial) {
+		id = clothMaterial.getId();
+		clothId = clothMaterial.getClothId();
+		clothColorId = clothMaterial.getClothColorId();
+		materialId = clothMaterial.getMaterialId();
+		color = clothMaterial.getColor();
+		part = clothMaterial.getPart();
+		unitName = clothMaterial.getUnitName();
+		supplier = clothMaterial.getSupplier();
+		consumption = clothMaterial.getConsumption();
+		estimatedPrice = clothMaterial.getEstimatedPrice();
+		count = clothMaterial.getCount();
+		orderCount = clothMaterial.getOrderCount();
+		price = clothMaterial.getPrice();
+		orderDate = clothMaterial.getOrderDate();
+		remark = clothMaterial.getRemark();
 	}
 	
-	public ClothMaterial(ClothMaterial clothMaterial) {
-		this.id = clothMaterial.getId();
-		this.clothId = clothMaterial.getClothId();
-		this.clothColorId = clothMaterial.getClothColorId();
-		this.materialId = clothMaterial.getMaterialId();
-		this.color = clothMaterial.getColor();
-		this.part = clothMaterial.getPart();
-		this.unitName = clothMaterial.getUnitName();
-		this.supplier = clothMaterial.getSupplier();
-		this.consumption = clothMaterial.getConsumption();
-		this.estimatedPrice = clothMaterial.getEstimatedPrice();
-		this.count = clothMaterial.getCount();
-		this.orderCount = clothMaterial.getOrderCount();
-		this.price = clothMaterial.getPrice();
-		this.orderDate = clothMaterial.getOrderDate();
-		this.remark = clothMaterial.getRemark();
+	public ClothMaterial(ClothMaterialDao dao) {
+		id = dao.getInt("id");
+		clothId = dao.getInt("cloth_id");
+		clothColorId = dao.getInt("cloth_color_id");
+		materialId = dao.getInt("material_id");
+		color = dao.getStr("color");
+		part = dao.getStr("part");
+		unitName = dao.getStr("unit_name");
+		supplier = dao.getStr("supplier");
+		consumption = dao.getDouble("consumption");
+		estimatedPrice = dao.getDouble("estimated_price");
+		count = dao.getInt("count");
+		orderCount = dao.getInt("order_count");
+		price = dao.getDouble("price");
+		orderDate = DateUtil.timestampToDate(dao.getTimestamp("order_date"));
+		remark = dao.getStr("remark");
+	}
+	
+	public ClothMaterialDao toDao() {
+		ClothMaterialDao dao = new ClothMaterialDao();
+		if(id > 0) {
+			dao.set("id", id);
+		}
+		dao.set("cloth_id", clothId);
+		dao.set("cloth_color_id", clothColorId);
+		dao.set("material_id", materialId);
+		dao.set("color", color);
+		dao.set("part", part);
+		dao.set("unit_name", unitName);
+		dao.set("supplier", supplier);
+		dao.set("consumption", consumption);
+		dao.set("estimated_price", estimatedPrice);
+		dao.set("count", count);
+		dao.set("order_count", orderCount);
+		dao.set("price", price);
+		dao.set("order_date", orderDate);
+		dao.set("remark", remark);
+		return dao;
 	}
 }

@@ -2,52 +2,21 @@ package com.yicheng.dao;
 
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Model;
 
-import com.yicheng.pojo.ClothSize;
-
-public class ClothSizeDao extends HibernateDaoBase {
-
-	public int create(ClothSize clothSize) {
-		return (Integer) getHibernateTemplate().save(clothSize);
-	}
-
-	public void update(ClothSize clothSize) {
-		getHibernateTemplate().update(clothSize);
-	}
-
-	public void delete(int id) {
-		getHibernateTemplate().delete(new ClothSize(id));
-	}
+public class ClothSizeDao extends Model<ClothSizeDao> {
 	
-	public void deleteByCloth(int clothId) {
-		Session session = super.getSession(true);
-		Query query = null;
-		try {
-			query = session.createQuery("delete ClothSize where clothId = " + clothId);
-			query.executeUpdate();
-		}catch(Exception e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
-		}finally {
-			session.close();
-		}
+	private static final long serialVersionUID = 101765688616158506L;
+	
+	public static ClothSizeDao dao = new ClothSizeDao();
+	
+	public static void deleteByCloth(int clothId) {
+		Db.update("delete from cloth_size where cloth_id = ?", clothId);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<ClothSize> getByCloth(int clothId) {
-		Session session = super.getSession(true);
-		Query query = null;
-		try {
-			query = session.createQuery("from ClothSize where clothId = " + clothId + "order by sizeType asc");
-			return query.list();
-		}catch(Exception e) {
-			logger.error(e.getMessage());
-		}finally {
-			session.close();
-		}
-		return null;
+	public static List<ClothSizeDao> getByCloth(int clothId) {
+		return dao.find("from cloth_size where cloth_id = ? order by sizeType asc", clothId);
 	}
 
 }

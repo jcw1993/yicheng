@@ -1,11 +1,9 @@
 package com.yicheng.pojo;
 
-import java.io.Serializable;
+import com.yicheng.dao.ClothSizeDao;
 
-public class ClothSize implements Serializable {
 
-	private static final long serialVersionUID = 5897533045836037706L;
-	
+public class ClothSize {
 	private int id;
 	private int clothId;
 	private int clothColorId;
@@ -57,18 +55,31 @@ public class ClothSize implements Serializable {
 		this.count = count;
 	}
 	
-	public ClothSize(int clothId, int clothColorId, int sizeType, int count) {
-		this.clothId = clothId;
-		this.clothColorId = clothColorId;
-		this.sizeType = sizeType;
-		this.count = count;
+	public ClothSize(ClothSize clothSize) {
+		id = clothSize.getId();
+		clothId = clothSize.getClothId();
+		clothColorId = clothSize.getClothColorId();
+		sizeType = clothSize.getSizeType();
+		count = clothSize.getCount();
 	}
 	
-	public ClothSize(ClothSize clothSize) {
-		this.id = clothSize.getId();
-		this.clothId = clothSize.getId();
-		this.clothColorId = clothSize.getClothColorId();
-		this.sizeType = clothSize.getSizeType();
-		this.count = clothSize.getSizeType();
+	public ClothSize(ClothSizeDao dao) {
+		id = dao.getInt("id");
+		clothId = dao.getInt("cloth_id");
+		clothColorId = dao.getInt("cloth_color_id");
+		sizeType = dao.getInt("size_type");
+		count = dao.getInt("count");
+	}
+	
+	public ClothSizeDao toDao() {
+		ClothSizeDao dao = new ClothSizeDao();
+		if(id > 0) {
+			dao.set("id", id);
+		}
+		dao.set("cloth_id", clothId);
+		dao.set("cloth_color_id", clothColorId);
+		dao.set("size_type", sizeType);
+		dao.set("count", count);
+		return dao;
 	}
 }

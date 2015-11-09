@@ -1,12 +1,11 @@
 package com.yicheng.pojo;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class OrderCloth implements Serializable {
+import com.yicheng.dao.OrderClothDao;
+import com.yicheng.util.DateUtil;
 
-	private static final long serialVersionUID = -3293539450701976134L;
-	
+public class OrderCloth {
 	private int id;
 	private String orderNumber;
 	private int clothId;
@@ -67,19 +66,34 @@ public class OrderCloth implements Serializable {
 		this.count = count;
 	}
 	
-	public OrderCloth(String orderNumber, int clothId, Date deliveryDate, Integer count) {
-		this.orderNumber = orderNumber;
-		this.clothId = clothId;
-		this.deliveryDate = deliveryDate;
-		this.count = count;
+	public OrderCloth(OrderCloth orderCloth) {
+		id = orderCloth.getId();
+		orderNumber = orderCloth.getOrderNumber();
+		clothId = orderCloth.getClothId();
+		deliveryDate = orderCloth.getDeliveryDate();
+		count = orderCloth.getCount();
+		
 	}
 	
-	public OrderCloth(OrderCloth orderCloth) {
-		this.id = orderCloth.getId();
-		this.clothId = orderCloth.getClothId();
-		this.orderNumber = orderCloth.getOrderNumber();
-		this.deliveryDate = orderCloth.getDeliveryDate();
-		this.count = orderCloth.getCount();
+	public OrderCloth(OrderClothDao dao) {
+		id = dao.getInt("id");
+		orderNumber = dao.getStr("order_number");
+		clothId = dao.getInt("cloth_id");
+		deliveryDate = DateUtil.timestampToDate(dao.getTimestamp("delivery_date"));
+		count = dao.getInt("count");
+		
+	}
+	
+	public OrderClothDao toDao() {
+		OrderClothDao dao = new OrderClothDao();
+		if(id > 0) {
+			dao.set("id", id);
+		}
+		dao.set("order_number", orderNumber);
+		dao.set("cloth_id", clothId);
+		dao.set("delivery_date", deliveryDate);
+		dao.set("count", count);
+		return dao;
 	}
 	
 }

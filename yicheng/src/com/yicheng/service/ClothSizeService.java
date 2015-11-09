@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
-import com.yicheng.dao.DaoFactory;
+import com.yicheng.dao.ClothSizeDao;
 import com.yicheng.pojo.ClothSize;
 import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
@@ -23,8 +23,9 @@ public class ClothSizeService {
 	public GenericResult<Integer> create(ClothSize clothSize) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = DaoFactory.getInstance().getClothSizeDao().create(clothSize);
-			result.setData(outId);
+			ClothSizeDao dao = clothSize.toDao();
+			dao.save();
+			result.setData(dao.getInt("id"));
 			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothSize.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -37,7 +38,7 @@ public class ClothSizeService {
 	public NoneDataResult update(ClothSize clothSize) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getClothSizeDao().update(clothSize);
+			clothSize.toDao().update();
 			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothSize.getClothId()));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -50,7 +51,7 @@ public class ClothSizeService {
 	public NoneDataResult delete(int id, int clothId) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getClothSizeDao().delete(id);
+			ClothSizeDao.dao.deleteById(id);
 			CacheUtil.remove(String.format(CLOTH_COUNT_CACHE_KEY, clothId));
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -63,7 +64,7 @@ public class ClothSizeService {
 	public NoneDataResult deleteByCloth(int clothId) {
 		NoneDataResult result = new NoneDataResult();
 		try {
-			DaoFactory.getInstance().getClothSizeDao().deleteByCloth(clothId);
+			ClothSizeDao.deleteByCloth(clothId);
 		}catch(Exception e) {
 			logger.error(e.getMessage());
 			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
@@ -80,8 +81,12 @@ public class ClothSizeService {
 			result.setData(clothCountList);
 		}else {
 			try {
-				clothCountList = DaoFactory.getInstance().getClothSizeDao().getByCloth(clothId);
-				if(null != clothCountList && !clothCountList.isEmpty()) {
+				List<ClothSizeDao> daos = ClothSizeDao.getByCloth(clothId);
+				if(null != daos && !daos.isEmpty()) {
+					clothCountList = new ArrayList<ClothSize>();
+					for(ClothSizeDao dao : daos) {
+						clothCountList.add(new ClothSize(dao));
+					}
 					result.setData(clothCountList);
 					CacheUtil.put(String.format(CLOTH_COUNT_CACHE_KEY, clothId), clothCountList);
 				}else {

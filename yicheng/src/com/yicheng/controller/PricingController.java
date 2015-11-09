@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.yicheng.common.BaseController;
 import com.yicheng.common.MaterialType;
 import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
@@ -33,10 +34,11 @@ import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
 
 @Controller
-public class PricingController {
+@RequestMapping(value = "/Pricing")
+public class PricingController extends BaseController {
 	private static Logger logger = LoggerFactory.getLogger(PricingController.class);
 	
-	@RequestMapping(value = "/Pricing/ClothPriceToProcess", method = RequestMethod.GET)
+	@RequestMapping(value = "/ClothPriceToProcess", method = RequestMethod.GET)
 	public ModelAndView clothPriceToProcess(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothToPriceResult = ServiceFactory.getInstance().getClothService().getNeedPricing();
@@ -64,7 +66,7 @@ public class PricingController {
 		return new ModelAndView("pricing/cloth_price_to_process", "model", model);
 	}
 	
-	@RequestMapping(value = "/Pricing/ClothPriceProcessed", method = RequestMethod.GET)
+	@RequestMapping(value = "/ClothPriceProcessed", method = RequestMethod.GET)
 	public ModelAndView clothPriceProcessed(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothPricedResult = ServiceFactory.getInstance().getClothService().getPriced();
@@ -91,7 +93,7 @@ public class PricingController {
 		return new ModelAndView("pricing/cloth_price_processed", "model", model);
 	}
 	
-	@RequestMapping(value = "/Pricing/SearchInToPrice", method = RequestMethod.GET)
+	@RequestMapping(value = "/SearchInToPrice", method = RequestMethod.GET)
 	public ModelAndView searchInToPrice(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String keyword = request.getParameter("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
@@ -125,7 +127,7 @@ public class PricingController {
 		}
 	}
 	
-	@RequestMapping(value = "/Pricing/SearchInPriced", method = RequestMethod.GET)
+	@RequestMapping(value = "/SearchInPriced", method = RequestMethod.GET)
 	public ModelAndView searchInPriced(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String keyword = request.getParameter("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
@@ -159,7 +161,7 @@ public class PricingController {
 		}
 	}
 	
-	@RequestMapping(value = "/Pricing/ClothPriceDetail", method = RequestMethod.GET)
+	@RequestMapping(value = "/ClothPriceDetail", method = RequestMethod.GET)
 	public ModelAndView clothPriceDetail(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
@@ -174,7 +176,7 @@ public class PricingController {
 		return new ModelAndView("pricing/cloth_price_detail", "model", model);
 	}
 
-	@RequestMapping(value = "/Pricing/ClothPriceOperate", method = RequestMethod.GET)
+	@RequestMapping(value = "/ClothPriceOperate", method = RequestMethod.GET)
 	public ModelAndView clothPriceOperate(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
@@ -190,7 +192,7 @@ public class PricingController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/Pricing/ClothMaterialSavePrice", method = RequestMethod.POST)
+	@RequestMapping(value = "/ClothMaterialSavePrice", method = RequestMethod.POST)
 	public NoneDataJsonResult saveClothMaterialPrice(HttpServletRequest request, HttpServletResponse response) {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", true);

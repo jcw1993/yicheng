@@ -1,5 +1,6 @@
 package com.yicheng.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -7,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
-import com.yicheng.dao.DaoFactory;
+import com.yicheng.dao.UserDao;
 import com.yicheng.pojo.User;
 import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
@@ -30,8 +31,12 @@ public class UserService {
 			result.setData(userList);
 		}else {
 			try {
-				userList = DaoFactory.getInstance().getUserDao().getAll();
-				if(null != userList && !userList.isEmpty()) {
+				List<UserDao> daos = UserDao.getAll();
+				if(null != daos && !daos.isEmpty()) {
+					userList = new ArrayList<User>();
+					for(UserDao dao : daos) {
+						userList.add(new User(dao));
+					}
 					result.setData(userList);
 					CacheUtil.put(ALL_USER_CACHE_KEY, userList);
 				}else {
@@ -114,8 +119,9 @@ public class UserService {
 	public GenericResult<Integer> create(User user) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = DaoFactory.getInstance().getUserDao().create(user);
-			result.setData(outId);
+			UserDao dao = user.toDao();
+			dao.save();
+			result.setData(dao.getInt("id"));
 			CacheUtil.remove(ALL_USER_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -128,7 +134,7 @@ public class UserService {
 	public NoneDataResult update(User user) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getUserDao().update(user);
+			user.toDao().update();
 			CacheUtil.remove(ALL_USER_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -141,7 +147,7 @@ public class UserService {
 	public NoneDataResult delete(int id) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getUserDao().delete(id);
+			UserDao.dao.deleteById(id);
 			CacheUtil.remove(ALL_USER_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());

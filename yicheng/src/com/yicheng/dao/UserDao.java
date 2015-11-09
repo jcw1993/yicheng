@@ -2,26 +2,16 @@ package com.yicheng.dao;
 
 import java.util.List;
 
-import com.yicheng.pojo.User;
+import com.jfinal.plugin.activerecord.Model;
 
-public class UserDao extends HibernateDaoBase {
-
-	@SuppressWarnings("unchecked")
-	public List<User> getAll() {
-		List<User> userList = getHibernateTemplate().find("from User");
-		return userList;
-	}
-
-	public int create(User user) {
-		return (Integer) getHibernateTemplate().save(user);
-	}
-
-	public void update(User user) {
-		getHibernateTemplate().update(user);
-	}
-
-	public void delete(int id) {
-		getHibernateTemplate().delete(new User(id));
+public class UserDao extends Model<UserDao> {
+	
+	private static final long serialVersionUID = -6823343413461277249L;
+	
+	public static UserDao dao = new UserDao();
+	
+	public static List<UserDao> getAll() {
+		return dao.find("select * from user");
 	}
 
 }

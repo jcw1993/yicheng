@@ -1,11 +1,11 @@
 package com.yicheng.pojo;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class Cloth implements Serializable {
-	private static final long serialVersionUID = 186654531546632842L;
+import com.yicheng.dao.ClothDao;
+import com.yicheng.util.DateUtil;
 
+public class Cloth {
 	private int id;
 	private String type;
 	private String name;
@@ -63,34 +63,39 @@ public class Cloth implements Serializable {
 	public Cloth(int id) {
 		this.id = id;
 	}
-
-	public Cloth(int id, String type, String name, String client, String remark, String imagePath, Date createdTime) {
-		this.id = id;
-		this.type = type;
-		this.name = name;
-		this.client = client;
-		this.remark = remark;
-		this.imagePath = imagePath;
-		this.createdTime = createdTime;
-	}
-	
-	public Cloth(String type, String name, String client, String remark, String imagePath, Date createdTime) {
-		this.type = type;
-		this.name = name;
-		this.client = client;
-		this.remark = remark;
-		this.imagePath = imagePath;
-		this.createdTime = createdTime;
-	}	
 	
 	public Cloth(Cloth cloth) {
-		this.id = cloth.getId();
-		this.type = cloth.getType();
-		this.name = cloth.getName();
-		this.client = cloth.getClient();
-		this.remark = cloth.getRemark();
-		this.imagePath = cloth.getImagePath();
-		this.createdTime = cloth.getCreatedTime();
+		id = cloth.getId();
+		type = cloth.getType();
+		name = cloth.getName();
+		client = cloth.getClient();
+		remark = cloth.getRemark();
+		imagePath = cloth.getImagePath();
+		createdTime = cloth.getCreatedTime();
+	}
+	
+	public Cloth(ClothDao dao) {
+		id = dao.getInt("id");
+		type = dao.getStr("type");
+		name = dao.getStr("name");
+		client = dao.getStr("client");
+		remark = dao.getStr("remark");
+		imagePath = dao.getStr("image_path");
+		createdTime = DateUtil.timestampToDate(dao.getTimestamp("created_time"));
+	}
+
+	public ClothDao toDao() {
+		ClothDao dao = new ClothDao();
+		if(id > 0) {
+			dao.set("id", id);
+		}
+		dao.set("type", type);
+		dao.set("name", name);
+		dao.set("client", client);
+		dao.set("remark", remark);
+		dao.set("image_path", imagePath);
+		dao.set("created_time", createdTime);
+		return dao;
 	}
 	
 	@Override

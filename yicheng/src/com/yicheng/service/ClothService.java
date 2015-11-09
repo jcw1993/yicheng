@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yicheng.dao.DaoFactory;
+import com.yicheng.dao.ClothDao;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
@@ -30,8 +30,9 @@ public class ClothService {
 	public GenericResult<Integer> create(Cloth cloth) {
 		GenericResult<Integer> result = new GenericResult<Integer>();
 		try {
-			int outId = DaoFactory.getInstance().getClothDao().create(cloth);
-			result.setData(outId);
+			ClothDao clothDao = cloth.toDao();
+			clothDao.save();
+			result.setData(clothDao.getInt("id"));
 			CacheUtil.remove(ALL_CLOTH_CACHE_KEY);
 		}catch(DataAccessException e) {
 			e.printStackTrace();
@@ -45,7 +46,7 @@ public class ClothService {
 	public NoneDataResult update(Cloth cloth) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getClothDao().update(cloth);
+			cloth.toDao().update();
 			CacheUtil.remove(ALL_CLOTH_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -58,7 +59,7 @@ public class ClothService {
 	public NoneDataResult delete(int id) {
 		NoneDataResult result = new NoneDataResult();
 		try{
-			DaoFactory.getInstance().getClothDao().delete(id);
+			ClothDao.dao.deleteById(id);
 			CacheUtil.remove(ALL_CLOTH_CACHE_KEY);
 		}catch(DataAccessException e) {
 			logger.error(e.getMessage());
@@ -76,8 +77,12 @@ public class ClothService {
 			result.setData(clothList);
 		}else {
 			try {
-				clothList = DaoFactory.getInstance().getClothDao().getAll();
-				if(null != clothList && !clothList.isEmpty()) {
+ 				List<ClothDao> daos = ClothDao.getAll();
+				if(null != daos && !daos.isEmpty()) {
+					clothList = new ArrayList<Cloth>();
+					for(ClothDao dao : daos) {
+						clothList.add(new Cloth(dao));
+					}
 					result.setData(clothList);
 					CacheUtil.put(ALL_CLOTH_CACHE_KEY, clothList);
 				}else {

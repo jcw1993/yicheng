@@ -68,6 +68,11 @@ public class QiniuUtil {
 		return QINIU_BASE_URL + resourceKey;
 	}
 
+	public static String uploadImage(String resourceKey, File file) throws QiniuException {
+		upload(file, resourceKey, getUpToken(DEFAULT_BUCKET, resourceKey), MIME_TYPE_JPEG);
+		return QINIU_BASE_URL + resourceKey;
+	}
+	
 	public static String upload(File file, String key, String upToken, String mimeType) throws QiniuException {
 		Response response = uploadManager.put(file, key, upToken, null, mimeType, false);
 		if(response.isOK()) {
