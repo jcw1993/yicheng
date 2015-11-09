@@ -19,7 +19,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,11 +27,7 @@ import com.yicheng.common.MaterialType;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothSize;
-import com.yicheng.service.ClothColorService;
-import com.yicheng.service.ClothMaterialService;
-import com.yicheng.service.ClothService;
-import com.yicheng.service.ClothSizeService;
-import com.yicheng.service.OrderClothService;
+import com.yicheng.service.ServiceFactory;
 import com.yicheng.service.data.ClothDetailData;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.service.data.ClothOrderDetailData;
@@ -43,23 +38,7 @@ import com.yicheng.util.Utils;
 @Controller
 public class ExportController {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(ExportController.class);
-
-	@Autowired
-	private ClothService clothService;
-
-	@Autowired
-	private ClothMaterialService clothMaterialService;
-
-	@Autowired
-	private ClothColorService clothColorService;
-	
-	@Autowired
-	private ClothSizeService clothSizeService;
-	
-	@Autowired
-	private OrderClothService orderClothService;
+	private static Logger logger = LoggerFactory.getLogger(ExportController.class);
 
 	@RequestMapping(value = { "/Manager/ExportMaterialExcel",
 			"/Proofing/ExportMaterialExcel" }, method = RequestMethod.GET)
@@ -67,7 +46,7 @@ public class ExportController {
 			HttpServletResponse response) throws IOException {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 
-		GenericResult<Cloth> clothResult = clothService.getById(clothId);
+		GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
 		String fileName = null;
 		if (clothResult.getResultCode() == ResultCode.NORMAL) {
 			fileName = clothResult.getData().getType() + "_ " + "面辅料明细表";
@@ -80,17 +59,17 @@ public class ExportController {
 
 		Workbook workbook = new HSSFWorkbook();
 
-		GenericResult<List<ClothColor>> clothColorResult = clothColorService
+		GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService()
 				.getByCloth(clothId);
 		if (clothColorResult.getResultCode() == ResultCode.NORMAL) {
 			for (ClothColor clothColor : clothColorResult.getData()) {
-				GenericResult<List<ClothMaterialDetailData>> leathherResult = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> leathherResult = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_LEATHER);
-				GenericResult<List<ClothMaterialDetailData>> fabricResult = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> fabricResult = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_FABRIC);
-				GenericResult<List<ClothMaterialDetailData>> supportResults = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> supportResults = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_SUPPORT);
 
@@ -113,7 +92,7 @@ public class ExportController {
 			HttpServletResponse response) throws IOException {
  		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 
-		GenericResult<Cloth> clothResult = clothService.getById(clothId);
+		GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
 		String fileName = null;
 		if (clothResult.getResultCode() == ResultCode.NORMAL) {
 			fileName = clothResult.getData().getType() + "_ " + "报价单";
@@ -126,17 +105,17 @@ public class ExportController {
 
 		Workbook workbook = new HSSFWorkbook();
 
-		GenericResult<List<ClothColor>> clothColorResult = clothColorService
+		GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService()
 				.getByCloth(clothId);
 		if (clothColorResult.getResultCode() == ResultCode.NORMAL) {
 			for (ClothColor clothColor : clothColorResult.getData()) {
-				GenericResult<List<ClothMaterialDetailData>> leathherResult = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> leathherResult = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_LEATHER);
-				GenericResult<List<ClothMaterialDetailData>> fabricResult = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> fabricResult = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_FABRIC);
-				GenericResult<List<ClothMaterialDetailData>> supportResults = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> supportResults = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_SUPPORT);
 
@@ -159,7 +138,7 @@ public class ExportController {
 			HttpServletResponse response) throws IOException {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 
-		GenericResult<Cloth> clothResult = clothService.getById(clothId);
+		GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
 
 		String fileName = null;
 		if (clothResult.getResultCode() == ResultCode.NORMAL) {
@@ -173,22 +152,22 @@ public class ExportController {
 
 		Workbook workbook = new HSSFWorkbook();
 		
-		GenericResult<List<ClothColor>> clothColorResult = clothColorService
+		GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService()
 				.getByCloth(clothId);
 		if (clothColorResult.getResultCode() == ResultCode.NORMAL) {
 			for (ClothColor clothColor : clothColorResult.getData()) {
-				GenericResult<List<ClothMaterialDetailData>> leathherResult = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> leathherResult = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_LEATHER);
-				GenericResult<List<ClothMaterialDetailData>> fabricResult = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> fabricResult = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_FABRIC);
-				GenericResult<List<ClothMaterialDetailData>> supportResult = clothMaterialService
+				GenericResult<List<ClothMaterialDetailData>> supportResult = ServiceFactory.getInstance().getClothMaterialService()
 						.getTypeDetailByCloth(clothId, clothColor.getId(),
 								MaterialType.MATERIAL_TYPE_SUPPORT);
 				
-				GenericResult<List<ClothSize>> clothSizeResult = clothSizeService.getByClothColor(clothId, clothColor.getId());
-				GenericResult<ClothOrderDetailData> clothOrderDetailResult = orderClothService
+				GenericResult<List<ClothSize>> clothSizeResult = ServiceFactory.getInstance().getClothSizeService().getByClothColor(clothId, clothColor.getId());
+				GenericResult<ClothOrderDetailData> clothOrderDetailResult = ServiceFactory.getInstance().getOrderClothService()
 						.search(null, clothId);
 				
 				exportClothCountSheet(workbook, clothColor.getColor(), clothResult.getData(), clothOrderDetailResult.getData(),
@@ -263,12 +242,12 @@ public void exportRecordItems(HttpServletRequest request, HttpServletResponse re
 		
 		for(int clothId : clothIds) {
 			
-			GenericResult<Cloth> clothResult = clothService.getById(clothId);
-			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
+			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			
 			if(clothResult.getResultCode() == ResultCode.NORMAL && clothColorResult.getResultCode() == ResultCode.NORMAL) {
 				row = sheet.createRow(rowIndex);
-				GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = clothMaterialService.getTypeDetailByCloth(clothResult.getData().getId(), clothColorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
+				GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothResult.getData().getId(), clothColorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
 				ClothDetailData cloth = null;
 				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
 					cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData(), clothMaterialResult.getData());

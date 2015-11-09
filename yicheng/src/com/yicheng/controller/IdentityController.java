@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.yicheng.common.UserType;
 import com.yicheng.pojo.User;
-import com.yicheng.service.UserService;
+import com.yicheng.service.ServiceFactory;
 import com.yicheng.util.GenericJsonResult;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.ResultCode;
@@ -25,9 +24,6 @@ import com.yicheng.util.Utils;
 
 @Controller
 public class IdentityController {
-
-	@Autowired
-	private UserService userService;
 
 	@RequestMapping(value = { "/", "/Login" }, method = RequestMethod.GET)
 	public ModelAndView loginView(HttpServletRequest request,
@@ -53,7 +49,7 @@ public class IdentityController {
 
 		name = name.trim();
 		password = password.trim();
-		GenericResult<User> userResult = userService.search(
+		GenericResult<User> userResult = ServiceFactory.getInstance().getUserService().search(
 				name, password, userType);
 		if (userResult.getResultCode() == ResultCode.NORMAL) {
 			User user = userResult.getData();

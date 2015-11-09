@@ -1,4 +1,4 @@
-package com.yicheng.dao.impl;
+package com.yicheng.dao;
 
 import javax.annotation.Resource;
 

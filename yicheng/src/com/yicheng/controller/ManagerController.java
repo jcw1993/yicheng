@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,11 +22,7 @@ import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothSize;
-import com.yicheng.service.ClothColorService;
-import com.yicheng.service.ClothMaterialService;
-import com.yicheng.service.ClothService;
-import com.yicheng.service.ClothSizeService;
-import com.yicheng.service.OrderClothService;
+import com.yicheng.service.ServiceFactory;
 import com.yicheng.service.data.ClothDetailData;
 import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.service.data.ClothOrderDetailData;
@@ -40,25 +35,10 @@ public class ManagerController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ManagerController.class);
 	
-	@Autowired
-	private ClothMaterialService clothMaterialService;
-	
-	@Autowired
-	private OrderClothService orderClothService;
-	
-	@Autowired
-	private ClothService clothService;
-	
-	@Autowired
-	private ClothColorService clothColorService;
-	
-	@Autowired
-	private ClothSizeService clothSizeService;
-	
 	@RequestMapping(value = "/Manager/ClothMaterialManage", method = RequestMethod.GET)
 	public ModelAndView clothMaterialManage(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothResult = clothService.getNeedPricing();
+		GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().getNeedPricing();
 		
 		if(clothResult.getResultCode() == ResultCode.NORMAL) {
 			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
@@ -88,7 +68,7 @@ public class ManagerController {
 		String keyword = request.getParameter("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
-			GenericResult<List<Cloth>> clothResult = clothService.searchInAll(keyword);
+			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().searchInAll(keyword);
 			if(clothResult.getResultCode() == ResultCode.NORMAL) {
 				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -120,7 +100,7 @@ public class ManagerController {
 	@RequestMapping(value = "/Manager/ClothPriceManage", method = RequestMethod.GET)
 	public ModelAndView clothPriceManage(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothPricedResult = clothService.getPriced();
+		GenericResult<List<Cloth>> clothPricedResult = ServiceFactory.getInstance().getClothService().getPriced();
 		if(clothPricedResult.getResultCode() == ResultCode.NORMAL) {
 			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -149,7 +129,7 @@ public class ManagerController {
 		String keyword = request.getParameter("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
-			GenericResult<List<Cloth>> clothResult = clothService.searchInPriced(keyword);
+			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().searchInPriced(keyword);
 			if(clothResult.getResultCode() == ResultCode.NORMAL) {
 				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -181,7 +161,7 @@ public class ManagerController {
 	@RequestMapping(value = "/Manager/ClothCountManage", method = RequestMethod.GET)
 	public ModelAndView clothCountManage(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<List<Cloth>> clothCountedResult = clothService.getCounted();
+		GenericResult<List<Cloth>> clothCountedResult = ServiceFactory.getInstance().getClothService().getCounted();
 		if(clothCountedResult.getResultCode() == ResultCode.NORMAL) {
 			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -210,7 +190,7 @@ public class ManagerController {
 		String keyword = request.getParameter("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
-			GenericResult<List<Cloth>> clothResult = clothService.searchInCounted(keyword);
+			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().searchInCounted(keyword);
 			if(clothResult.getResultCode() == ResultCode.NORMAL) {
 				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
@@ -244,7 +224,7 @@ public class ManagerController {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
 		if(clothColorId == 0) {
-			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
 				clothColorId = clothColorResult.getData().get(0).getId();
 			}
@@ -261,7 +241,7 @@ public class ManagerController {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
 		if(clothColorId == 0) {
-			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
 				clothColorId = clothColorResult.getData().get(0).getId();
 			}
@@ -276,7 +256,7 @@ public class ManagerController {
 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
 		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
 		if(clothColorId == 0) {
-			GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
 				clothColorId = clothColorResult.getData().get(0).getId();
 			}
@@ -288,11 +268,11 @@ public class ManagerController {
 	
 	private Map<String, Object> getClothMaterialInfo(int clothId, int clothColorId) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<Cloth> clothResult = clothService.getById(clothId);
-		GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
-		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
-		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
-		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
+		GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
+		GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
+		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
+		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
+		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
 		
 		model.put("clothColorId", clothColorId);
 		
@@ -317,14 +297,14 @@ public class ManagerController {
 	
 	private Map<String, Object> getClothMaterialInfoWithCount(int clothId, int clothColorId) {
 		Map<String, Object> model = new HashMap<String, Object>();
-		GenericResult<Cloth> clothResult = clothService.getById(clothId);
-		GenericResult<List<ClothColor>> clothColorResult = clothColorService.getByCloth(clothId);
+		GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
+		GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 		
-		GenericResult<List<ClothSize>> clothSizeResult = clothSizeService.getByClothColor(clothId, clothColorId);
-		GenericResult<ClothOrderDetailData> clothOrderDetailResult = orderClothService.search(null, clothId);
-		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
-		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
-		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = clothMaterialService.getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
+		GenericResult<List<ClothSize>> clothSizeResult = ServiceFactory.getInstance().getClothSizeService().getByClothColor(clothId, clothColorId);
+		GenericResult<ClothOrderDetailData> clothOrderDetailResult = ServiceFactory.getInstance().getOrderClothService().search(null, clothId);
+		GenericResult<List<ClothMaterialDetailData>> leatherDetailResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_LEATHER);
+		GenericResult<List<ClothMaterialDetailData>> fabricDetailResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_FABRIC);
+		GenericResult<List<ClothMaterialDetailData>> supportDetailResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothId, clothColorId, MaterialType.MATERIAL_TYPE_SUPPORT);
 		
 		model.put("clothColorId", clothColorId);
 		if(clothResult.getResultCode() == ResultCode.NORMAL 
@@ -392,10 +372,10 @@ public class ManagerController {
 		}
 		List<ClothDetailData> resultList = new ArrayList<ClothDetailData>();
 		for(Cloth cloth : clothList) {
-			GenericResult<List<ClothColor>> colorResult = clothColorService.getByCloth(cloth.getId());
+			GenericResult<List<ClothColor>> colorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(cloth.getId());
 			if(colorResult.getResultCode() == ResultCode.NORMAL) {
 				ClothDetailData data = null;
-				GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = clothMaterialService.getTypeDetailByCloth(cloth.getId(), colorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
+				GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(cloth.getId(), colorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
 				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
 					data = new ClothDetailData(cloth, colorResult.getData(), clothMaterialResult.getData());
 				}else {

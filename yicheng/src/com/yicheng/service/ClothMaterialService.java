@@ -1,29 +1,206 @@
 package com.yicheng.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+
+import com.yicheng.dao.DaoFactory;
+import com.yicheng.pojo.ClothColor;
 import com.yicheng.pojo.ClothMaterial;
+import com.yicheng.pojo.Material;
 import com.yicheng.service.data.ClothMaterialDetailData;
+import com.yicheng.util.CacheUtil;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.NoneDataResult;
+import com.yicheng.util.ResultCode;
 
-public interface ClothMaterialService {
-	public GenericResult<Integer> create(ClothMaterial clothMaterial);
-	
-	public NoneDataResult update(ClothMaterial clothMaterial);
-	
-	public NoneDataResult delete(int id, int clothId);
-	
-	public NoneDataResult deleteByCloth(int clothId);
+public class ClothMaterialService {
 
-	public GenericResult<List<ClothMaterial>> getByCloth(int clothId);
+	private static Logger logger = LoggerFactory.getLogger(ClothMaterialService.class);
+
+	private static final String CLOTH_MATERIAL_CACHE_KEY = "cloth_material_cache_%d";
+
+	public GenericResult<Integer> create(ClothMaterial clothMaterial) {
+		GenericResult<Integer> result = new GenericResult<Integer>();
+		try {
+			int outId = DaoFactory.getInstance().getClothMaterialDao().create(clothMaterial);
+			result.setData(outId);
+			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY,
+					clothMaterial.getClothId()));
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage());
+			result.setResultCode(ResultCode.E_DATABASE_INSERT_ERROR);
+			result.setMessage(e.getMessage());
+		}
+		return result;
+	}
+
+	public NoneDataResult update(ClothMaterial clothMaterial) {
+		NoneDataResult result = new NoneDataResult();
+		try {
+			DaoFactory.getInstance().getClothMaterialDao().update(clothMaterial);
+			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY,
+					clothMaterial.getClothId()));
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage());
+			result.setResultCode(ResultCode.E_DATABASE_UPDATE_ERROR);
+			result.setMessage(e.getMessage());
+		}
+		return result;
+	}
+
+	public NoneDataResult delete(int id, int clothId) {
+		NoneDataResult result = new NoneDataResult();
+		try {
+			DaoFactory.getInstance().getClothMaterialDao().delete(id);
+			CacheUtil.remove(String.format(CLOTH_MATERIAL_CACHE_KEY, clothId));
+		} catch (DataAccessException e) {
+			logger.error(e.getMessage());
+			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
+			result.setMessage(e.getMessage());
+		}
+		return result;
+	}
 	
-	public GenericResult<List<ClothMaterial>> getByClothColor(int clothId, int clothColorId);
+	public NoneDataResult deleteByCloth(int clothId) {
+		NoneDataResult result = new NoneDataResult();
+		try {
+			DaoFactory.getInstance().getClothMaterialDao().deleteByCloth(clothId);
+		}catch(Exception e) {
+			logger.error(e.getMessage());
+			result.setResultCode(ResultCode.E_DATABASE_DELETE_ERROR);
+			result.setMessage(e.getMessage());
+		}
+		return result;
+	}
 	
-	public GenericResult<ClothMaterial> getById(int clothId, int clothColorId, int clothMaterialId);
-	
-	public GenericResult<List<ClothMaterialDetailData>> getDetailByCloth(int clothId, int clothColorId);
-	
-	public GenericResult<List<ClothMaterialDetailData>> getTypeDetailByCloth(int clothId, int clothColorId, int type);
-	
+	public GenericResult<List<ClothMaterial>> getByCloth(int clothId) {
+		GenericResult<List<ClothMaterial>> result = new GenericResult<List<ClothMaterial>>();
+		@SuppressWarnings("unchecked")
+		List<ClothMaterial> clothMaterialList = (List<ClothMaterial>) CacheUtil.get(String.format(CLOTH_MATERIAL_CACHE_KEY, clothId));
+		if(null != clothMaterialList && !clothMaterialList.isEmpty()) {
+			result.setData(clothMaterialList);
+		}else {
+			try {
+				clothMaterialList = DaoFactory.getInstance().getClothMaterialDao().getByCloth(clothId);
+				if(null != clothMaterialList && !clothMaterialList.isEmpty()) {
+					result.setData(clothMaterialList);
+					CacheUtil.put(String.format(CLOTH_MATERIAL_CACHE_KEY, clothId), clothMaterialList);
+				}else {
+					result.setResultCode(ResultCode.E_NO_DATA);
+				}
+			}catch(DataAccessException e) {
+				logger.error(e.getMessage());
+				result.setMessage(e.getMessage());
+				result.setResultCode(ResultCode.E_DATABASE_GET_ERROR);
+			}
+		}
+		return result;
+	}
+
+	public GenericResult<List<ClothMaterial>> getByClothColor(int clothId, int clothColorId) {
+		GenericResult<List<ClothMaterial>> result = new GenericResult<List<ClothMaterial>>();
+		GenericResult<List<ClothMaterial>> allResult = getByCloth(clothId);
+		if(allResult.getResultCode() == ResultCode.NORMAL) {
+			List<ClothMaterial> resultList = new ArrayList<ClothMaterial>();
+			for(ClothMaterial clothMaterial : allResult.getData()) {
+				if(clothMaterial.getClothColorId() == clothColorId) {
+					resultList.add(clothMaterial);
+				}
+			}
+			if(!resultList.isEmpty()) {
+				result.setData(resultList);
+			}else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+			}
+		}else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	public GenericResult<ClothMaterial> getById(int clothId, int clothColorId, int clothMaterialId) {
+		GenericResult<ClothMaterial> result = new GenericResult<ClothMaterial>();
+		GenericResult<List<ClothMaterial>> allResult = getByClothColor(clothId, clothColorId);
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			for (ClothMaterial clothMaterial : allResult.getData()) {
+				if (clothMaterial.getId() == clothMaterialId) {
+					result.setData(clothMaterial);
+					break;
+				}
+			}
+		} else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
+	public GenericResult<List<ClothMaterialDetailData>> getDetailByCloth(
+			int clothId, int clothColorId) {
+		GenericResult<List<ClothMaterialDetailData>> result = new GenericResult<List<ClothMaterialDetailData>>();
+		
+		GenericResult<ClothColor> clothColorResult = ServiceFactory.getInstance().getClothColorService().getById(clothId, clothColorId);
+		GenericResult<List<ClothMaterial>> clothMaterialResult = getByClothColor(clothId, clothColorId);
+		if (clothColorResult.getResultCode() == ResultCode.NORMAL
+				&& clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+			List<ClothMaterialDetailData> dataList = new ArrayList<ClothMaterialDetailData>();
+			for (ClothMaterial clothMaterial : clothMaterialResult.getData()) {
+				int materialId = clothMaterial.getMaterialId();
+				GenericResult<Material> materialResult = ServiceFactory.getInstance().getMaterialService()
+						.getById(materialId);
+				if (materialResult.getResultCode() == ResultCode.NORMAL) {
+					ClothMaterialDetailData data = new ClothMaterialDetailData(
+							clothMaterial, clothColorResult.getData(), materialResult.getData());
+					dataList.add(data);
+				}
+			}
+			if (!dataList.isEmpty()) {
+				result.setData(dataList);
+			} else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no cloth material detail data, clothId: "
+						+ clothId);
+			}
+		} else {
+			result.setResultCode(clothMaterialResult.getResultCode());
+			result.setMessage(clothMaterialResult.getMessage());
+		}
+
+		return result;
+	}
+
+	public GenericResult<List<ClothMaterialDetailData>> getTypeDetailByCloth(
+			int clothId, int clothColorId, int type) {
+		GenericResult<List<ClothMaterialDetailData>> result = new GenericResult<List<ClothMaterialDetailData>>();
+		GenericResult<List<ClothMaterialDetailData>> allResult = getDetailByCloth(clothId, clothColorId);
+		if (allResult.getResultCode() == ResultCode.NORMAL) {
+			List<ClothMaterialDetailData> dataList = new ArrayList<ClothMaterialDetailData>();
+			for (ClothMaterialDetailData data : allResult.getData()) {
+				if (null == data) {
+					continue;
+				}
+
+				if (data.getMaterialType() == type) {
+					dataList.add(data);
+				}
+			}
+			if (!dataList.isEmpty()) {
+				result.setData(dataList);
+			} else {
+				result.setResultCode(ResultCode.E_NO_DATA);
+				result.setMessage("no clothMaterial, clothId: " + clothId
+						+ ", type: " + type);
+			}
+		} else {
+			result.setResultCode(allResult.getResultCode());
+			result.setMessage(allResult.getMessage());
+		}
+		return result;
+	}
+
 }
