@@ -1,7 +1,5 @@
 package com.yicheng.common;
 
-import java.io.File;
-
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -28,7 +26,15 @@ import com.yicheng.dao.UserDao;
 
 public class AppConfig extends JFinalConfig {
 	
-	private static String CONFIG_BASE_DIR = "WebRoot/WEB-INF/config/" ;
+//	private static String CONFIG_BASE_DIR = "WebRoot/WEB-INF/config/" ;
+	
+//	private static final String jdbcUrl = "jdbc:mysql://localhost:3306/yicheng?autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
+//	private static final String userName = "devuser";
+//	private static final String password = "qyff2011";
+	
+	private static final String jdbcUrl = "jdbc:mysql://rds6a1em9jdgrqb3o09r.mysql.rds.aliyuncs.com:3306/yicheng?autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
+	private static final String userName = "devuser";
+	private static final String password = "njuswi2015";
 	
 	public void configConstant(Constants me) {
 		me.setDevMode(true);
@@ -47,7 +53,8 @@ public class AppConfig extends JFinalConfig {
 	}
 
 	public void configPlugin(Plugins me) {
-		C3p0Plugin c3p0Plugin = new C3p0Plugin(new File(CONFIG_BASE_DIR + "c3p0.properties"));
+//		C3p0Plugin c3p0Plugin = new C3p0Plugin(new File(CONFIG_BASE_DIR + "c3p0.properties"));
+		C3p0Plugin c3p0Plugin = new C3p0Plugin(jdbcUrl, userName, password);
 		me.add(c3p0Plugin);
 		ActiveRecordPlugin activeRecordPlugin = new ActiveRecordPlugin(c3p0Plugin);
 		me.add(activeRecordPlugin);
