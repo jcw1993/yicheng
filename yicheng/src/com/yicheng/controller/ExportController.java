@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -19,10 +18,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.jfinal.core.ActionKey;
+import com.yicheng.common.BaseController;
 import com.yicheng.common.MaterialType;
 import com.yicheng.pojo.Cloth;
 import com.yicheng.pojo.ClothColor;
@@ -33,18 +31,14 @@ import com.yicheng.service.data.ClothMaterialDetailData;
 import com.yicheng.service.data.ClothOrderDetailData;
 import com.yicheng.util.GenericResult;
 import com.yicheng.util.ResultCode;
-import com.yicheng.util.Utils;
 
-@Controller
-public class ExportController {
+public class ExportController extends BaseController {
 
 	private static Logger logger = LoggerFactory.getLogger(ExportController.class);
 
-	@RequestMapping(value = { "/Manager/ExportMaterialExcel",
-			"/Proofing/ExportMaterialExcel" }, method = RequestMethod.GET)
-	public void exportMaterial(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+	@ActionKey("ExportMaterialExcel")
+	public void ExportMaterialExcel() throws IOException {
+		int clothId = getParaToInt("clothId");
 
 		GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
 		String fileName = null;
@@ -55,7 +49,7 @@ public class ExportController {
 		}
 
 		fileName = new String((fileName + ".xls").getBytes("GBK"), "ISO8859_1");
-		setResponseInfo(response, fileName);
+		setResponseInfo(getResponse(), fileName);
 
 		Workbook workbook = new HSSFWorkbook();
 
@@ -79,18 +73,16 @@ public class ExportController {
 			}
 		}
 
-		OutputStream output = response.getOutputStream();
+		OutputStream output = getResponse().getOutputStream();
 		workbook.write(output);
 
 		output.flush();
 		output.close();
 	}
 
-	@RequestMapping(value = { "/Manager/ExportPriceExcel",
-			"/Pricing/ExportPriceExcel" }, method = RequestMethod.GET)
-	public void exportPrice(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
- 		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+	@ActionKey("ExportPriceExcel")
+	public void ExportPriceExcel() throws IOException {
+ 		int clothId = getParaToInt("clothId");
 
 		GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
 		String fileName = null;
@@ -101,7 +93,7 @@ public class ExportController {
 		}
 
 		fileName = new String((fileName + ".xls").getBytes("GBK"), "ISO8859_1");
-		setResponseInfo(response, fileName);
+		setResponseInfo(getResponse(), fileName);
 
 		Workbook workbook = new HSSFWorkbook();
 
@@ -125,18 +117,16 @@ public class ExportController {
 			}
 		}
 
-		OutputStream output = response.getOutputStream();
+		OutputStream output = getResponse().getOutputStream();
 		workbook.write(output);
 
 		output.flush();
 		output.close();
 	}
 
-	@RequestMapping(value = { "/Manager/ExportCountExcel",
-			"/Buyer/ExportCountExcel" }, method = RequestMethod.GET)
-	public void exportCount(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
+	@ActionKey("ExportCountExcel")
+	public void ExportCountExcel() throws IOException {
+		int clothId = getParaToInt("clothId");
 
 		GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
 
@@ -148,7 +138,7 @@ public class ExportController {
 		}
 		
 		fileName = new String((fileName + ".xls").getBytes("GBK"), "ISO8859_1");
-		setResponseInfo(response, fileName);
+		setResponseInfo(getResponse(), fileName);
 
 		Workbook workbook = new HSSFWorkbook();
 		
@@ -177,7 +167,7 @@ public class ExportController {
 		}
 
 
-		OutputStream output = response.getOutputStream();
+		OutputStream output = getResponse().getOutputStream();
 		workbook.write(output);
 
 		output.flush();
@@ -185,124 +175,124 @@ public class ExportController {
 
 	}
 	
+	@ActionKey("ExportRecordItems")
 	@SuppressWarnings("deprecation")
-	@RequestMapping(value = { "/Manager/ExportRecordItems", "/Proofing/ExportRecordItems" }, method = RequestMethod.GET)
-public void exportRecordItems(HttpServletRequest request, HttpServletResponse response) throws IOException {
-	String[] selectedIds = request.getParameterValues("selectedId");
-	List<Integer> clothIds = new ArrayList<Integer>();
-	if(null == selectedIds || selectedIds.length == 0) {
-		return;
-	}
-	
-	for(String selectIdString : selectedIds) {
-		try {
-			clothIds.add(Integer.parseInt(selectIdString));
-		} catch (NumberFormatException e) {
-			continue;
+	public void ExportRecordItems() throws IOException {
+		String[] selectedIds = getRequest().getParameterValues("selectedId");
+		List<Integer> clothIds = new ArrayList<Integer>();
+		if(null == selectedIds || selectedIds.length == 0) {
+			return;
 		}
-	}
-
-	if(!clothIds.isEmpty()) {
-		String fileName = "历史记录";
-	
-		fileName = new String((fileName + ".xls").getBytes("GBK"), "ISO8859_1");
-		setResponseInfo(response, fileName);
-	
-		Workbook workbook = new HSSFWorkbook();
 		
-		String[] columns = new String[]{"款号", "款名", "颜色", "买手", "皮料", "创建时间"};
-
-		Sheet sheet = null;
-		Row row = null;
-		Cell cell = null;
-		CellStyle style = null;
-		CellStyle colorStyle = null;
-
-		if (workbook instanceof HSSFWorkbook) {
-			HSSFColor lightGray = setColor((HSSFWorkbook) workbook,
-					(byte) 0xE0, (byte) 0xE0, (byte) 0xE0);
-			colorStyle = workbook.createCellStyle();
-			colorStyle.setFillForegroundColor(lightGray.getIndex());
-			colorStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		for(String selectIdString : selectedIds) {
+			try {
+				clothIds.add(Integer.parseInt(selectIdString));
+			} catch (NumberFormatException e) {
+				continue;
+			}
 		}
-
-		style = workbook.createCellStyle();
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-
-		sheet = workbook.createSheet("历史记录");
-
-		int rowIndex = 0;
-		row = sheet.createRow(rowIndex);
-		for (int i = 0; i < columns.length; i++) {
-			cell = row.createCell(i);
-			cell.setCellValue(columns[i]);
-			cell.setCellStyle(colorStyle);
-		}
-		rowIndex++;
+	
+		if(!clothIds.isEmpty()) {
+			String fileName = "历史记录";
 		
-		for(int clothId : clothIds) {
+			fileName = new String((fileName + ".xls").getBytes("GBK"), "ISO8859_1");
+			setResponseInfo(getResponse(), fileName);
+		
+			Workbook workbook = new HSSFWorkbook();
 			
-			GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
-			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
+			String[] columns = new String[]{"款号", "款名", "颜色", "买手", "皮料", "创建时间"};
+	
+			Sheet sheet = null;
+			Row row = null;
+			Cell cell = null;
+			CellStyle style = null;
+			CellStyle colorStyle = null;
+	
+			if (workbook instanceof HSSFWorkbook) {
+				HSSFColor lightGray = setColor((HSSFWorkbook) workbook,
+						(byte) 0xE0, (byte) 0xE0, (byte) 0xE0);
+				colorStyle = workbook.createCellStyle();
+				colorStyle.setFillForegroundColor(lightGray.getIndex());
+				colorStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+			}
+	
+			style = workbook.createCellStyle();
+			style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+	
+			sheet = workbook.createSheet("历史记录");
+	
+			int rowIndex = 0;
+			row = sheet.createRow(rowIndex);
+			for (int i = 0; i < columns.length; i++) {
+				cell = row.createCell(i);
+				cell.setCellValue(columns[i]);
+				cell.setCellStyle(colorStyle);
+			}
+			rowIndex++;
 			
-			if(clothResult.getResultCode() == ResultCode.NORMAL && clothColorResult.getResultCode() == ResultCode.NORMAL) {
-				row = sheet.createRow(rowIndex);
-				GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothResult.getData().getId(), clothColorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
-				ClothDetailData cloth = null;
-				if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
-					cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData(), clothMaterialResult.getData());
-				}else {
-					cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
-				}
+			for(int clothId : clothIds) {
 				
+				GenericResult<Cloth> clothResult = ServiceFactory.getInstance().getClothService().getById(clothId);
+				GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 				
-				cell = row.createCell(0);
-				cell.setCellValue(cloth.getType());
-				cell.setCellStyle(style);
-				
-				cell = row.createCell(1);
-				cell.setCellValue(cloth.getName());
-				cell.setCellStyle(style);
-				
-				cell = row.createCell(2);
-				cell.setCellValue(cloth.getColor());
-				cell.setCellStyle(style);
-				
-				cell = row.createCell(3);
-				cell.setCellValue(cloth.getClient());
-				cell.setCellStyle(style);
-				
-				cell = row.createCell(4);
-				StringBuilder cellValue = new StringBuilder();
-				if(null != cloth.getLeathers() && !cloth.getLeathers().isEmpty()) {
-					for(ClothMaterialDetailData leather : cloth.getLeathers()) {
-						cellValue.append(leather.getMaterialName());
-						cellValue.append("\n");
+				if(clothResult.getResultCode() == ResultCode.NORMAL && clothColorResult.getResultCode() == ResultCode.NORMAL) {
+					row = sheet.createRow(rowIndex);
+					GenericResult<List<ClothMaterialDetailData>> clothMaterialResult = ServiceFactory.getInstance().getClothMaterialService().getTypeDetailByCloth(clothResult.getData().getId(), clothColorResult.getData().get(0).getId(), MaterialType.MATERIAL_TYPE_LEATHER);
+					ClothDetailData cloth = null;
+					if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
+						cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData(), clothMaterialResult.getData());
+					}else {
+						cloth = new ClothDetailData(clothResult.getData(), clothColorResult.getData());
 					}
-				}else {
-					cellValue.append("暂无数据");
+					
+					
+					cell = row.createCell(0);
+					cell.setCellValue(cloth.getType());
+					cell.setCellStyle(style);
+					
+					cell = row.createCell(1);
+					cell.setCellValue(cloth.getName());
+					cell.setCellStyle(style);
+					
+					cell = row.createCell(2);
+					cell.setCellValue(cloth.getColor());
+					cell.setCellStyle(style);
+					
+					cell = row.createCell(3);
+					cell.setCellValue(cloth.getClient());
+					cell.setCellStyle(style);
+					
+					cell = row.createCell(4);
+					StringBuilder cellValue = new StringBuilder();
+					if(null != cloth.getLeathers() && !cloth.getLeathers().isEmpty()) {
+						for(ClothMaterialDetailData leather : cloth.getLeathers()) {
+							cellValue.append(leather.getMaterialName());
+							cellValue.append("\n");
+						}
+					}else {
+						cellValue.append("暂无数据");
+					}
+					cell.setCellValue(cellValue.toString());
+					cell.setCellStyle(style);
+					
+					cell = row.createCell(5);
+					cell.setCellValue(null == cloth.getCreatedTime() ? "" : cloth.getCreatedTime().toLocaleString());
+					cell.setCellStyle(style);
+					
+					rowIndex++;
 				}
-				cell.setCellValue(cellValue.toString());
-				cell.setCellStyle(style);
 				
-				cell = row.createCell(5);
-				cell.setCellValue(null == cloth.getCreatedTime() ? "" : cloth.getCreatedTime().toLocaleString());
-				cell.setCellStyle(style);
-				
-				rowIndex++;
 			}
 			
+		
+			OutputStream output = getResponse().getOutputStream();
+			workbook.write(output);
+			
+			output.flush();
+			output.close();
 		}
-		
-	
-		OutputStream output = response.getOutputStream();
-		workbook.write(output);
-		
-		output.flush();
-		output.close();
-	}
 
-}
+	}
 	
 	@SuppressWarnings("deprecation")
 	private void exportClothCountSheet(Workbook workbook, String sheetTitle,

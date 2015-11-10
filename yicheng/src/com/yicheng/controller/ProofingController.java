@@ -109,7 +109,7 @@ public class ProofingController extends BaseController {
 
 	public void ClothMaterialDetail() {
 		int clothId = getParaToInt("clothId");
-		int clothColorId = getParaToInt("clothColorId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId", false);
 		if(clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
@@ -269,7 +269,7 @@ public class ProofingController extends BaseController {
 	
 	public void ClothMaterialOperate() {
 		int clothId = getParaToInt("clothId");
-		int clothColorId = getParaToInt("clothColorId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId", false);
 		if(clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
@@ -402,7 +402,12 @@ public class ProofingController extends BaseController {
 	@Before(POST.class)
 	public void CreateNewVersion() {
 		int clothId = getParaToInt("clothId");
-		renderJson(new NoneDataJsonResult(ServiceFactory.getInstance().getClothService().copyCloth(clothId)));
+		try {
+			renderJson(new NoneDataJsonResult(ServiceFactory.getInstance().getClothService().copyCloth(clothId)));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private Map<String, Object> getClothMaterialInfo(int clothId, int clothColorId) {

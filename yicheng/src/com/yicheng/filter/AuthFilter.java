@@ -19,11 +19,11 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.yicheng.util.UserInfoStorage;
 
-public class AuthenticationFilter implements Filter {
+public class AuthFilter implements Filter {
 	
-	private static Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
+	private static Logger logger = LoggerFactory.getLogger(AuthFilter.class);
 	
-	private static final String[] VALID_URL_SUFFIX = {"Login", ".js", ".css", ".jpg", ".png"};
+	private static final String[] VALID_URL_SUFFIX = {"Login", "LoginPost", ".js", ".css", ".jpg", ".png"};
 	
 	private Gson gson = null;
 

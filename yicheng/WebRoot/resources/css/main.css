@@ -201,3 +201,7 @@ div.margin-top-little {
 {
 	margin-right : 10%;
 }
+
+a.delete-link {
+	color: red;
+}

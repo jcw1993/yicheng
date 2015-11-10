@@ -21,7 +21,7 @@
 
 			<div class="col-sm-9">
 				<h3>皮衣详情
-				<a id="cloth-create" href="ExportMaterialExcel?clothId=${cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">导出面辅料明细表</a>
+				<a id="cloth-create" href="../ExportMaterialExcel?clothId=${cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">导出面辅料明细表</a>
 				<a href="ClothMaterialOperate?clothId=${cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">修改</a>
 				</h3>
 				<hr />

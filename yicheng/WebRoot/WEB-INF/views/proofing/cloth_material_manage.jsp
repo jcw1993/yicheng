@@ -79,7 +79,7 @@
 						<a href="ClothMaterialOperate?clothId=${cloth.id}">修改</a>
 						<a href"#" class="new_version_btn">新建版本</a>
 						<a href"#" class="create-color">添加颜色</a>
-						<a href"#" clothId="${cloth.id}" class="delete-cloth">删除</a>
+						<a href"#" clothId="${cloth.id}" class="delete-cloth delete-link">删除</a>
 					</td>
 				</tr>
 			</c:forEach>			
@@ -148,6 +148,7 @@ $newVersionBtn.click(function(e) {
 			clothId: clothId
 		},
 		success: function(result) {
+			console.log(result);
 			if(result.resultCode == 0) {
 				alert("创建成功");
 				location.reload();
@@ -201,7 +202,7 @@ $exportBtn.click(function(e) {
 	var data = $("input.export_check:checkbox:checked").serialize();
 	console.log("data: " + data);
 	if(data) {
-		window.location = "ExportRecordItems?" + data;	
+		window.location = "../ExportRecordItems?" + data;	
 	}else {
 		alert("请选择导出项");
 	}

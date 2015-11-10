@@ -20,7 +20,7 @@
 		</div>	
 		<div class="col-sm-9">
 			<h3>皮衣详情
-			<a href="ExportPriceExcel?clothId=${cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">导出报价单</a>
+			<a href="../ExportPriceExcel?clothId=${cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">导出报价单</a>
 			</h3>
 			<hr />
 			<div>

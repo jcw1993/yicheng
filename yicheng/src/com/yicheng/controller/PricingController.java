@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.yicheng.common.BaseController;
 import com.yicheng.common.MaterialType;
 import com.yicheng.common.Pagination;
@@ -33,17 +33,14 @@ import com.yicheng.util.NoneDataResult;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
 
-@Controller
-@RequestMapping(value = "/Pricing")
 public class PricingController extends BaseController {
 	private static Logger logger = LoggerFactory.getLogger(PricingController.class);
 	
-	@RequestMapping(value = "/ClothPriceToProcess", method = RequestMethod.GET)
-	public ModelAndView clothPriceToProcess(HttpServletRequest request, HttpServletResponse response) {
+	public void ClothPriceToProcess() {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothToPriceResult = ServiceFactory.getInstance().getClothService().getNeedPricing();
 		if(clothToPriceResult.getResultCode() == ResultCode.NORMAL) {
-			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 			
 			List<Cloth> allList = clothToPriceResult.getData();
@@ -62,16 +59,15 @@ public class PricingController extends BaseController {
 		}else {
 			logger.warn("cloth get need pricing exception");
 		}
-		
-		return new ModelAndView("pricing/cloth_price_to_process", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("pricing/cloth_price_to_process"));
 	}
 	
-	@RequestMapping(value = "/ClothPriceProcessed", method = RequestMethod.GET)
-	public ModelAndView clothPriceProcessed(HttpServletRequest request, HttpServletResponse response) {
+	public void ClothPriceProcessed() {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothPricedResult = ServiceFactory.getInstance().getClothService().getPriced();
 		if(clothPricedResult.getResultCode() == ResultCode.NORMAL) {
-			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 			
 			List<Cloth> allList = clothPricedResult.getData();
@@ -90,7 +86,8 @@ public class PricingController extends BaseController {
 		}else {
 			logger.warn("cloth get priced exception");
 		}
-		return new ModelAndView("pricing/cloth_price_processed", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("pricing/cloth_price_processed"));
 	}
 	
 	@RequestMapping(value = "/SearchInToPrice", method = RequestMethod.GET)
@@ -127,14 +124,13 @@ public class PricingController extends BaseController {
 		}
 	}
 	
-	@RequestMapping(value = "/SearchInPriced", method = RequestMethod.GET)
-	public ModelAndView searchInPriced(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String keyword = request.getParameter("keyword");
+	public void SearchInPriced() throws IOException {
+		String keyword = getPara("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
 			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().searchInPriced(keyword);
 			if(clothResult.getResultCode() == ResultCode.NORMAL) {
-				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 				
 				List<Cloth> allList = clothResult.getData();
@@ -154,17 +150,17 @@ public class PricingController extends BaseController {
 			}else {
 				logger.warn("cloth get need pricing exception");
 			}
-			return new ModelAndView("pricing/cloth_price_processed", "model", model);
+			getRequest().setAttribute("model", model);
+			renderJson(getJsp("pricing/cloth_price_processed"));
 		}else {	
-			response.sendRedirect(request.getContextPath() + "/Error");
-			return null;
+			getResponse().sendRedirect(getRequest().getContextPath() + "/Error");
+			return ;
 		}
 	}
 	
-	@RequestMapping(value = "/ClothPriceDetail", method = RequestMethod.GET)
-	public ModelAndView clothPriceDetail(HttpServletRequest request, HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+	public void ClothPriceDetail() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId", false);
 		if(clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
@@ -173,13 +169,13 @@ public class PricingController extends BaseController {
 		}
 		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		model.put("baseUrl", "ClothPriceDetail?clothId=" + clothId);
-		return new ModelAndView("pricing/cloth_price_detail", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("pricing/cloth_price_detail"));
 	}
 
-	@RequestMapping(value = "/ClothPriceOperate", method = RequestMethod.GET)
-	public ModelAndView clothPriceOperate(HttpServletRequest request, HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+	public void ClothPriceOperate() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId", false);
 		if(clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
@@ -188,17 +184,17 @@ public class PricingController extends BaseController {
 		}
 		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		model.put("baseUrl", "ClothPriceOperate?clothId=" + clothId);
-		return new ModelAndView("pricing/cloth_price_operate", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("pricing/cloth_price_operate"));
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/ClothMaterialSavePrice", method = RequestMethod.POST)
-	public NoneDataJsonResult saveClothMaterialPrice(HttpServletRequest request, HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", true);
-		int clothMaterialId = Utils.getRequestIntValue(request, "clothMaterialId", true);
-		double price = Utils.getRequestDoubleValue(request, "price", true);
-		String remark = request.getParameter("remark");
+	@Before(POST.class)
+	public void ClothMaterialSavePrice() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = getParaToInt("clothColorId");
+		int clothMaterialId = getParaToInt("clothMaterialId");
+		double price = Utils.getRequestDoubleValue(getRequest(), "price", true);
+		String remark = getPara("remark");
 		
 		GenericResult<ClothMaterial> clothMaterialResult = ServiceFactory.getInstance().getClothMaterialService().getById(clothId, clothColorId, clothMaterialId);
 		if(clothMaterialResult.getResultCode() == ResultCode.NORMAL) {
@@ -206,9 +202,9 @@ public class PricingController extends BaseController {
 			clothMaterial.setPrice(price);
 			clothMaterial.setRemark(remark);
 			NoneDataResult updateResult = ServiceFactory.getInstance().getClothMaterialService().update(clothMaterial);
-			return new NoneDataJsonResult(updateResult);
+			renderJson(new NoneDataJsonResult(updateResult));
 		}else {
-			return new NoneDataJsonResult(clothMaterialResult);
+			renderJson(new NoneDataJsonResult(clothMaterialResult));
 		}
 	}
 	

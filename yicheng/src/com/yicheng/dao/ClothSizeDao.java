@@ -16,7 +16,7 @@ public class ClothSizeDao extends Model<ClothSizeDao> {
 	}
 
 	public static List<ClothSizeDao> getByCloth(int clothId) {
-		return dao.find("from cloth_size where cloth_id = ? order by sizeType asc", clothId);
+		return dao.find("select * from cloth_size where cloth_id = ? order by size_type asc", clothId);
 	}
 
 }

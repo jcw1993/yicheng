@@ -6,18 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
 import com.yicheng.common.BaseController;
 import com.yicheng.common.ClothSizeType;
 import com.yicheng.common.MaterialType;
@@ -38,20 +32,16 @@ import com.yicheng.util.NoneDataResult;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
 
-@Controller
-@RequestMapping(value = "/Buyer")
 public class BuyerController extends BaseController {
 
 	private static Logger logger = LoggerFactory.getLogger(BuyerController.class);
 
-	@RequestMapping(value = "/ClothCountToProcess", method = RequestMethod.GET)
-	public ModelAndView ClothCountToProcess(HttpServletRequest request,
-			HttpServletResponse response) {
+	public void ClothCountToProcess() {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothToCountResult = ServiceFactory.getInstance().getClothService()
 				.getNeedCount();
 		if (clothToCountResult.getResultCode() == ResultCode.NORMAL) {
-			int pageIndex = Utils.getRequestIntValue(request, "pageIndex",
+			int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex",
 					false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 
@@ -72,17 +62,16 @@ public class BuyerController extends BaseController {
 			logger.warn("cloth get need count exception");
 		}
 
-		return new ModelAndView("buyer/cloth_count_to_process", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("buyer/cloth_count_to_process"));
 	}
 
-	@RequestMapping(value = "/ClothCountProcessed", method = RequestMethod.GET)
-	public ModelAndView ClothCountProcessed(HttpServletRequest request,
-			HttpServletResponse response) {
+	public void ClothCountProcessed() {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothCountedResult = ServiceFactory.getInstance().getClothService()
 				.getCounted();
 		if (clothCountedResult.getResultCode() == ResultCode.NORMAL) {
-			int pageIndex = Utils.getRequestIntValue(request, "pageIndex",
+			int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex",
 					false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 
@@ -103,19 +92,18 @@ public class BuyerController extends BaseController {
 			logger.warn("cloth get counted exception");
 		}
 
-		return new ModelAndView("buyer/cloth_count_processed", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("buyer/cloth_count_processed"));
 	}
 
-	@RequestMapping(value = "/SearchInToCount", method = RequestMethod.GET)
-	public ModelAndView SearchInToCount(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		String keyword = request.getParameter("keyword");
+	public void SearchInToCount() throws IOException {
+		String keyword = getPara("keyword");
 		if (StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
 			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService()
 					.searchInNeedCount(keyword);
 			if (clothResult.getResultCode() == ResultCode.NORMAL) {
-				int pageIndex = Utils.getRequestIntValue(request, "pageIndex",
+				int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex",
 						false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 
@@ -137,24 +125,21 @@ public class BuyerController extends BaseController {
 			} else {
 				logger.warn("cloth get need pricing exception");
 			}
-			return new ModelAndView("buyer/cloth_count_to_process", "model",
-					model);
+			renderJsp(getJsp("buyer/cloth_count_to_process"));
 		} else {
-			response.sendRedirect(request.getContextPath() + "/Error");
-			return null;
+			getResponse().sendRedirect(getRequest().getContextPath() + "/Error");
+			return ;
 		}
 	}
 
-	@RequestMapping(value = "/SearchInCounted", method = RequestMethod.GET)
-	public ModelAndView SearchInCounted(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		String keyword = request.getParameter("keyword");
+	public void SearchInCounted() throws IOException {
+		String keyword = getPara("keyword");
 		if (StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
 			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService()
 					.searchInCounted(keyword);
 			if (clothResult.getResultCode() == ResultCode.NORMAL) {
-				int pageIndex = Utils.getRequestIntValue(request, "pageIndex",
+				int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex",
 						false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 
@@ -176,19 +161,16 @@ public class BuyerController extends BaseController {
 			} else {
 				logger.warn("cloth get need pricing exception");
 			}
-			return new ModelAndView("buyer/cloth_count_processed", "model",
-					model);
+			renderJsp(getJsp("buyer/cloth_count_processed"));
 		} else {
-			response.sendRedirect(request.getContextPath() + "/Error");
-			return null;
+			getResponse().sendRedirect(getRequest().getContextPath() + "/Error");
+			return ;
 		}
 	}
 
-	@RequestMapping(value = "/ClothCountDetail", method = RequestMethod.GET)
-	public ModelAndView ClothCountDetail(HttpServletRequest request,
-			HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId",
+	public void ClothCountDetail() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId",
 				false);
 		if (clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService()
@@ -200,14 +182,13 @@ public class BuyerController extends BaseController {
 		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		getClothTotalPrice(clothId, model);
 		model.put("baseUrl", "ClothCountDetail?clothId=" + clothId);
-		return new ModelAndView("buyer/cloth_count_detail", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("buyer/cloth_count_detail"));
 	}
 
-	@RequestMapping(value = "/Buyer/ClothCountOperate", method = RequestMethod.GET)
-	public ModelAndView ClothCountOperate(HttpServletRequest request,
-			HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId",
+	public void ClothCountOperate() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId",
 				false);
 		if (clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService()
@@ -219,23 +200,20 @@ public class BuyerController extends BaseController {
 		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		getClothTotalPrice(clothId, model);
 		model.put("baseUrl", "ClothCountOperate?clothId=" + clothId);
-		return new ModelAndView("buyer/cloth_count_operate", "model", model);
+		renderJsp(getJsp("buyer/cloth_count_operate"));
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/OrderClothSaveCount", method = RequestMethod.POST)
-	public NoneDataJsonResult OrderClothSaveCount(HttpServletRequest request,
-			HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId",
-				true);
+	@Before(POST.class)
+	public void OrderClothSaveCount() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = getParaToInt("clothColorId");
 
-		int xsCount = Utils.getRequestIntValue(request, "xsCount", false);
-		int sCount = Utils.getRequestIntValue(request, "sCount", false);
-		int mCount = Utils.getRequestIntValue(request, "mCount", false);
-		int lCount = Utils.getRequestIntValue(request, "lCount", false);
-		int xlCount = Utils.getRequestIntValue(request, "xlCount", false);
-		int xxlCount = Utils.getRequestIntValue(request, "xxlCount", false);
+		int xsCount = Utils.getRequestIntValue(getRequest(), "xsCount", false);
+		int sCount = Utils.getRequestIntValue(getRequest(), "sCount", false);
+		int mCount = Utils.getRequestIntValue(getRequest(), "mCount", false);
+		int lCount = Utils.getRequestIntValue(getRequest(), "lCount", false);
+		int xlCount = Utils.getRequestIntValue(getRequest(), "xlCount", false);
+		int xxlCount = Utils.getRequestIntValue(getRequest(), "xxlCount", false);
 
 		GenericResult<List<ClothSize>> clothSizeResult = ServiceFactory.getInstance().getClothSizeService()
 				.getByClothColor(clothId, clothColorId);
@@ -276,28 +254,24 @@ public class BuyerController extends BaseController {
 			originBuyCount = originBuyCount - originTotalCount + totalBuyCount;
 			orderCloth.setCount(originBuyCount);
 			NoneDataResult updateResult = ServiceFactory.getInstance().getOrderClothService().update(orderCloth);
-			return new NoneDataJsonResult(updateResult);
+			renderJson(new NoneDataJsonResult(updateResult));
 		} else {
 			OrderCloth orderCloth = new OrderCloth();
 			orderCloth.setClothId(clothId);
 			orderCloth.setCount(totalBuyCount);
 			GenericResult<Integer> createResult = ServiceFactory.getInstance().getOrderClothService().create(orderCloth);
-			return new NoneDataJsonResult(createResult);
+			renderJson(new NoneDataJsonResult(createResult));
 		}
 	}
 
 	// TODO
-	@ResponseBody
-	@RequestMapping(value = "/ClothMaterialSaveCount", method = RequestMethod.POST)
-	public NoneDataJsonResult ClothMaterialSaveCount(
-			HttpServletRequest request, HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothMaterialId = Utils.getRequestIntValue(request,
-				"clothMaterialId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId",
-				true);
-		int count = Utils.getRequestIntValue(request, "count", true);
-		String remark = request.getParameter("remark");
+	@Before(POST.class)
+	public void ClothMaterialSaveCount() {
+		int clothId = getParaToInt("clothId");
+		int clothMaterialId = getParaToInt("clothMaterialId");
+		int clothColorId = getParaToInt("clothColorId");
+		int count = getParaToInt("count");
+		String remark = getPara("remark");
 
 		GenericResult<ClothMaterial> clothMaterialResult = ServiceFactory.getInstance().getClothMaterialService()
 				.getById(clothId, clothColorId, clothMaterialId);
@@ -307,9 +281,9 @@ public class BuyerController extends BaseController {
 			clothMaterial.setRemark(remark);
 			NoneDataResult updateResult = ServiceFactory.getInstance().getClothMaterialService()
 					.update(clothMaterial);
-			return new NoneDataJsonResult(updateResult);
+			renderJson(new NoneDataJsonResult(updateResult));
 		} else {
-			return new NoneDataJsonResult(clothMaterialResult);
+			renderJson(new NoneDataJsonResult(clothMaterialResult));
 		}
 	}
 

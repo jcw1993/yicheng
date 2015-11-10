@@ -30,7 +30,7 @@
 		</div>
 		<div class="row col-xs-4"></div>
 		<div class="row col-xs-5">
-			<form id="loginForm" action="Login" method="post">
+			<form id="loginForm" action="LoginPost" method="post">
 				<div class="input-group input-item">
 					<h3>怡诚-用户登录</h3>
 				</div>
@@ -94,7 +94,7 @@
 				name = name.trim();
 				password = password.trim();
 				$.ajax({
-					url: "Login",
+					url: "LoginPost",
 					method: "post",
 					data: {
 						name: name,

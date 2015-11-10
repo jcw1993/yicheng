@@ -21,7 +21,7 @@
 			<jsp:include page="../left_color_navi.jsp" flush="true" />
 		</div>	
 		<div class="col-sm-9">
-			<h3>皮衣详情<a href="ExportCountExcel?clothId=${clothOrder.cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">导出采购单</a>
+			<h3>皮衣详情<a href="../ExportCountExcel?clothId=${clothOrder.cloth.id}&clothColorId=${model.clothColorId}" class="btn btn-primary create-button">导出采购单</a>
 			</h3>
 			<hr />
 			<div>

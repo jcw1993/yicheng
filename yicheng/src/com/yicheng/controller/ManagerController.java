@@ -6,17 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.yicheng.common.BaseController;
 import com.yicheng.common.MaterialType;
 import com.yicheng.common.Pagination;
 import com.yicheng.pojo.Cloth;
@@ -30,18 +24,16 @@ import com.yicheng.util.GenericResult;
 import com.yicheng.util.ResultCode;
 import com.yicheng.util.Utils;
 
-@Controller
-public class ManagerController {
+public class ManagerController extends BaseController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ManagerController.class);
 	
-	@RequestMapping(value = "/Manager/ClothMaterialManage", method = RequestMethod.GET)
-	public ModelAndView clothMaterialManage(HttpServletRequest request, HttpServletResponse response) {
+	public void ClothMaterialManage() {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().getNeedPricing();
 		
 		if(clothResult.getResultCode() == ResultCode.NORMAL) {
-			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 			
 			List<Cloth> allList = clothResult.getData();
@@ -60,17 +52,17 @@ public class ManagerController {
 		}else {
 			logger.warn("cloth get all exception");
 		}
-		return new ModelAndView("manager/cloth_material_manage", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("manager/cloth_material_manage"));
 	}
 	
-	@RequestMapping(value = "/Manager/SearchInMaterialManage", method = RequestMethod.GET)
-	public ModelAndView searchInAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String keyword = request.getParameter("keyword");
+	public void SearchInMaterialManage() throws IOException {
+		String keyword = getPara("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
 			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().searchInAll(keyword);
 			if(clothResult.getResultCode() == ResultCode.NORMAL) {
-				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 				
 				List<Cloth> allList = clothResult.getData();
@@ -90,19 +82,19 @@ public class ManagerController {
 			}else {
 				logger.warn("cloth get all exception");
 			}
-			return new ModelAndView("manager/cloth_material_manage", "model", model);
+			getRequest().setAttribute("model", model);
+			renderJsp(getJsp("manager/cloth_material_manage"));
 		}else {	
-			response.sendRedirect(request.getContextPath() + "/Error");
-			return null;
+			getResponse().sendRedirect(getRequest().getContextPath() + "/Error");
+			return ;
 		}
 	}
 	
-	@RequestMapping(value = "/Manager/ClothPriceManage", method = RequestMethod.GET)
-	public ModelAndView clothPriceManage(HttpServletRequest request, HttpServletResponse response) {
+	public void ClothPriceManage() {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothPricedResult = ServiceFactory.getInstance().getClothService().getPriced();
 		if(clothPricedResult.getResultCode() == ResultCode.NORMAL) {
-			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 			
 			List<Cloth> allList = clothPricedResult.getData();
@@ -121,17 +113,17 @@ public class ManagerController {
 		}else {
 			logger.warn("cloth get priced exception");
 		}
-		return new ModelAndView("manager/cloth_price_manage", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp(getPara("manager/cloth_price_manage")));
 	}
 	
-	@RequestMapping(value = "/Manager/SearchInPriceManage", method = RequestMethod.GET)
-	public ModelAndView searchInPriced(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String keyword = request.getParameter("keyword");
+	public void SearchInPriceManage() throws IOException {
+		String keyword = getPara("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
 			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().searchInPriced(keyword);
 			if(clothResult.getResultCode() == ResultCode.NORMAL) {
-				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 				
 				List<Cloth> allList = clothResult.getData();
@@ -151,19 +143,19 @@ public class ManagerController {
 			}else {
 				logger.warn("cloth get need pricing exception");
 			}
-			return new ModelAndView("manager/cloth_price_manage", "model", model);
+			getRequest().setAttribute("model", model);
+			renderJsp(getJsp("manager/cloth_price_manage"));
 		}else {	
-			response.sendRedirect(request.getContextPath() + "/Error");
-			return null;
+			getResponse().sendRedirect(getRequest().getContextPath() + "/Error");
+			return ;
 		}
 	}
 	
-	@RequestMapping(value = "/Manager/ClothCountManage", method = RequestMethod.GET)
-	public ModelAndView clothCountManage(HttpServletRequest request, HttpServletResponse response) {
+	public void ClothCountManage() {
 		Map<String, Object> model = new HashMap<String, Object>();
 		GenericResult<List<Cloth>> clothCountedResult = ServiceFactory.getInstance().getClothService().getCounted();
 		if(clothCountedResult.getResultCode() == ResultCode.NORMAL) {
-			int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+			int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 			int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 			
 			List<Cloth> allList = clothCountedResult.getData();
@@ -182,17 +174,17 @@ public class ManagerController {
 		}else {
 			logger.warn("cloth get counted exception");
 		}
-		return new ModelAndView("manager/cloth_count_manage", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("manager/cloth_count_manage"));
 	}
 	
-	@RequestMapping(value = "/Manager/SearchInCountManage", method = RequestMethod.GET)
-	public ModelAndView searchInCounted(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String keyword = request.getParameter("keyword");
+	public void SearchInCountManage() throws IOException {
+		String keyword = getPara("keyword");
 		if(StringUtils.isNotBlank(keyword)) {
 			Map<String, Object> model = new HashMap<String, Object>();
 			GenericResult<List<Cloth>> clothResult = ServiceFactory.getInstance().getClothService().searchInCounted(keyword);
 			if(clothResult.getResultCode() == ResultCode.NORMAL) {
-				int pageIndex = Utils.getRequestIntValue(request, "pageIndex", false);
+				int pageIndex = Utils.getRequestIntValue(getRequest(), "pageIndex", false);
 				int startIndex = pageIndex * Pagination.ITEMS_PER_PAGE;
 				
 				List<Cloth> allList = clothResult.getData();
@@ -212,17 +204,17 @@ public class ManagerController {
 			}else {
 				logger.warn("cloth get need counted exception");
 			}
-			return new ModelAndView("manager/cloth_count_manage", "model", model);
+			getRequest().setAttribute("model", model);
+			renderJsp(getJsp("manager/cloth_count_manage"));
 		}else {	
-			response.sendRedirect(request.getContextPath() + "/Error");
-			return null;
+			getResponse().sendRedirect(getRequest().getContextPath() + "/Error");
+			return ;
 		}
 	}
 	
-	@RequestMapping(value = "/Manager/ClothMaterialDetail", method = RequestMethod.GET)
-	public ModelAndView clothMaterialDetail(HttpServletRequest request, HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+	public void ClothMaterialDetail() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId", false);
 		if(clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
@@ -232,14 +224,14 @@ public class ManagerController {
 		
 		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		model.put("baseUrl", "ClothMaterialDetail?clothId=" + clothId);
-		return new ModelAndView("manager/cloth_material_detail", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("manager/cloth_material_detail"));
 		
 	}
 	
-	@RequestMapping(value = "/Manager/ClothPriceDetail", method = RequestMethod.GET)
-	public ModelAndView clothPriceDetail(HttpServletRequest request, HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+	public void ClothPriceDetail() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId", false);
 		if(clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
@@ -248,13 +240,14 @@ public class ManagerController {
 		}
 		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		model.put("baseUrl", "ClothPriceDetail?clothId=" + clothId);
-		return new ModelAndView("manager/cloth_price_detail", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("manager/cloth_price_detail"));
+		
 	}
 	
-	@RequestMapping(value = "/Manager/ClothCountDetail", method = RequestMethod.GET)
-	public ModelAndView clothCountDetail(HttpServletRequest request, HttpServletResponse response) {
-		int clothId = Utils.getRequestIntValue(request, "clothId", true);
-		int clothColorId = Utils.getRequestIntValue(request, "clothColorId", false);
+	public void ClothCountDetail() {
+		int clothId = getParaToInt("clothId");
+		int clothColorId = Utils.getRequestIntValue(getRequest(), "clothColorId", false);
 		if(clothColorId == 0) {
 			GenericResult<List<ClothColor>> clothColorResult = ServiceFactory.getInstance().getClothColorService().getByCloth(clothId);
 			if(clothColorResult.getResultCode() == ResultCode.NORMAL) {
@@ -263,7 +256,8 @@ public class ManagerController {
 		}
 		Map<String, Object> model = getClothMaterialInfoWithCount(clothId, clothColorId);
 		model.put("baseUrl", "ClothCountDetail?clothId=" + clothId);
-		return new ModelAndView("manager/cloth_count_detail", "model", model);
+		getRequest().setAttribute("model", model);
+		renderJsp(getJsp("manager/cloth_count_detail"));
 	}
 	
 	private Map<String, Object> getClothMaterialInfo(int clothId, int clothColorId) {
