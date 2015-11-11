@@ -11,7 +11,7 @@
 	<jsp:include page="manager_navi.jsp" flush="true" />
 
 	<div class="container-body">
-		<h3>报价单
+		<h3>报价单</h3>
 		<hr />
 
 		<c:if test="${null != model.clothPriced}">

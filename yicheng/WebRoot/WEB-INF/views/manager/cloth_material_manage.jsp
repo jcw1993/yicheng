@@ -11,7 +11,7 @@
 	<jsp:include page="manager_navi.jsp" flush="true" />
 
 	<div class="container-body">
-		<h3>面辅料清单
+		<h3>面辅料清单</h3>
 		<hr />
 
 		<div class="navbar-form search-div">

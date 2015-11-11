@@ -32,16 +32,25 @@
 					<th>创建时间</th>
 					<th>款号</th>
 					<th>款名</th>
+					<th>预览</th>
 					<th>颜色</th>
 					<th>买手</th>
 					<th>皮料</th>
 					<th>操作</th>
 				</tr>
-				<c:forEach items="${model.clothToCount}" var="cloth">
+				<c:forEach items="${model.clothCounted}" var="cloth">
 					<tr>
 						<td><fmt:formatDate value="${cloth.createdTime}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 						<td>${cloth.type}</td>
 						<td>${cloth.name}</td>
+						<td>
+						<c:if test="${null != cloth.imagePath}">
+				             <img src="${cloth.imagePath}?imageView2/0/w/200/h/265" />
+			     	     </c:if>	
+						<c:if test="${null == cloth.imagePath}">
+							<p>暂无图片</p>
+						</c:if>
+						</td>
 						<td>${cloth.color}</td>
 						<td>${cloth.client}</td>
 						<td>

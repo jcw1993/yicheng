@@ -114,7 +114,7 @@ public class ManagerController extends BaseController {
 			logger.warn("cloth get priced exception");
 		}
 		getRequest().setAttribute("model", model);
-		renderJsp(getJsp(getPara("manager/cloth_price_manage")));
+		renderJsp(getJsp("manager/cloth_price_manage"));
 	}
 	
 	public void SearchInPriceManage() throws IOException {

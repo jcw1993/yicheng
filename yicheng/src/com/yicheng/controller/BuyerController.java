@@ -200,6 +200,7 @@ public class BuyerController extends BaseController {
 		Map<String, Object> model = getClothMaterialInfo(clothId, clothColorId);
 		getClothTotalPrice(clothId, model);
 		model.put("baseUrl", "ClothCountOperate?clothId=" + clothId);
+		getRequest().setAttribute("model", model);
 		renderJsp(getJsp("buyer/cloth_count_operate"));
 	}
 
