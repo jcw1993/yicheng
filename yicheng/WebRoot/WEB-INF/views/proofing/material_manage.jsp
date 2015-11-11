@@ -20,11 +20,12 @@
 			
 			<div class="margin-top-little">
 				<div class="row title-area">
-					<p class="col-sm-7">皮料</p>
+					<div class="col-sm-9"><h3>皮料</h3></div><br />
 					<div class="col-sm-2">
 						<a href="#" id="add_leather_btn" class="btn btn-success btn-sm" >添加</a>	
 					</div>
 				</div>	
+				<br />
 
 				<c:if test="${null != leathers}">	
 				<table id="leather_table" class="table table-striped table-bordered table-hover table-responsive">
@@ -47,11 +48,12 @@
 
 			<div class="margin-top-little">
 		 	     <div class="row title-area">
-			     	<p class="col-sm-7">面料</p>
+					<div class="col-sm-9"><h3>面料</h3></div><br />
 			     	<div class="col-sm-2">
 			     		<a href="#" id="add_fabric_btn" class="btn btn-success btn-sm" >添加</a>	
 			     	</div>
 			     </div>		
+			     <br />
 			     <c:if test="${null != fabrics}">
 			     <table id="fabric_table" class="table table-striped table-bordered table-hover table-responsive">
 			     	<tr>
@@ -74,12 +76,12 @@
 
 			<div class="margin-top-little">
 				 <div class="row title-area">
-			     	<p class="col-sm-7">辅料</p>
+					<div class="col-sm-9"><h3>辅料</h3></div><br />
 					<div class="col-sm-2">
 						<a href="#" id="add_support_btn" class="btn btn-success btn-sm" >添加</a>	
 					</div>
-
-	     	     </div>		
+	     	     </div>	
+	     	     <br />	
 	     	     <c:if test="${null != supports}">
 	     	     <table id="support_table" class="table table-striped table-bordered table-hover table-responsive">
 	     	     	<tr>

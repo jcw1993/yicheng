@@ -28,14 +28,14 @@ public class AppConfig extends JFinalConfig {
 	
 //	private static String CONFIG_BASE_DIR = "WebRoot/WEB-INF/config/" ;
 	
-//	private static final String jdbcUrl = "jdbc:mysql://localhost:3306/yicheng?autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
-//	private static final String userName = "devuser";
-//	private static final String password = "qyff2011";
-	
-	private static final String jdbcUrl = "jdbc:mysql://rds6a1em9jdgrqb3o09r.mysql.rds.aliyuncs.com:3306/yicheng?autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
+	private static final String jdbcUrl = "jdbc:mysql://localhost:3306/yicheng?autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
 	private static final String userName = "devuser";
-	private static final String password = "njuswi2015";
+	private static final String password = "qyff2011";
 	
+//	private static final String jdbcUrl = "jdbc:mysql://rds6a1em9jdgrqb3o09r.mysql.rds.aliyuncs.com:3306/yicheng?autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
+//	private static final String userName = "devuser";
+//	private static final String password = "njuswi2015";
+//	
 	public void configConstant(Constants me) {
 		me.setDevMode(true);
 		me.setUploadedFileSaveDirectory("/Users/jinchengwei/Desktop/cos_share_upload/");
