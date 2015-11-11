@@ -16,7 +16,7 @@
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
-					
+					<a class="navbar-brand" href="#">江阴怡诚</a>
 				</div>
 			</div>
 			<div class="col-xs-10">
@@ -24,8 +24,10 @@
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
 						<li><a href="ClothPriceToProcess">报价单管理</a></li>
-						<li><a href="../Logout">退出</a></li>
 					</ul>
+					<ul class="nav navbar-nav navbar-right">
+				        <li ><a href="../Logout">退出</a></li>
+				    </ul>
 				</div>
 			</div>
 		</div>
